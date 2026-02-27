@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite';
+import { viteStaticCopy } from 'vite-plugin-static-copy';
 
 export default defineConfig({
   server: {
@@ -11,5 +12,14 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ['swisseph-wasm'],
   },
-  assetsInclude: ['**/*.wasm'],
+  plugins: [
+    viteStaticCopy({
+      targets: [
+        {
+          src: 'node_modules/swisseph-wasm/wsam/*',
+          dest: 'wsam',
+        },
+      ],
+    }),
+  ],
 });
