@@ -15,6 +15,7 @@ import { drawChartWheel, drawSevenYearOverlay, drawDecanOverlay, drawBiWheel } f
 import { calculateTransits } from './modules/transit.js';
 import { calculateHouseDecans } from './modules/decans.js';
 import { calculateSevenYearCycles } from './modules/sevens.js';
+import { loadKnowledge, extractChartFacts, generateAnalysis } from './modules/analysis.js';
 
 // ============================================
 // SVG Sign Helper — replaces Unicode zodiac emoji with SVG icons everywhere
@@ -54,6 +55,9 @@ let lrSearchTimeout = null;
 let currentTransit = null;
 let trSelectedCity = null;
 let trSearchTimeout = null;
+
+// Analysis state
+let analysisKnowledge = null;
 
 // ============================================
 // DOM ELEMENTS
@@ -2346,6 +2350,142 @@ function switchTRTab(tabName) {
 }
 
 // ============================================
+// ANALYSIS
+// ============================================
+async function showAnalysisPanel() {
+  const noChart = $('analysisNoChart');
+  const content = $('analysisContent');
+
+  if (!currentChart) {
+    noChart.classList.remove('hidden');
+    content.classList.add('hidden');
+    return;
+  }
+
+  noChart.classList.add('hidden');
+  content.classList.remove('hidden');
+
+  // Load knowledge base if needed
+  if (!analysisKnowledge) {
+    try {
+      analysisKnowledge = await loadKnowledge();
+    } catch (e) {
+      console.error('Knowledge base yüklenemedi:', e);
+      return;
+    }
+  }
+
+  renderRuleAnalysis();
+}
+
+function renderRuleAnalysis() {
+  if (!currentChart || !analysisKnowledge) return;
+
+  const facts = extractChartFacts(currentChart, analysisKnowledge);
+  const sections = generateAnalysis(facts, analysisKnowledge);
+  const container = $('analysisRuleResults');
+
+  container.innerHTML = sections.map((s, i) => `
+    <div class="analysis-card${i === 0 ? ' open' : ''}" data-section="${s.id}">
+      <div class="analysis-card-header" onclick="this.parentElement.classList.toggle('open')">
+        <span class="analysis-card-icon">${s.icon}</span>
+        <span class="analysis-card-title">${s.title}</span>
+        <span class="analysis-card-toggle">▼</span>
+      </div>
+      <div class="analysis-card-body">
+        <div class="analysis-card-content">${formatAnalysisContent(s.content)}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function formatAnalysisContent(text) {
+  return text
+    .split('\n')
+    .map(line => {
+      line = line.trim();
+      if (!line) return '';
+
+      // Gezegen yerleşimi başlığı (@@PLANET_HEADER@@ marker)
+      if (line.startsWith('@@PLANET_HEADER@@')) {
+        const headerText = line.replace('@@PLANET_HEADER@@', '');
+        return `<h4 class="analysis-planet-header">${headerText}</h4>`;
+      }
+
+      // Etiketli satırlar (label: value)
+      const labelPatterns = [
+        'Anahtar kavramlar:', 'Güçlü yönler:', 'Geliştirilmesi gereken yönler:',
+        'Yönetici gezegen:', 'Baskın element:', 'Baskın nitelik:', 'Eksik element:',
+        'Hassas vücut bölgeleri:', 'Dikkat edilmesi gereken:', 'Öfke tetikleyicisi:',
+        'Temsil ettiği:', 'Ev konuları:', 'Dekan konusu:', 'Odak konular:',
+        'Venüs şunları temsil eder:', 'Venüs durumu:', '7. ev konuları:',
+        'Göz rengi:', 'Göz yapısı:', 'Boy:', 'Vücut yapısı:', 'Saç:',
+        'Yürüyüş:', 'Ayırt edici işaretler:', 'Genel görünüm:', 'Yüz hatları:',
+      ];
+      for (const lbl of labelPatterns) {
+        if (line.startsWith(lbl)) {
+          const label = lbl.slice(0, -1);
+          const value = line.slice(lbl.length).trim();
+          return `<p class="analysis-label-line"><strong>${label}:</strong> ${value}</p>`;
+        }
+      }
+
+      // Bölüm başlıkları (── xxx ──)
+      if (line.startsWith('──')) {
+        return `<p class="analysis-subtitle">${line}</p>`;
+      }
+
+      // Gezegen satırları (sembol ile başlayan)
+      if (line.match(/^[☉☽♀♂☿♃♄♅♆♇⚷⚸℞]/)) {
+        return `<p class="analysis-planet-line">${line}</p>`;
+      }
+
+      // Yorum satırları (→ ile başlayan)
+      if (line.startsWith('→') || line.startsWith('  →')) {
+        return `<p class="analysis-interp">${line.replace(/^\s*→\s*/, '→ ')}</p>`;
+      }
+
+      // Dekan bilgisi
+      if (line.match(/^\s*Dekan \d/)) {
+        return `<p class="analysis-decan">${line.trim()}</p>`;
+      }
+
+      // Element/nitelik bar gösterimi
+      if (line.match(/^\s*(Ateş|Toprak|Hava|Su|Öncü|Sabit|Değişken):\s*\d/)) {
+        return `<p class="analysis-bar-line">${line}</p>`;
+      }
+
+      // Element/nitelik yorum (italik gövde)
+      if (line.match(/^(Ateş|Toprak|Hava|Su|Öncü|Sabit|Değişken) baskınlığı:/)) {
+        return `<p class="analysis-balance-note"><em>${line}</em></p>`;
+      }
+
+      // Venüs aspektleri satırı
+      if (line.startsWith('  ') && line.includes('—')) {
+        return `<p class="analysis-interp">${line.trim()}</p>`;
+      }
+
+      return `<p>${line}</p>`;
+    })
+    .join('');
+}
+
+function setupAnalysisEvents() {
+  // No additional setup needed for rule-based only mode
+}
+
+// ============================================
 // START
 // ============================================
+
+// Setup analysis event listeners after DOM loads
+setupAnalysisEvents();
+
+// Show analysis panel when analysis tab is activated
+document.querySelectorAll('.main-tab[data-main-tab="analysis"]').forEach(tab => {
+  tab.addEventListener('click', () => {
+    setTimeout(() => showAnalysisPanel(), 50);
+  });
+});
+
 init();

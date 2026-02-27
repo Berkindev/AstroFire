@@ -132,7 +132,10 @@ export async function calculateNatalChart(birthData) {
     interceptedSigns,
     
     // Şans Noktası
-    partOfFortune,
+    partOfFortune: partOfFortune ? {
+      ...partOfFortune,
+      house: findHouseOfPlanet(partOfFortune.longitude, houses.cusps),
+    } : null,
     
     // Aspektler
     aspects,

@@ -86,14 +86,20 @@ export function calculatePlanetPosition(jd, planetId) {
  * @returns {Array<Object>} Gezegen pozisyonları
  */
 export function calculatePlanetPositions(jd, planets) {
-  return planets.map(planet => {
-    const pos = calculatePlanetPosition(jd, planet.id);
-    return {
-      ...planet,
-      ...pos,
-      isRetrograde: pos.speed < 0,
-    };
-  });
+  const results = [];
+  for (const planet of planets) {
+    try {
+      const pos = calculatePlanetPosition(jd, planet.id);
+      results.push({
+        ...planet,
+        ...pos,
+        isRetrograde: pos.speed < 0,
+      });
+    } catch (e) {
+      console.warn(`Gezegen hesaplanamadı: ${planet.name} (ID: ${planet.id})`, e.message);
+    }
+  }
+  return results;
 }
 
 /**

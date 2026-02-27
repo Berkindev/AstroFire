@@ -1,0 +1,2968 @@
+{
+  "signs": {
+    "aries": {
+      "name": "Koç",
+      "ruler": "Mars",
+      "element": "fire",
+      "modality": "cardinal",
+      "keywords": [
+        "Enerji",
+        "Cesaret",
+        "Liderlik",
+        "Rekabet",
+        "Sabırsızlık",
+        "İçgüdü",
+        "Macera",
+        "Özgüven",
+        "Hızlı karar",
+        "Agresiflik"
+      ],
+      "positive": [
+        "Öncü",
+        "Kararlı",
+        "Mücadeleci",
+        "Azimli",
+        "Koruyucu",
+        "Adaletli",
+        "Heyecanlı",
+        "Yaratıcı",
+        "İnisiyatif alan"
+      ],
+      "negative": [
+        "Aceleci",
+        "Fevri",
+        "Kaba",
+        "Sabırsız",
+        "İnatçı",
+        "Bencil",
+        "Saldırgan",
+        "Toleranssız",
+        "Emir almaktan nefret eder"
+      ],
+      "health": {
+        "body": [
+          "Baş",
+          "Yüz",
+          "Kaslar",
+          "Kan",
+          "Beyincik"
+        ],
+        "risks": [
+          "Yaralanmalar",
+          "Sivilceler",
+          "Ateşli hastalıklar",
+          "Kan hastalıkları",
+          "Kas hastalıkları",
+          "Kesikler"
+        ]
+      },
+      "careers": [
+        "Askerlik",
+        "Spor",
+        "Mühendislik",
+        "Danışmanlık",
+        "Girişimcilik",
+        "Açil servis",
+        "Fitness eğitmenliği",
+        "Beden eğitimi öğretmenliği"
+      ],
+      "anger_trigger": "Emir almak, yenilgi, beklemek zorunda kalmak",
+      "summary": "İçgüdüsel mantık ile hareket eder. İlkel benlik enerjisine sahip, ateşli, hareketli, enerjik, maceraperest. Liderlik ve yönetme özellikleri vardır. Cesaret, pervasızlık ve rekabet ile tanınır. İradesi güçlü, direkt harekete geçme eğilimindedir, hızlı karar alabilir. Zafer odaklı, yenilgiye tahammülü yoktur. Sevdikleri için riske girer, tutkulu ve koruyucudur.",
+      "life_goal": "Varolmak",
+      "core_drive": "Kendini sahiplenme güdüsü, hareket etme güdüsü, eylemsel güdü",
+      "shadow_side": "Sürekli çatışma içinde olmak ister, başkalarının isteklerine aldırmaz, kendi deneyimlemek ister",
+      "key_questions": "Kendimle neden çatışıyorum? Kendimi neden paylaşamıyorum? Teslim olursam ne olur?",
+      "recommendations": "Zihni durduran çalışmalar, meditasyon, su kenarinda vakit geçirmek, pilates/yoga, öfkenin sebebini bulmak",
+      "sign_annoyance": "Direkt saldiri, gücünü küçümseme",
+      "love_mystery": "Bebek ruhu - güven, şefkat ve masumiyet",
+      "personality_lg": "Koc burcu, zodyakin ilk ve en atesi işaretidir. Linda Goodman'a göre Koc, gucllu bir el sikisi, ani bir gülümseme ve zorlu bir kisilige sahiptir. Haksizliga karsi aninda savasan, fikirlerini cesurca dile getiren, underdog'un savunucusudur. Bir trafik polisine bile karsi çıkar. Yuzundeki ifade acik, dobra ve masumca olduricidir. Koc'un saf bir iyimserlik ve bitmek bilmeyen bir enerjisi vardir. Her sey yeni başlar gibi hisseder - cunku Koc zodyakin 'bebegi'dir. Lider olmak ister, ikinci olmaya tahammul edemez. Sabirsizdir ama kalbi saftir.",
+      "love_style_lg": "Koc âşıkken tamamen basvuruyu kaybeder - tutku dolu, sabrisiz ve romantiktir. Ask için savasir, fethetmek ister. Koc erkeği kadıni kovalamaktan, Koc kadıni işe bağımsızligini koruyarak sevmekten hoslanir. İliskide dürüstlük ve doğrudan iletişim ister. Oyunlardan nefret eder. Kiskanclik yapabilir ama sadakati tartismisizdir. İlk görüşde aska inanir ve bunu cesurca ifade eder."
+    },
+    "taurus": {
+      "name": "Boğa",
+      "ruler": "Venüs",
+      "element": "earth",
+      "modality": "fixed",
+      "keywords": [
+        "Sabır",
+        "Güvenilirlik",
+        "Sadakat",
+        "Duygusallık",
+        "İnat",
+        "Pratiklik",
+        "Lüks düşkünü",
+        "İştah",
+        "Konfor",
+        "Tutuculuk"
+      ],
+      "positive": [
+        "Kararlı",
+        "Güvenilir",
+        "Sadık",
+        "Çalışkan",
+        "Realist",
+        "Estetik",
+        "Lezzet tutkunu",
+        "Finansal zeka"
+      ],
+      "negative": [
+        "İnatçı",
+        "Tembel",
+        "Maddiyatçı",
+        "Şüpheci",
+        "Değişime direnç",
+        "Aşırı ihtiyatlı",
+        "Oburluk",
+        "Kıskanç"
+      ],
+      "health": {
+        "body": [
+          "Boyun",
+          "Boğaz",
+          "Bel bölgesi"
+        ],
+        "risks": [
+          "Boyun fıtığı",
+          "Bademcik sorunları",
+          "Ses telleri sorunları",
+          "Tiroit",
+          "Hormon bozuklukları",
+          "Aşırı kilo"
+        ]
+      },
+      "careers": [
+        "Bankacılık",
+        "Kuyumculuk",
+        "Gayrimenkul",
+        "Mimari",
+        "Gastronomi",
+        "Hayvancılık",
+        "Komisyöncüluk",
+        "Al-sat"
+      ],
+      "anger_trigger": "Güvenliğinin tehdit edilmesi, maddi kayıp, değişime zorlanmak",
+      "summary": "Soğukkanlı, aşırı güvenlik ihtiyacında, güvenilir, sadık ve duygusal. Lükse, rahatına, konforuna düşkün. Duygularını belli etmez. Paraya önem verir, aşırı tedbirli ve temkinli. Sabırla ilerler, sağlam adımlar atar. Risk almayı sevmez, kararlı ve istikrarlı bir şekilde başarıya ulaşır. Sessiz ve derinden gider.",
+      "life_goal": "Sahip olmak ve güvenlik",
+      "core_drive": "Maddeyi sahiplenme güdüsü - ne kadar sahipsem o kadar güvendeyim",
+      "shadow_side": "Fazla tutunmak, değişimden korkmak, güvenli alandan çıkmama",
+      "key_questions": "Dunyaya büyümeye mi geldim, güvende kalmaya mi? Güvenlik alanimdan çıkarsam ne olur?",
+      "recommendations": "Düzenli bagis yapmak, yeni bilgiler alabilecegi eğitimlere katılmak, farkli insanlar arasina karışmak, seyahat etmek, üretken bir alan olüstürmak",
+      "sign_annoyance": "Parayla ilgili yorumlar, gorgusuzsun/pintsin demek, luksune ve konforuna mudahale",
+      "love_mystery": "Çocuk ruhu - sahiplenme, güvenlik ve dokunma",
+      "personality_lg": "Boga burcu, sabırlı, güvenilir ve kararlıdir. Linda Goodman, Boga'yi topraga sağlam basan, kolay kolay yerinden oynamayan bir güç olarak tanımlar. Boga maddi güvenligi, konfor ve güzellige değer verir. Bes duyusuyla yaşayan, yemek, muzik, sanat ve dokunma yoluyla hayattan zevk alan bir burcktur. İnatcidilari efsanevidir - bir kez karar verdimi hicbir güç onu durduramaaz. Ama bu inat, ayni zamanda muhtesem bir sadakat ve kararlıliktir. Boga yavas hareket eder ama her adımi sağlamdir.",
+      "love_style_lg": "Boga âşıkken sahiplenicidir ama son derece sadiktir. Fiziksel dokunma ve yakinlik Boga için aşkın dilidir. Romantik, duyusal ve sabırlı bir âşıkdir. Boga erkeği geleneksel, koruyucu ve guvvellir bir partnerdir. Boga kadıni sadik, şefkatli ve tutkulu ancak kıskançtır. Boga için ask, güvenlik demektir - duygusal ve maddi. Aldatmaya hiç tahammulu yoktur."
+    },
+    "gemini": {
+      "name": "İkizler",
+      "ruler": "Merkür",
+      "element": "air",
+      "modality": "mutable",
+      "keywords": [
+        "Zeka",
+        "Hareketlilik",
+        "Uyum",
+        "Çok yönlülük",
+        "Merak",
+        "İletişim",
+        "Pratiklik",
+        "Yaratıcılık",
+        "Eğlence"
+      ],
+      "positive": [
+        "Parlak zeka",
+        "Öğretici",
+        "Yetenekli",
+        "Sosyal",
+        "Adapte olabilen",
+        "Çözüm odaklı",
+        "Entelektüel",
+        "İkna kabiliyeti"
+      ],
+      "negative": [
+        "Dikkat dağınıklığı",
+        "İki yüzlülük",
+        "Yalancı",
+        "Kararsız",
+        "Sabırsız",
+        "Tatminsiz",
+        "Manipülatif",
+        "İstikrarsız"
+      ],
+      "health": {
+        "body": [
+          "Eller",
+          "Parmaklar",
+          "Kollar",
+          "Burun",
+          "Üst solunum yolu"
+        ],
+        "risks": [
+          "Astım",
+          "Bronşit",
+          "Akciğer sorunları",
+          "Omuz ağrıları",
+          "Öğrenme güçlüğü"
+        ]
+      },
+      "careers": [
+        "İletişim",
+        "Satış",
+        "Pazarlama",
+        "Yazarlık",
+        "Öğretmenlik",
+        "El becerisi gerektiren işler",
+        "Medya"
+      ],
+      "anger_trigger": "Sıkılmak, özgürlüğünün kısıtlanması, monotonluk",
+      "summary": "Zeka kapasitesi yüksek, çok yönlü düşünür, çok yönlü zekaya sahiptir. Mantık ön plandadır. Kolay öğrenir, kolay öğretir. Her işte başarılı olur, her mesleğe yatkındır. Dikkati çok çabuk dağılır. Aynı anda birkaç farklı iş yapabilir. Kıvrak zekalı, iletişimde ve insan ilişkilerinde akıcı, uyumlu, sosyal anlamda aktif. Burçlar kuşağının öğretmeni.",
+      "life_goal": "Bilmek ve iletişim kurmak",
+      "core_drive": "Merak ve bilme güdüsü, ne kadar çok bilirse o kadar varim der",
+      "shadow_side": "Hep daha fazlasini istemek, tatmin olmamak, zihin aşırı konuşması",
+      "recommendations": "Durmayi dinlemeyi öğrenmeli, sessizlikte kendini tutabilmek, kalpten bağ kurmak, bol bol eğitim almak, yazi yazmak",
+      "sign_annoyance": "Yalan soyluyorsun/ortaligi karıştıriyorsun deme, dedikoducusun deme",
+      "love_mystery": "Ergen ruhu - merak, iletişim ve çift yönlülük",
+      "personality_lg": "İkizler burcu, zodyakin en çok yönlü, merakli ve iletişim odakli işarettir. Linda Goodman, İkizler'i sürekli hareket halınde olan, bir anda birden fazla konu hakkinda konusabilen, iki farkli kisiliigi barindiiran bir burc olarak betimler. İkizler hava gibidir - tutamazsiniz. Zeka birincidir, duygular ikinci planda kalir. Harika bir hikaye anlaticisi, çekiçi bir konuşmaçı ve sosyal bir kelebektr. Sikilmaktan nefret eder ve sürekli zihinsel uyarima ihtiyac duyar.",
+      "love_style_lg": "İkizler aşkta önce zihinsel bağlantı arar. Sohbet edemiyorsa, sevemez. İkizler erkeği büyüleyici, esprili ama yakalanmasi zor bir âşıktrr. İkizler kadıni flortoz, zeki ve değişkendir. Ask için özgürlüğu feda etmez. Ciftlerde hem en iyi arkadas hem âşık olmak ister. Tek eslilik zor gelebilir - sıkılmamak için sürekli yenilik gerekir.",
+      "key_questions": "Neden bir yerde duramıyorum? Derinleşmekten neden korkuyorum? Bilmek mi yaşamak mı?"
+    },
+    "cancer": {
+      "name": "Yengeç",
+      "ruler": "Ay",
+      "element": "water",
+      "modality": "cardinal",
+      "keywords": [
+        "Duygusallık",
+        "Koruyuculuk",
+        "Aile",
+        "Hafıza",
+        "Sezgisellik",
+        "Melankoli",
+        "İçe dönüklük",
+        "Hassasiyet",
+        "Nostalji"
+      ],
+      "positive": [
+        "Şefkatli",
+        "Merhametli",
+        "İyi hatırlar",
+        "Yardımsever",
+        "Evcimen",
+        "Sanatçı ruh",
+        "Koleksiyöncü",
+        "Hayal güçlü",
+        "Affedici"
+      ],
+      "negative": [
+        "Alıngan",
+        "Kaprisli",
+        "Karamsar",
+        "Çekingen",
+        "Güvensiz",
+        "Aşağılık kompleksi",
+        "Morali çabuk bozulur",
+        "Dolaylı davranır"
+      ],
+      "health": {
+        "body": [
+          "Mide",
+          "Sindirim sistemi",
+          "Rahim",
+          "Yumurtalıklar",
+          "Göğüsler"
+        ],
+        "risks": [
+          "Mide hastalıkları",
+          "Genetik rahatsızlıklar",
+          "Süper anne sendromu",
+          "Kanser riski",
+          "Miyom",
+          "Kist",
+          "Göğüsteki kitleler"
+        ]
+      },
+      "careers": [
+        "Emlakçılık",
+        "Aşçılık",
+        "Öğretmenlik (Anaokulu/Tarih)",
+        "Psikoloji",
+        "Hemşirelik",
+        "Sosyal Hizmet"
+      ],
+      "anger_trigger": "Ailesi veya sevdiklerine yönelik tehdit, güvensizlik hissi, duygusal ihmal",
+      "summary": "İçselleştiren, duygusal, sezgisel mantıkla hareket eden burç. Hafızası güçlü, merhametli, tedbirli ve amacından şaşmaz. Hamarat, evcimen ve koleksiyöncü. Sanatçı ruhlu, karşılıksız yardım eden, hayırsever mizaçlı, toleranslı ve affedici. Aile, yuva, ev, anne, geçmiş ve alışkanlıklar ile özdeşleşir. Amacına doğrudan değil dolaylı şekilde ulaşır.",
+      "life_goal": "Sevmek ve sevilmek, aile kurmak",
+      "core_drive": "Kabule geçiş, korunma ve beslenme güdüsü",
+      "shadow_side": "Kabuguna saklanmak, küstügunde söylememek, bilmediği iyi dunyadan bildiği kötü dunya iyidir düşüncesi",
+      "key_questions": "Sevgi nedir? Kendi duygularımi nerede unuttum? Fazla fedakârlığın en altta neyi doldurmaya çalışiyor?",
+      "recommendations": "Kendini beslemeyi öğrenmeli, kabugunden çıkmali, cesaretli olmali, güvenli alandan çıkmak, sevilmek için fedakârlık etmeyi bırakmak",
+      "sign_annoyance": "Ailesine, sevdiklerine, kutsal alan olarak gördükleri yere laf etme",
+      "love_mystery": "Genc ruhu - duygusal bağlantı, koruma ve beslenme",
+      "personality_lg": "Yengec burcu, zodyakin en duygusal ve koruyucu işarettir. Linda Goodman, Yengec'i sert bir kabugun altinda son derece hassas bir kalp taşıyan, ailesine ve sevdiklerine derinden bağlı bir burc olarak anlatir. Yengec Ay tarafindan yönetilir ve ruh halleri ayin evreleriyle degisir. Mizahci ve gülmeyi seven biri olmasina ragmen, içsel duyarlılıgi çok derindir. Güvenlik - özellikle duygusal güvenlik - Yengec'in hayatinin temel taşıdır. Nostaljik, gekmise bağlı ve hatiralarla yasar.",
+      "love_style_lg": "Yengec aşkta anne/baba gibi koruyucu, besleyiçi ve sariçi olur. Duygusal güvenlik olmadan sevemez. Yengec erkeği utangac görünür ama içten içe derin bir tutkuyla sever. Yengec kadıni evini cennet yapar, sezdklerini besler ve korur. Kiskanclik ve sahiplenme güçlüdur. Yengec için ask = aile kurmaktir. Reddedilmekten çok korkar ve bu yuzden dolaylı yollardan yaklasir."
+    },
+    "leo": {
+      "name": "Aslan",
+      "ruler": "Güneş",
+      "element": "fire",
+      "modality": "fixed",
+      "keywords": [
+        "Özgüven",
+        "Liderlik",
+        "Gösteriş",
+        "Cömertlik",
+        "Yaratıcılık",
+        "Karizma",
+        "Sıcakkanlılık",
+        "Meydan okuma",
+        "İnat"
+      ],
+      "positive": [
+        "Yaratıcı",
+        "Etkileyici",
+        "Lider",
+        "Şık",
+        "Sorumluluk sahibi",
+        "Açık sözlü",
+        "Özgüvenli",
+        "Cömert",
+        "Sadık"
+      ],
+      "negative": [
+        "Baskıcı",
+        "Savurgan",
+        "Buyurgan",
+        "Patavatsız",
+        "Dik kafalı",
+        "Lüks düşkünü",
+        "Otoriter",
+        "Megaloman",
+        "Hükmedici"
+      ],
+      "health": {
+        "body": [
+          "Kalp",
+          "Sırt",
+          "Gözler"
+        ],
+        "risks": [
+          "Görme bozuklukları",
+          "Kalp krizi riski",
+          "Sırt ağrıları"
+        ]
+      },
+      "careers": [
+        "Oyuncu",
+        "Yönetmen",
+        "Yönetici",
+        "Politikacı",
+        "Tasarımcı",
+        "Göz doktoru",
+        "Moda",
+        "Sahne sanatları",
+        "Şovmenlik"
+      ],
+      "anger_trigger": "Takdir edilmemek, otoritesinin sorgulanması, görmezden gelinmek",
+      "summary": "Dışa dönük ve sosyal, özgüvenli, şartları zorlayan. Girdiği her ortamda dikkat çeken, doğal çekiciliğe sahip. Ünlü olmaya ve tanınmaya doğuştan yatkın. Sıcakkanlı, girişken, pozitif. Kin tutmaz. Meydan okumaya her an hazır. Bağlı, sadık, cömert, iyi dost. Yaratıcı ruhlu ve etkileyici. Lider ruhlu ve gösterişli. Karizmatik.",
+      "life_goal": "Zirveye çıkmak, sahip olmak",
+      "core_drive": "Sahne ve gösteriş, dikkat çekme arzusu, liderlik",
+      "shadow_side": "Emretmeyi çok sever, abarirsa diktatörleşebilir, lks mutluluk getirmez yanilgisi",
+      "sign_annoyance": "Egosuna oynama - sen cömert degilsin, sen egolusun demek",
+      "love_mystery": "Genc yetiskin ruhu - yaratıcılık, drama ve coşkulu ifade",
+      "personality_lg": "Aslan burcu, zodyakin krali/kralicesidir. Linda Goodman, Aslan'i girdigi her ortamda fark edilen, doğal bir karizmayla doluu, cömert ve dramatik bir burc olarak tanımlar. Güneş tarafindan yönetilir ve ışığıni herkesle paylaasir. Aslan'in kalbi kocaman, gururu işe daha da büyüktur. Ilgi merkezi olmak ister ve olmadigi zaman kuserr. Yaratici, oyuncu ve çocuk ruhlu bir taraf taşır. Liderligi içgüdüsel olarak üstlenir.",
+      "love_style_lg": "Aslan aşkta kraaliyet gibi sever - cömert, tutkulu ve gösterişli. Sürprizler, hediyeler ve romantik jestler Aslan'in ask dilidir. Aslan erkeği koruyucu, dominant ve sadik bir partnerdir. Aslan kadıni kusursuz bir kraliçe gibi davranilmak ister. Her ikişi de hayranlk ve takdir bekler. Aslan için ask, sahneye çıkmak gibidir - alkis olmadan performans olmaz. Sadakat tartismasizdir ama gururu kırılırsa geri dönüşü zordur.",
+      "key_questions": "Alkış olmadan var olabilir miyim? Gurur mu ego mu? Başkalarının ışığını söndürüyor muyum?",
+      "recommendations": "Alçakgönüllülük pratiği, başkalarını sahneye çıkarma, içsel değerini dışsal onaya bağlamama, çocuklarla vakit geçirme"
+    },
+    "virgo": {
+      "name": "Başak",
+      "ruler": "Chiron (Merkür)",
+      "element": "earth",
+      "modality": "mutable",
+      "keywords": [
+        "Mükemmeliyetçilik",
+        "Detaycılık",
+        "Titizlik",
+        "Pratik zeka",
+        "Eleştirellik",
+        "Hizmet",
+        "Analiz",
+        "Takıntı",
+        "Endişe"
+      ],
+      "positive": [
+        "Düzenli",
+        "Metodik",
+        "Espirili",
+        "Etik",
+        "Pratik",
+        "Faydacı",
+        "Nüktedan",
+        "Sistematik"
+      ],
+      "negative": [
+        "Takıntılı",
+        "Evhamlı",
+        "Eleştirel",
+        "Hastalık hastası",
+        "Kuşkucu",
+        "Aşırı titiz",
+        "Kurgusal"
+      ],
+      "health": {
+        "body": [
+          "Alt karın bölgesi",
+          "Bağırsaklar"
+        ],
+        "risks": [
+          "Bağırsak sistemi sorunları",
+          "Obsesif takıntılar",
+          "Sindirim sistemi sorunları",
+          "Kabızlık",
+          "İshal",
+          "Sinirsel rahatsızlıklar"
+        ]
+      },
+      "careers": [
+        "Doktor",
+        "Veteriner",
+        "Muhasebeci",
+        "Laborant",
+        "Editör",
+        "Organizatör"
+      ],
+      "anger_trigger": "Düzensizlik, dikkatsizlik, etik dışı davranışlar, eleştirilmek",
+      "summary": "Faydalı olma, düzenli olma, tertipli ve metodik çalışma ile tanınır. Mükemmeliyetçi ve detaycı. Gerçekçi, akıl vermeyi seven, hizmet sektöründe başarılı. Pratik zekaya sahip, espritüel, lafı gediğine koyan, nüktedan. Yerli yerinde hareket eder, yaptığı işi muntazam yapar. Etik olmaya dikkat eder, nerede durması gerektiğini bilir.",
+      "sign_annoyance": "Ne kadar takıntılı oldugunu söyleme, neye takıntı yapacagi belli olmaz",
+      "love_mystery": "Olgun yetiskin ruhu - hizmet, analiz ve mükemmeliyetcilik",
+      "personality_lg": "Başak burcu, zodyakin en analitiik, detayci ve hizmet odakli işarettir. Linda Goodman, Başak'i sessizce her seyi goseren, kusurlarri bulan ama amaçı her zaman iyileştirmek olan bir burc olarak anlatir. Başak elestirmen degildir - mükemmeliyetcidir. Temizlik, düzen ve sistem Başak için hayatitir. Merkur tarafindan yönetilir ve zihinsel kapasitesi son derece yüksektir. Alccakgönüllü görünürr ama içten içe ne kadar capabel oldugunu bilir.",
+      "love_style_lg": "Başak aşkta yavaas, dikkatli ve seçicidir. Herkese âşık olmaz - analiz eder, değerlendirir, sonra karar verir. Başak erkeği kibar, centilmen ve güvenilirdir ama duygularıni ifade etmekte zorlanir. Başak kadıni zarif, zeki ve sağduyuludur. Ask için pratik ispatlar ister - sozler degil eylemler. Başak'in elestiri eğilimi ilişkide sorun yaratabilir ama niyeti her zaman iyileştirmektir.",
+      "life_goal": "Hizmet etmek ve mükemmelleştirmek",
+      "core_drive": "Analiz ve düzenleme güdüsü, faydalı olma arzusu",
+      "shadow_side": "Aşırı eleştiri, mükemmeliyetçilik yüzünden hiçbir şeyi yeterli bulmama, takıntılı kontrol",
+      "key_questions": "Mükemmel olmak zorunda mıyım? Eleştirimin altında ne yatıyor? Kendimi yeterli hissetmek için ne gerekiyor?",
+      "recommendations": "Kendine şefkat göstermek, mükemmeliyetçiliği bırakmak, doğada vakit geçirmek, sanatla uğraşmak, kontrolü bırakma pratiği"
+    },
+    "libra": {
+      "name": "Terazi",
+      "ruler": "Venüs",
+      "element": "air",
+      "modality": "cardinal",
+      "keywords": [
+        "Adalet",
+        "Uyum",
+        "Diplomasi",
+        "Estetik",
+        "Kararsızlık",
+        "İlişkiler",
+        "Sanat",
+        "Naziklik",
+        "Ortakçılık"
+      ],
+      "positive": [
+        "Hakkaniyetli",
+        "Zarif",
+        "İkna kabiliyetli",
+        "Güler yüzlü",
+        "Objektif",
+        "Romantik",
+        "Sosyal",
+        "Yaratıcı"
+      ],
+      "negative": [
+        "Kararsız",
+        "Hayır diyemez",
+        "Kaprisli",
+        "Politik",
+        "Bencil",
+        "Demoralize",
+        "Fiziksel tembellik"
+      ],
+      "health": {
+        "body": [
+          "Böbrekler",
+          "Kulaklar",
+          "Bel boşlukları",
+          "Gamzeler"
+        ],
+        "risks": [
+          "Kulak hastalıkları",
+          "Orta kulak sorunları",
+          "Kepçe kulak",
+          "İdrar yolları enfeksiyonu",
+          "Böbrek yetmezliği"
+        ]
+      },
+      "careers": [
+        "Avukat",
+        "Diplomat",
+        "Modacı",
+        "Şarkıcı",
+        "Ressam",
+        "Hakim",
+        "Politikacı",
+        "Terzi",
+        "Uluslararası ilişkiler"
+      ],
+      "anger_trigger": "Adaletsizlik, haksızlık, uyumsuzluk, çirkinlik ve kabalık",
+      "summary": "Adalet duygusu güçlü, hakkaniyetli. Uyumlu, ahenkli, iyi dinleyici, uzlaşmacı ve barışçıl. Sanatın her alanında başarılı. İnsan ilişkilerinde başarılı, kalp kırmak istemeyen. Kibar, nazik, ince ruhlu. Duygu ve mantığı dengeleyen. Fanatik değildir, olayı her yönüyle görmek ister. Estetik zevkli, giyimi özenli. Vücut dilini iyi kullanır, güler yüzlü ve diplomasi sahibi.",
+      "sign_annoyance": "Evlilikleri ve ilişkileri hakkinda yorum kaldırmaz, flortoz ve naif",
+      "love_mystery": "Evlilik ruhu - denge, uyum ve ortaklik",
+      "personality_lg": "Terazi burcu, zodyakin denge, güzellik ve uyum araayan işarettir. Linda Goodman, Terazi'yi hayatin her alaninda dengeyi arayan, çatışmadan kaçınan ama adalet duygusu gucclu bir burc olarak betimler. Venus tarafindan yönetilir ve güzellige, estettige ve sanata doğal bir çekimi vardir. Terazi'nin en büyük sorunu karar vermektir - iki tarrafi da gorur ve seçim yapmak istemez. Diplomasi ve zarafet doğal yetenekleridir.",
+      "love_style_lg": "Terazi aşkta ortaklik ve uyum arar. Yalniz olmaktan nefret eder - bir partner olmadan kendini eksik hisseder. Terazi erkeği romantik, kibar ve estetik bir âşıktır. Terazi kadıni büyüleyici, zarif ve son derece çekiciddir. Catismadan kaçınır ve ilişkide barisi korumak için cömert tavizler verir. Ancak bu taviz vermee uzun vadede dengessizlik yaratabilir. Terazi için ask, güzel ve uyumlu bir ortaklik demektir.",
+      "life_goal": "Denge ve uyum kurmak, ilişki yoluyla kendini bulmak",
+      "core_drive": "Uyum ve adalet güdüsü, ilişki kurma ihtiyacı",
+      "shadow_side": "Karar verememe, başkalarına aşırı bağımlılık, çatışmadan kaçma",
+      "key_questions": "Kendi kararlarımı verebiliyor muyum? Başkalarını memnun etmek için kendimden ne kadar vazgeçiyorum?",
+      "recommendations": "Tek başına karar verme pratiği, kendi zevklerini keşfetme, sınır koyma çalışmaları, bireysel hobiler edinme"
+    },
+    "scorpio": {
+      "name": "Akrep",
+      "ruler": "Plüton",
+      "element": "water",
+      "modality": "fixed",
+      "keywords": [
+        "Gizem",
+        "Sezgi",
+        "Analiz",
+        "Manipülasyon",
+        "İrade",
+        "Karanlık",
+        "Kontrol",
+        "Tutku",
+        "İntikam"
+      ],
+      "positive": [
+        "Keskin zeka",
+        "Psikolog",
+        "Stratejist",
+        "Sır tutar",
+        "Dayanıklı",
+        "Soğukkanlı",
+        "Mucit",
+        "Kararlı"
+      ],
+      "negative": [
+        "Kinci",
+        "Fitneci",
+        "Sadist/Mazoşist",
+        "Sapkın",
+        "Fanatik",
+        "İçten pazarlıklı",
+        "Paranoyak"
+      ],
+      "health": {
+        "body": [
+          "Cinsel organlar"
+        ],
+        "risks": [
+          "Cinsel hastalıklar",
+          "Ölümcül kazalar",
+          "Ameliyatlık durumlar",
+          "Prostat sorunları",
+          "Erkeksel hastalıklar"
+        ]
+      },
+      "careers": [
+        "Dedektif",
+        "Polis",
+        "Psikolog",
+        "Cerrah",
+        "Ajan",
+        "Medyum",
+        "Araştırmacı",
+        "Metafizik işler"
+      ],
+      "anger_trigger": "Yalan söylenmesi, ihanet, güç kaybı, kontrolün elinden alınması",
+      "summary": "Manyetik güce sahip, gizemli ruh yapısı olan burç. Sezgisel analitik mantıkla çalışır. Sessiz, sakin, içe kapalı, az konuşan. Gözleri ile ifade eden, derin. İki tipi vardır: Kartal tipi (insanlık yararına) ve Yılan tipi (kendi çıkarları için). Sezgisel zekaya sahip, düşünce ve niyet okuma kabiliyeti olan. Sağlam iradeli, dayanıklı, sert, güçlü. İyi bir dinleyiçi ve doğal psikolog.",
+      "sign_annoyance": "Iftira atma, hemen suclama - asla unutmaz",
+      "love_mystery": "Cinsel tutku ruhu - dönüşüm, gizem ve yoğünlük",
+      "personality_lg": "Akrep burcu, zodyakin en yoğun, gizemli ve güçlü işarettir. Linda Goodman, Akrep'i sakin goruunen ama altinda volkanik bir güç taşıyan, hipnotik bakışlarla dolu, sirlari cozmeyi seven bir burc olarak anlatir. Pluto tarafindan yönetilir ve dönüşüm Akrep'in hayat temasidir. Akrep asla yüzeysel degildir - her seyin derinlerine iner. Güven kazanmak zor, kaybetmek kolay. Intikam duygusu güçlü ama sadakati de esssizdir. Akrep ölümü ve yeniden doğuşu temsil eder.",
+      "love_style_lg": "Akrep aşkta tamamen bağlanır veya hiç bağlanmaz - ortasi yoktur. Cinsel ve duygusal yoğünlük Akrep için aşkın temelidir. Akrep erkeği hipnotik, tutkulu ve sahiplenicidir. Akrep kadıni gizemli, güçlü ve son derece çekicidir. Aldatma affediilmez. Akrep sevdigini testlerden geçirir - sadakkatini, gücünü ve derinligini ölçer. Ask için her seyini verir ama karsiliginda ayni derinligi bekler.",
+      "life_goal": "Dönüşüm ve derinlik, gücün farkına varmak",
+      "core_drive": "Kontrol ve dönüşüm güdüsü, derinlere inme arzusu",
+      "shadow_side": "Kontrol takıntısı, intikam duygusu, güvensizlikten kaynaklanan manipülasyon",
+      "key_questions": "Kontrolü bırakırsam ne olur? Güven duymayı neden bu kadar zor buluyorum? İntikam bana ne katıyor?",
+      "recommendations": "Güven egzersizleri, bırakma ve affetme çalışmaları, derin nefes ve meditasyon, psikoterapi, dönüşüm odaklı çalışmalar"
+    },
+    "sagittarius": {
+      "name": "Yay",
+      "ruler": "Jüpiter",
+      "element": "fire",
+      "modality": "mutable",
+      "keywords": [
+        "Özgürlük",
+        "Neşe",
+        "Felsefe",
+        "Seyahat",
+        "Şans",
+        "Patavatsızlık",
+        "Dağınıklık",
+        "İyimserlik"
+      ],
+      "positive": [
+        "Adil",
+        "Öğretici",
+        "Fedakar",
+        "Espritüel",
+        "Yabancı dil yeteneği",
+        "Dindar",
+        "Coşkulu"
+      ],
+      "negative": [
+        "Sabırsız",
+        "Plansız",
+        "Pot kırıcı",
+        "Sözünü tutmaz",
+        "İtaatsiz",
+        "Abartılı",
+        "Dağınık"
+      ],
+      "health": {
+        "body": [
+          "Kalça",
+          "Bacaklar"
+        ],
+        "risks": [
+          "Obezite",
+          "Şeker/Diyabet",
+          "Kolesterol"
+        ]
+      },
+      "careers": [
+        "Öğretmen",
+        "Akademisyen",
+        "Din adamı",
+        "Seyahat rehberi",
+        "Sosyal medya uzmanı",
+        "Savcı",
+        "Yoga ve meditasyon uzmanı"
+      ],
+      "anger_trigger": "Özgürlüğünün kısıtlanması, adaletsizlik, sıkıcı rutin",
+      "summary": "Rahatına düşkün, neşeli, keyifli. Yerinde duramaz. Yabancı dil öğrenimine yatkın, öğrenme ve öğretme konularında iyi. Seyahat ve uzun yolculuklar sever. Filozof ruhlu, felsefeye meraklı, ileri görüşlü, coşkulu ve adil. Gezmeyi, öğrenmeyi, gezerek öğrenmeyi sever. Her durumda özgür ve kendi iradesi ile karar verir. İyi arkadaş, neşeli, iyimser dost. Şanslı ve talihli yaşamı olan burç.",
+      "sign_annoyance": "Bilgisine oynama - sen bilmiyorsun, yapamazsin karışma anlaminda",
+      "love_mystery": "Arayis ruhu - özgürlük, felsefe ve macera",
+      "personality_lg": "Yay burcu, zodyakin en iyimser, maceraçı ve ozguurlukcu işarettir. Linda Goodman, Yay'i sürekli yeni ufuklara yönelen, felsefeci, neşeli ve dobra bir burc olarak betimler. Jupiter tarafindan yönetilir ve büyüme, genisleme ve sans Yay'in doğal temasidir. Yay doğruyu sooyler - bazen fazla doğruyu. Dogaldir, yapay degildir ve herkesin içini acan bir enerjisi vardirr. Sporcu, gezgin ve yaşam ogrrencisidir.",
+      "love_style_lg": "Yay aşkta ozguurlugune düşkündur - kafes hissi ilişkiyi bitirir. Yay erkeği maceraci, esprili ve cezbediçi bir âşıktır ama bagllanmasi zor olabilir. Yay kadıni bağımsız, enerjiik ve dobra bir partnerdir. Ask için macera ve buurme gerekir - rutinden sikilir. Yay için ask, birlikte yaşam maceerasina çıkmak demektir. Sadakat vardir ama özgürlük sınırlanirssa kacabilir.",
+      "life_goal": "Anlamak, keşfetmek ve özgür olmak",
+      "core_drive": "Özgürlük ve anlam arayışı güdüsü, sürekli büyüme ihtiyacı",
+      "shadow_side": "Sorumluluktan kaçma, aşırı iyimserlik, sözünü tutamama, yüzeysellik",
+      "key_questions": "Özgürlük adına nelerden kaçıyorum? Derinleşmekten neden korkuyorum?",
+      "recommendations": "Bir konuda uzmanlaşma, sabır egzersizleri, verdiği sözleri tutma pratiği, derinlemesine öğrenme"
+    },
+    "capricorn": {
+      "name": "Oğlak",
+      "ruler": "Satürn",
+      "element": "earth",
+      "modality": "cardinal",
+      "keywords": [
+        "Disiplin",
+        "Hırs",
+        "Sorumluluk",
+        "Melankoli",
+        "Tutumluluk",
+        "Kuralcılık",
+        "Matematik",
+        "Ciddiyet"
+      ],
+      "positive": [
+        "Çalışkan",
+        "Dakik",
+        "Güvenilir",
+        "Alçakgönüllü",
+        "Sır tutar",
+        "Mükemmeliyetçi",
+        "Sayısal zeka"
+      ],
+      "negative": [
+        "Kötümser",
+        "Cimri",
+        "Kuşkucu",
+        "Katı",
+        "Asosyal",
+        "Detay takıntılı",
+        "Yeniliğe kapalı"
+      ],
+      "health": {
+        "body": [
+          "Tırnaklar",
+          "Kıllar",
+          "Deri",
+          "Dişler",
+          "Kemikler",
+          "Eklemler"
+        ],
+        "risks": [
+          "Eklem kas kemik hastalıkları",
+          "Diş problemleri",
+          "Deri hastalıkları",
+          "Egzama",
+          "Diz kapağı problemleri"
+        ]
+      },
+      "careers": [
+        "Yönetici",
+        "Ekonomist",
+        "Matematikçi",
+        "Mimar",
+        "Mühendis",
+        "Bankacı",
+        "Kendi işinin patronu"
+      ],
+      "anger_trigger": "Kurallara uyulmaması, saygısızlık, sorumsuzluk, düzensizlik",
+      "summary": "Sert, katı ve kuralcı. Disiplinli, tertipli, pratik. Sorumluluk bilincine sahip. Gençken yaşlı, yaşlıyken genç gibi hisseder. Erken yaşta olgunlaşır. Duygularını gizler. Sayısal zekalı. Çalışkan, hırslı, sabırlı, ahlaklı, kuralcı ve iradeli. Uygulamada ve pratikte başarılı. Maddenin değerini bilir. Dakiktir, zamanı en iyi kullanan burçtur. Sadık, vefalı ve güvenilir.",
+      "sign_annoyance": "Isiyle ilgili, gelirleriyle ilgili küçümseme elestirme, toplum statüsunu küçümseme",
+      "love_mystery": "Bilgelik ruhu - disiplin, hırs ve sorumluluk",
+      "personality_lg": "Oglak burcu, zodyakin en disiplinli, hırslı ve sorumlu işarettir. Linda Goodman, Oglak'i daggin zirvesine yavas ama karraarli adımlarla tirmaanan, zammanin değerini bilen, genncliginde yaşlı, yaşlıliginda genc gorunen bir burc olarak anlatir. Saturn tarafinddan yönetilir ve hayatinn dersleri, sınırlar ve yapi Oglak'in temasssidir. Oglak dışarıdan soğuk gorunebilir ama içinde derin bir mizah ve sicaklik taşır. Basari için sabiiirla çalışir ve hak etttigini alir.",
+      "love_style_lg": "Oglak aşkta yaavas ve dikkatlidir - acelleye gelmez. Oglak erkeği geleneksel, güvenilir ve koruyucu bir partnerdir. Oglak kadıni güçlü, bağımsız ve seçicidir. Ask için uzun vadeli pllan yapar - gecelik ilisskiler ilgişini cekmez. Oglak duygularıni göstermekte zorlanir ama sadakatti tartismmsizdir. Ask için güvenlik ve saygii sarttir.",
+      "life_goal": "Başarı, otorite ve toplumsal saygınlık kazanmak",
+      "core_drive": "Yapılandırma ve zirveye çıkma güdüsü, kontrol ve güvenlik ihtiyacı",
+      "shadow_side": "Aşırı ciddiyet, duygusal mesafe, işkoliklik, hayattan zevk alamama",
+      "key_questions": "Başarı beni mutlu ediyor mu? Duygularımı neden gizliyorum? Hayattan keyif almayı ne zaman unuttum?",
+      "recommendations": "Eğlenceye vakit ayırma, duygularını ifade etme pratiği, iç çocuğuyla bağlantı kurma, sanata ve müziğe yönelme"
+    },
+    "aquarius": {
+      "name": "Kova",
+      "ruler": "Uranüs",
+      "element": "air",
+      "modality": "fixed",
+      "keywords": [
+        "Özgürlük",
+        "Yenilikçilik",
+        "Ütopik",
+        "Bireysel",
+        "Dahi",
+        "İdealist",
+        "Şaşırtıcı",
+        "İsyankar"
+      ],
+      "positive": [
+        "Yenilikçi",
+        "Hümanist",
+        "Zeki",
+        "Teknoloji meraklısı",
+        "Özgürlükçü",
+        "Evrensel",
+        "Öğretici",
+        "Vizyoner"
+      ],
+      "negative": [
+        "Ukala",
+        "Sorumluluktan kaçan",
+        "Muhalif",
+        "Otoriteyle çatışan",
+        "Geleneklere karşı",
+        "Şantajcı",
+        "Dengesiz"
+      ],
+      "health": {
+        "body": [
+          "Dizler",
+          "Damarlar",
+          "Kan dolaşım sistemi",
+          "Topuklar"
+        ],
+        "risks": [
+          "Sinir sistemi hastalıkları",
+          "Ender nadir görünen hastalıklar",
+          "Kolesterol",
+          "Kalp ritim bozukluğu",
+          "Tansiyon"
+        ]
+      },
+      "careers": [
+        "Bilim insanı",
+        "Astrolog",
+        "Veri analisti",
+        "Yapay zeka mühendisi",
+        "Astronot",
+        "Elektrik mühendisi",
+        "Laborant"
+      ],
+      "anger_trigger": "Özgürlüğünün kısıtlanması, otorite baskısı, bireyselliğinin yok sayılması",
+      "summary": "Sosyal, bireysel, toplumcu, özgürlükçü. Alışılmamış ve farklı davranışlar, düşünceler sergiler. Fikirleri şaşırtıcı ve farklıdır fakat makul ve akla yatkındır. İyiliksever. Zamanın ve çağın ilerişinde yaşıyor gibidir. Kalıcı etkili zeka, üst akla sahip. Yenilikçi, denenmeyeni deneyen. Evrensel barış yanlısı. Teknolojiyi çok iyi kullanır. Astroloji ile özdeşleşen burç.",
+      "sign_annoyance": "Arkadaslarina ekibine laf söyleme - arkadasi ve ortami çok önemli",
+      "love_mystery": "Vizyon ruhu - insanlik, yenilik ve bağımsızlık",
+      "personality_lg": "Kova burcu, zodyakin en ozguurlukcu, yenilikci ve insansever işarettir. Linda Goodman, Kova'yi kurallari kiran, gelecege bakan, herkesi sassen, insanliga hizmet etmek isteyen ama yakin ilisskilerinde mesafeli kalabileen bir burc olarak betimler. Urannus tarafindan yönetilir ve ani değişimler, devrimler ve orijinallik Kova'nin dogasidir. Kova herkkesin arkadasi ama kimsenin tam aniladigi biri degildir. Excentric, zeki ve insanci.",
+      "love_style_lg": "Kova aşkta önce arkadas olmaak ister. Duygusal bbaski Kova'yi korkutur. Kova erkeği ilginc, orijinal ve tahmin edilemez bir âşıktır. Kova kadıni bağımsız, entelektüel ve sıra dışı bir partnerdir. Ask için zihinsel bağlantı ve özgürlük sart - duygusal drama istemez. Kova için ask, evrensel bir bagdir - sadece iki kissilik bir his degil.",
+      "life_goal": "İnsanlığa hizmet etmek, yenilik ve özgünlük",
+      "core_drive": "Bağımsızlık ve evrensel değerler güdüsü, farklı olma arzusu",
+      "shadow_side": "Duygusal mesafe, yakın ilişkilerden kaçma, aşırı entelektüelleştirme",
+      "key_questions": "Herkesi severken neden yakınlarıma mesafeliyim? Farklılığım beni yalnızlaştırıyor mu?",
+      "recommendations": "Bireysel ilişkilere önem verme, duygusal ifade pratiği, küçük gruplarda samimi paylaşım, topraklanma egzersizleri"
+    },
+    "pisces": {
+      "name": "Balık",
+      "ruler": "Neptün",
+      "element": "water",
+      "modality": "mutable",
+      "keywords": [
+        "Hayalperest",
+        "Sezgisel",
+        "Duygusal",
+        "Fedakar",
+        "Ruhsal",
+        "Sanatçı",
+        "Hassas",
+        "Kaçışçı"
+      ],
+      "positive": [
+        "Şefkatli",
+        "Merhametli",
+        "Yaratıcı",
+        "İnançlı",
+        "İlham verici",
+        "Cömert",
+        "Psikolojik destekçi"
+      ],
+      "negative": [
+        "Bağımlı",
+        "Kararsız",
+        "Aldatılmaya yatkın",
+        "Kaprisli",
+        "Psikosomatik",
+        "Gerçeklerden kaçan",
+        "Tembel"
+      ],
+      "health": {
+        "body": [
+          "Ayaklar",
+          "Ayak bilekleri",
+          "Lenf sistemi"
+        ],
+        "risks": [
+          "Ayak ve ayak bileği sorunları",
+          "Psikolojik rahatsızlıklar",
+          "Psikosomatik hastalıklar",
+          "Uyku bozuklukları",
+          "Alerjiler"
+        ]
+      },
+      "careers": [
+        "Şair",
+        "Müzisyen",
+        "Psikolog",
+        "Dansçı",
+        "Balerin",
+        "Film yönetmeni",
+        "Hayırsever",
+        "Tasarımcı",
+        "Reklamcı",
+        "Hemşire",
+        "Veteriner"
+      ],
+      "anger_trigger": "Duygusal ihmal, acımasızlık, adaletsizlik, güvensizlik",
+      "summary": "Diğer tüm burçlardan özellikler almıştır. Hayalci ve sezgici, duygusal. Cömert, özverili, fedakâr. Alçakgönüllü, nazik. Acıma ve merhamet duygusu güçlü. Zekidir, altıncı hissi çok güçlü, rüyaları doğru çıkar. Duyarlı ve hassas, yardımsever ve hoşgörülü. Şair ruhlu ve ilham verici, sanatkar ve yaratıcı. Hayal gücü yüksek, inançlı.",
+      "sign_annoyance": "Hayallerini ve zekalarini küçümseme - salaga oynamayi çok iyi bilir",
+      "love_mystery": "Kabul ruhu - merhamet, sezgi ve evrensel ask",
+      "personality_lg": "Balik burcu, zodyakin son ve en sezgisel, merhametli ve ruyamsii işarettir. Linda Goodman, Balik'i iki farkli yönde yuzeen iki balik gibi - hem bu duynya hem oteki dunyya arasinda gidip gelen, derin sezgileri olan, herkeesin acişini hisseden bir burc olarak anlatir. Neptun tarafindan yönetilir ve hayal gücü, spiritüalite ve ilham Balik'in doğal aleemmidir. Balik sinirrsizdir - nereye başladigini ve nerede bittigini bilmez. Sanata, muzige ve mistisizme doğal bir yakkinligi vardir.",
+      "love_style_lg": "Balik aşkta tamamen teslim olur - ruhunu, bedenini ve haayallerini verir. Balik erkeği romantik, hassas ve ruyamsii bir âşıktır. Balik kadıni gizemli, sezgisel ve son derece çekicidir. Ask için fedakârlık yapar - bazen fazlasiyla. Balik için ask, ruhlarin birlessmesidir. Pratik sorunlar onu ilgilendirmez - duygusal bağ her seydir. Aldatilmaya ve kullaanilmaya açıktır cunku herkeste iyiligi goruur.",
+      "life_goal": "Birleşmek, ilham vermek ve evrensel sevgiye ulaşmak",
+      "core_drive": "Birleşme ve kaybolma güdüsü, sınırları aşma arzusu",
+      "shadow_side": "Gerçeklerden kaçma, bağımlılık eğilimi, sınır koyamama, kurban rolüne girme",
+      "key_questions": "Gerçeklikten neden kaçıyorum? Sınır koymak beni kötü biri mi yapar? Kendimi feda ederek ne kazanıyorum?",
+      "recommendations": "Sınır koyma çalışmaları, ayakları yere basan aktiviteler, düzenli uyku ve beslenme, yaratıcı ifade (müzik, resim, yazı)"
+    }
+  },
+  "houses": {
+    "1": {
+      "name": "1. Ev",
+      "natural_sign": "aries",
+      "natural_ruler": "Mars",
+      "topics": [
+        "fiziksel yapı",
+        "dış görünüş",
+        "genel sağlık",
+        "duruş",
+        "ilk izlenim"
+      ],
+      "decans": {
+        "1": {
+          "sign": "aries",
+          "ruler": "Mars",
+          "topics": [
+            "fiziksel görünüm",
+            "beden yapısı",
+            "boy-kilo-göz"
+          ]
+        },
+        "2": {
+          "sign": "leo",
+          "ruler": "Güneş",
+          "topics": [
+            "kişilik",
+            "karakter",
+            "ilk intiba",
+            "benlik"
+          ]
+        },
+        "3": {
+          "sign": "sagittarius",
+          "ruler": "Jüpiter",
+          "topics": [
+            "genel sağlık",
+            "mesleki yatkınlık"
+          ]
+        }
+      }
+    },
+    "2": {
+      "name": "2. Ev",
+      "natural_sign": "taurus",
+      "natural_ruler": "Venüs",
+      "topics": [
+        "maddi durum",
+        "gelir",
+        "para kazanma şekli",
+        "para kullanımı",
+        "ses tonu"
+      ],
+      "decans": {
+        "1": {
+          "sign": "taurus",
+          "ruler": "Venüs",
+          "topics": [
+            "gelirler",
+            "para durumu",
+            "hayat boyu kazanç yolları"
+          ]
+        },
+        "2": {
+          "sign": "virgo",
+          "ruler": "Chiron",
+          "topics": [
+            "para kazanmak için harcanan efor",
+            "nasıl para kazanılacağı"
+          ]
+        },
+        "3": {
+          "sign": "capricorn",
+          "ruler": "Satürn",
+          "topics": [
+            "giderler",
+            "yatırımlar",
+            "parayı biriktirme ve kullanma"
+          ]
+        }
+      }
+    },
+    "3": {
+      "name": "3. Ev",
+      "natural_sign": "gemini",
+      "natural_ruler": "Merkür",
+      "topics": [
+        "zeka",
+        "yetenekler",
+        "konuşma tarzı",
+        "kardeşler",
+        "kısa yolculuklar",
+        "eğitim",
+        "el-kol yapısı"
+      ],
+      "decans": {
+        "1": {
+          "sign": "gemini",
+          "ruler": "Merkür",
+          "topics": [
+            "zeka kapasitesi",
+            "eğitim durumu",
+            "zihinsel algı",
+            "yetenekler"
+          ]
+        },
+        "2": {
+          "sign": "libra",
+          "ruler": "Venüs",
+          "topics": [
+            "kardeşlerle ilişkiler",
+            "akrabalar",
+            "yakın çevre ile ilişkiler"
+          ]
+        },
+        "3": {
+          "sign": "aquarius",
+          "ruler": "Uranüs",
+          "topics": [
+            "kısa yolculuklar",
+            "taşınma",
+            "teknolojik alet kullanma becerisi",
+            "araba kullanma"
+          ]
+        }
+      }
+    },
+    "4": {
+      "name": "4. Ev",
+      "natural_sign": "cancer",
+      "natural_ruler": "Ay",
+      "topics": [
+        "anne",
+        "aile",
+        "yuva",
+        "kökler",
+        "hafıza",
+        "gelenek",
+        "çocukluk",
+        "duygusal güvenlik"
+      ],
+      "decans": {
+        "1": {
+          "sign": "cancer",
+          "ruler": "Ay",
+          "topics": [
+            "oturulan ev",
+            "kökler",
+            "anne ve aile",
+            "ilk çocukluk dönemi",
+            "kadında annelik ve ilk hamilelik"
+          ]
+        },
+        "2": {
+          "sign": "scorpio",
+          "ruler": "Plüton",
+          "topics": [
+            "genetik miras",
+            "aileden geçen mal varlığı",
+            "hafıza",
+            "annenin mesleği"
+          ]
+        },
+        "3": {
+          "sign": "pisces",
+          "ruler": "Neptün",
+          "topics": [
+            "kişinin kendi kuracağı yuva",
+            "annelik ve ailevi sorumluluk",
+            "yaşlılık dönemi"
+          ]
+        }
+      }
+    },
+    "5": {
+      "name": "5. Ev",
+      "natural_sign": "leo",
+      "natural_ruler": "Güneş",
+      "topics": [
+        "aşk",
+        "çocuklar",
+        "hobiler",
+        "eğlence",
+        "şans oyunları",
+        "babayla ilişki"
+      ],
+      "decans": {
+        "1": {
+          "sign": "leo",
+          "ruler": "Güneş",
+          "topics": [
+            "çocuk konuları",
+            "kaç çocuk olacağı",
+            "ilk çocuğun cinsiyeti",
+            "baba ile ilişki",
+            "babalık"
+          ]
+        },
+        "2": {
+          "sign": "sagittarius",
+          "ruler": "Jüpiter",
+          "topics": [
+            "duygusal ve aşk hayatı",
+            "sevgi anlayışı",
+            "şan-şöhret-ünlenme"
+          ]
+        },
+        "3": {
+          "sign": "aries",
+          "ruler": "Mars",
+          "topics": [
+            "riskli işlemler",
+            "iddiacılık",
+            "kumara merak",
+            "havadan para",
+            "hobiler"
+          ]
+        }
+      }
+    },
+    "6": {
+      "name": "6. Ev",
+      "natural_sign": "virgo",
+      "natural_ruler": "Chiron",
+      "topics": [
+        "hastalıklar",
+        "iş hayatı",
+        "hizmet",
+        "evçil hayvanlar"
+      ],
+      "decans": {
+        "1": {
+          "sign": "virgo",
+          "ruler": "Chiron",
+          "topics": [
+            "kişinin hastalıkları",
+            "sağlıkla alakalı konular"
+          ]
+        },
+        "2": {
+          "sign": "capricorn",
+          "ruler": "Satürn",
+          "topics": [
+            "iş ortamı",
+            "çalışma hayatı",
+            "maddi kazanç potansiyeli",
+            "efor",
+            "rutin işler"
+          ]
+        },
+        "3": {
+          "sign": "taurus",
+          "ruler": "Venüs",
+          "topics": [
+            "hayvanlara bakış açısı",
+            "hayvanlarla ilişki",
+            "ne tür hayvan sevdiği"
+          ]
+        }
+      }
+    },
+    "7": {
+      "name": "7. Ev",
+      "natural_sign": "libra",
+      "natural_ruler": "Venüs",
+      "topics": [
+        "evlilik",
+        "ilişkiler",
+        "ortaklıklar",
+        "açık düşmanlar",
+        "yasal konular"
+      ],
+      "decans": {
+        "1": {
+          "sign": "libra",
+          "ruler": "Venüs",
+          "topics": [
+            "ilk evlilik",
+            "karşı cinsi algılama",
+            "evlenilecek kişinin tipi",
+            "ikinci çocuk"
+          ]
+        },
+        "2": {
+          "sign": "aquarius",
+          "ruler": "Uranüs",
+          "topics": [
+            "hemcinslerle ilişkiler",
+            "ortaklık anlayışı",
+            "açık düşmanlıklar"
+          ]
+        },
+        "3": {
+          "sign": "gemini",
+          "ruler": "Merkür",
+          "topics": [
+            "yasal-resmi prosedürler",
+            "mahkemelik durumlar",
+            "vergi durumları"
+          ]
+        }
+      }
+    },
+    "8": {
+      "name": "8. Ev",
+      "natural_sign": "scorpio",
+      "natural_ruler": "Plüton",
+      "topics": [
+        "cinsellik",
+        "borçlar",
+        "başkalarının parası",
+        "ölüm",
+        "gizli konular",
+        "sezgiler"
+      ],
+      "decans": {
+        "1": {
+          "sign": "scorpio",
+          "ruler": "Plüton",
+          "topics": [
+            "cinsellik",
+            "libido",
+            "cinsel yaklaşımlar",
+            "cinsel yolla bulaşan hastalıklar"
+          ]
+        },
+        "2": {
+          "sign": "pisces",
+          "ruler": "Neptün",
+          "topics": [
+            "eşin parası",
+            "başkalarının parası",
+            "giderler",
+            "nafaka",
+            "miras"
+          ]
+        },
+        "3": {
+          "sign": "cancer",
+          "ruler": "Ay",
+          "topics": [
+            "ağır ameliyatlar",
+            "ölümden acı durumlar",
+            "büyü-cin",
+            "gizli düşmanlıklar"
+          ]
+        }
+      }
+    },
+    "9": {
+      "name": "9. Ev",
+      "natural_sign": "sagittarius",
+      "natural_ruler": "Jüpiter",
+      "topics": [
+        "yüksek öğrenim",
+        "yabancı ülkeler",
+        "din-felsefe",
+        "2. evlilik",
+        "3. çocuk"
+      ],
+      "decans": {
+        "1": {
+          "sign": "sagittarius",
+          "ruler": "Jüpiter",
+          "topics": [
+            "yurtdışı bağlantılı konular",
+            "seyahatler",
+            "ikinci evlilik",
+            "üçüncü çocuk"
+          ]
+        },
+        "2": {
+          "sign": "aries",
+          "ruler": "Mars",
+          "topics": [
+            "yabancı dil konuları",
+            "kişisel gelişim durumu"
+          ]
+        },
+        "3": {
+          "sign": "leo",
+          "ruler": "Güneş",
+          "topics": [
+            "yüksek tahsil",
+            "inançlar ve felsefe",
+            "ithalat-ihracat",
+            "meslek"
+          ]
+        }
+      }
+    },
+    "10": {
+      "name": "10. Ev",
+      "natural_sign": "capricorn",
+      "natural_ruler": "Satürn",
+      "topics": [
+        "meslek",
+        "kariyer",
+        "toplum önündeki yer",
+        "itibar"
+      ],
+      "decans": {
+        "1": {
+          "sign": "capricorn",
+          "ruler": "Satürn",
+          "topics": [
+            "toplum önündeki vasıf",
+            "yapılan iş ve meslek",
+            "itibar"
+          ]
+        },
+        "2": {
+          "sign": "taurus",
+          "ruler": "Venüs",
+          "topics": [
+            "işten kazanılan para",
+            "işe yatkınlık"
+          ]
+        },
+        "3": {
+          "sign": "virgo",
+          "ruler": "Chiron",
+          "topics": [
+            "yapmak istediği iş",
+            "başkalarına faydalı olma",
+            "efor sarfetme"
+          ]
+        }
+      }
+    },
+    "11": {
+      "name": "11. Ev",
+      "natural_sign": "aquarius",
+      "natural_ruler": "Uranüs",
+      "topics": [
+        "arkadaşlıklar",
+        "topluluklar",
+        "sosyal statü",
+        "maaş",
+        "amaçlar",
+        "astroloji"
+      ],
+      "decans": {
+        "1": {
+          "sign": "aquarius",
+          "ruler": "Uranüs",
+          "topics": [
+            "kişinin amacı ve hedefi",
+            "idealist olup olmadığı"
+          ]
+        },
+        "2": {
+          "sign": "gemini",
+          "ruler": "Merkür",
+          "topics": [
+            "arkadaşlar ve dostlar",
+            "arkadaşlık anlayışı"
+          ]
+        },
+        "3": {
+          "sign": "libra",
+          "ruler": "Venüs",
+          "topics": [
+            "devlet ricaliyle ilişkiler",
+            "yasal-resmi kurumlarla ilişkiler"
+          ]
+        }
+      }
+    },
+    "12": {
+      "name": "12. Ev",
+      "natural_sign": "pisces",
+      "natural_ruler": "Neptün",
+      "topics": [
+        "bilinçaltı",
+        "ruhsal yapı",
+        "sezgiler",
+        "maneviyat",
+        "iç dünya",
+        "psikolojik durumlar"
+      ],
+      "decans": {
+        "1": {
+          "sign": "pisces",
+          "ruler": "Neptün",
+          "topics": [
+            "iç dünya",
+            "ruh yapısı",
+            "iç psikolojik durum"
+          ]
+        },
+        "2": {
+          "sign": "cancer",
+          "ruler": "Ay",
+          "topics": [
+            "sanatsal faaliyetler",
+            "yetenekler",
+            "soyut ilham ve hissedişler"
+          ]
+        },
+        "3": {
+          "sign": "scorpio",
+          "ruler": "Plüton",
+          "topics": [
+            "maneviyat",
+            "ölüm ve ölüm ötesi",
+            "rüyalar",
+            "hayaller",
+            "gizli düşmanlıklar"
+          ]
+        }
+      }
+    }
+  },
+  "planets": {
+    "sun": {
+      "name": "Güneş",
+      "type": "light",
+      "signifies": [
+        "kimlik",
+        "karakter",
+        "baba",
+        "kadında eş",
+        "özgüven",
+        "irade gücü",
+        "başarı",
+        "yaşam enerjisi"
+      ],
+      "dignity": {
+        "domicile": "leo",
+        "exaltation": "aries",
+        "detriment": "aquarius",
+        "fall": "libra"
+      }
+    },
+    "moon": {
+      "name": "Ay",
+      "type": "light",
+      "signifies": [
+        "aile",
+        "duygular",
+        "iç dünya",
+        "erkekte eş",
+        "hafıza",
+        "duygu durumu",
+        "annelik",
+        "sezgisel zeka"
+      ],
+      "dignity": {
+        "domicile": "cancer",
+        "exaltation": "taurus",
+        "detriment": "capricorn",
+        "fall": "scorpio"
+      }
+    },
+    "mercury": {
+      "name": "Merkür",
+      "type": "personal",
+      "signifies": [
+        "zeka",
+        "iletişim tarzı",
+        "öğrenme",
+        "el becerileri",
+        "düşünce",
+        "yetenekler",
+        "mantık kullanımı"
+      ],
+      "dignity": {
+        "domicile": "gemini",
+        "exaltation": "virgo",
+        "detriment": "sagittarius",
+        "fall": "pisces"
+      }
+    },
+    "venus": {
+      "name": "Venüs",
+      "type": "personal",
+      "signifies": [
+        "aşk",
+        "ilişkiler",
+        "estetik",
+        "maddi değerler",
+        "mizaç",
+        "huylar",
+        "tavır",
+        "tepkiler",
+        "özel sağlık göstergeleri",
+        "kadersel ilişki teması"
+      ],
+      "dignity": {
+        "domicile": "taurus",
+        "exaltation": "pisces",
+        "detriment": "scorpio",
+        "fall": "virgo"
+      }
+    },
+    "mars": {
+      "name": "Mars",
+      "type": "personal",
+      "signifies": [
+        "mücadele",
+        "irade",
+        "öfke",
+        "enerji",
+        "savunma",
+        "fiziksel güç",
+        "cinsellik"
+      ],
+      "dignity": {
+        "domicile": "aries",
+        "exaltation": "capricorn",
+        "detriment": "libra",
+        "fall": "cancer"
+      }
+    },
+    "jupiter": {
+      "name": "Jüpiter",
+      "type": "generational",
+      "signifies": [
+        "şans",
+        "genişleme",
+        "büyüme",
+        "inanç",
+        "umut",
+        "bereket",
+        "felsefe",
+        "yurtdışı"
+      ],
+      "dignity": {
+        "domicile": "sagittarius",
+        "exaltation": "cancer",
+        "detriment": "gemini",
+        "fall": "capricorn"
+      }
+    },
+    "saturn": {
+      "name": "Satürn",
+      "type": "generational",
+      "signifies": [
+        "sorumluluk",
+        "disiplin",
+        "sınırlar",
+        "olgünlük",
+        "sabır",
+        "zaman",
+        "kader",
+        "kısıtlamalar"
+      ],
+      "dignity": {
+        "domicile": "capricorn",
+        "exaltation": "libra",
+        "detriment": "cancer",
+        "fall": "aries"
+      }
+    },
+    "uranus": {
+      "name": "Uranüs",
+      "type": "generational",
+      "signifies": [
+        "yenilik",
+        "özgürlük",
+        "devrim",
+        "teknoloji",
+        "sıra dışı fikirler",
+        "ani değişimler"
+      ],
+      "dignity": {
+        "domicile": "aquarius",
+        "exaltation": "scorpio",
+        "detriment": "leo",
+        "fall": "taurus"
+      }
+    },
+    "neptune": {
+      "name": "Neptün",
+      "type": "generational",
+      "signifies": [
+        "hayaller",
+        "sezgi",
+        "maneviyat",
+        "ilham",
+        "yanılsama",
+        "sanat",
+        "bilinçaltı"
+      ],
+      "dignity": {
+        "domicile": "pisces",
+        "exaltation": "cancer",
+        "detriment": "virgo",
+        "fall": "capricorn"
+      }
+    },
+    "pluto": {
+      "name": "Plüton",
+      "type": "generational",
+      "signifies": [
+        "dönüşüm",
+        "güç",
+        "yeniden doğuş",
+        "kriz",
+        "derinlik",
+        "gizli güçler",
+        "psikolojik dönüşüm"
+      ],
+      "dignity": {
+        "domicile": "scorpio",
+        "exaltation": "leo",
+        "detriment": "taurus",
+        "fall": "aquarius"
+      }
+    },
+    "chiron": {
+      "name": "Chiron",
+      "type": "generational",
+      "signifies": [
+        "yara",
+        "şifa",
+        "öğretme",
+        "deneyim",
+        "acı yoluyla olgunlaşma",
+        "sağlık"
+      ],
+      "dignity": {
+        "domicile": "virgo",
+        "exaltation": null,
+        "detriment": null,
+        "fall": null
+      }
+    },
+    "north_node": {
+      "name": "Kuzey Düğümü",
+      "type": "point",
+      "signifies": [
+        "yaşam amacı",
+        "kadersel yön",
+        "gelişim alanı",
+        "ruhsal hedef"
+      ],
+      "dignity": null
+    },
+    "lilith": {
+      "name": "Lilith",
+      "type": "point",
+      "signifies": [
+        "karanlık dişi",
+        "bastırılmış arzular",
+        "tabular",
+        "içgüdüsel güç",
+        "gizli tutkular"
+      ],
+      "dignity": null
+    },
+    "south_node": {
+      "name": "Güney Düğümü",
+      "type": "point",
+      "signifies": [
+        "geçmiş yaşam kalıpları",
+        "doğal yetenekler",
+        "konfor alanı",
+        "bırakılması gereken alışkanlıklar",
+        "geçmişten gelen armağanlar"
+      ],
+      "dignity": null
+    },
+    "fortune": {
+      "name": "Şans Noktası",
+      "type": "point",
+      "signifies": [
+        "maddi şans",
+        "bolluk",
+        "doğal yetenek alanı",
+        "yaşamsal tatmin noktası",
+        "bereket kaynağı"
+      ],
+      "dignity": null
+    }
+  },
+  "aspects": {
+    "conjunction": {
+      "angle": 0,
+      "nature": "neutral",
+      "orb": 7,
+      "description": "Kavuşum - gezegenlerin yan yana durması, hangi gezegen daha ağırsa onun sözü geçer"
+    },
+    "square": {
+      "angle": 90,
+      "nature": "challenging",
+      "orb": 7,
+      "description": "Kare - sürtüşme, içsel gerilim, satürnyen bir açı, kişiyi zorlar-sınar"
+    },
+    "trine": {
+      "angle": 120,
+      "nature": "harmonious",
+      "orb": 8,
+      "description": "Üçgen - ölümlu akış, birçok şeyi daha kolay elde etme"
+    },
+    "opposition": {
+      "angle": 180,
+      "nature": "polarizing",
+      "orb": 8,
+      "description": "Karşıt - aynadaki yansıma, birbirini kışkırtan iki durum"
+    },
+    "sextile": {
+      "angle": 60,
+      "nature": "supportive",
+      "orb": 6,
+      "description": "Sekstil - destekleyiçi ama cüzi irade gerektiren"
+    }
+  },
+  "planet_aspects": {
+    "chiron_venus": {
+      "conjunction": "düştüğü burcun hastalığını verir",
+      "square": "geçmiş aşklar, yaralar ve maddi kayıpları hatırlama, odaklanma",
+      "trine": "bir şeyler için emek harcama, çaba sarfetme",
+      "opposition": "sevgi-yara çatışması, fedakârlığı abartma, kışkırtma enerjisi",
+      "sextile": "aldığı yaraları dönüştürme enerjisi"
+    },
+    "jupiter_neptune": {
+      "conjunction": "ilahi şans",
+      "square": "Aşırı idealizm, gerçeklerden kopma",
+      "trine": "Spiritüel şans, manevi bereket",
+      "opposition": "İnanç ve yanılsama çatışması",
+      "sextile": "Manevi büyüme fırsatları"
+    },
+    "jupiter_venus": {
+      "conjunction": "cömertlik, sevgi bolluğu, müsriflik",
+      "square": "aşırı sevgi, abartılı aşk, aşırı harcama, müsriflik",
+      "trine": "parayı kolay büyütür, kolay kazanır, bereket",
+      "opposition": "sevgi ve beklentiler çatışır, büyük şeyler yapar karşılığını alamaz",
+      "sextile": "ilişki ve parada desteklenme, şans"
+    },
+    "mars_pluto": {
+      "conjunction": "krizli kaoslu harekete geçme eylemi",
+      "trine": "güçlü değişim enerjisi",
+      "square": "Aşırı güç kullanımı, kontrol mücadeleleri, yıkıcı enerji",
+      "opposition": "Güç ve eylem arasında yoğun çatışma",
+      "sextile": "Kontrollü dönüşüm gücü"
+    },
+    "mars_uranus": {
+      "conjunction": "akıl savaşları, strateji ile hükmetme",
+      "square": "aşırı huzursuz, kurallara uymayan",
+      "trine": "özgürlükçü",
+      "opposition": "Beklenmedik çatışmalar, isyankar eylemler",
+      "sextile": "Yaratıcı ve özgün harekete geçme"
+    },
+    "mars_venus": {
+      "conjunction": "tutkulu aşk ve çekim, hazlar ön planda",
+      "square": "sabırsızlık ve çatışma, dürtüsel hareket",
+      "trine": "sevdiği şeylere uyum",
+      "opposition": "istekler ve sevgi arasında git gel",
+      "sextile": "romantik hamleler, aşk için mücadele"
+    },
+    "mercury_venus": {
+      "conjunction": "tatlı dilli, romantik iletişim, flörtöz",
+      "square": "yanlış anlaşılmalar ve iletişim zorlukları",
+      "trine": "kolay ve nazik iletişim",
+      "opposition": "sevgi-mantık çatışması",
+      "sextile": "kibar iletişim"
+    },
+    "moon_sun": {
+      "square": "duygusuyla kişilik arasında sürtüşme"
+    },
+    "moon_venus": {
+      "conjunction": "duygusal yakınlık ve şefkat, hafızası sevdiği anlarla dolu",
+      "square": "duygusal tutarsızlık, inişler çıkışlar",
+      "trine": "herkesle duygusal empati yapabilir",
+      "opposition": "seviyor mu sevmiyor mu sürekli çatışma",
+      "sextile": "sevecen, destekleyici"
+    },
+    "neptune_venus": {
+      "conjunction": "romantik şeyleri idealize eder",
+      "square": "aldanma, gerçeklerden kaçma eğilimi",
+      "trine": "hem maddi hem manevi destekleniyor",
+      "opposition": "sevgi-gerçeklik çatışması",
+      "sextile": "hem maddi hem manevi destekleniyor"
+    },
+    "pluto_venus": {
+      "conjunction": "derin tutkulu aşk, dönüşüm",
+      "square": "kıskançlık, manipülasyon, kontrol",
+      "trine": "aşırı yoğun bağlar",
+      "opposition": "güç ve sevgi çatışması",
+      "sextile": "güçlü değişim dönüşüm fırsatları"
+    },
+    "saturn_venus": {
+      "conjunction": "ciddi sabırlı âşık, aşkta sınavlar",
+      "square": "soğuk, sevgişini belli edemeyen",
+      "trine": "sabırlı ve kalıcı ilişki, sadakat",
+      "opposition": "bağlanmak zor",
+      "sextile": "az ama öz ilişkiler"
+    },
+    "sun_venus": {
+      "conjunction": "uyum-aşk, kendini sevgi ile ifade edebilme yeteneği",
+      "square": "insan ilişkilerinde çatışma, değer kavgası",
+      "trine": "tüm insanlıkla kolay uyum, sevgişini gösterir",
+      "opposition": "sevgi ile benliği arasında denge kuramaz",
+      "sextile": "genel olarak uyumlu"
+    },
+    "uranus_venus": {
+      "conjunction": "ani sürpriz aşklar",
+      "square": "sevgide ani uyumsuzluk, dengesizlik",
+      "trine": "sürekli yeni heyecanlar",
+      "opposition": "bağlanma çatışması",
+      "sextile": "aklı mantığı sevgişiyle destekliyor"
+    },
+    "sun_moon": {
+      "conjunction": "Güneş ve Ay aynı burçta: iç dünya ile dış dünya uyumlu, güçlü irade",
+      "square": "Duygusuyla kişilik arasında sürtüşme, iç çatışma",
+      "trine": "Duygusal ve kişisel uyum, dengeli ifade",
+      "opposition": "İç dünya ile dış dünya çatışması, denge arayışı",
+      "sextile": "Kişilik ve duygular arasında hafif uyum"
+    },
+    "sun_mars": {
+      "conjunction": "Güçlü irade ve fiziksel enerji, liderlik",
+      "square": "Ego ve eylem arasında gerilim, öfke patlamaları",
+      "trine": "Doğal liderlik, kendine güven, başarı enerjisi",
+      "opposition": "İrade çatışması, agresif eğilimler",
+      "sextile": "İrade ve eylemi destekleyen enerji"
+    },
+    "sun_jupiter": {
+      "conjunction": "Şans, iyimserlik, cömertlik, büyük planlar",
+      "square": "Abartma eğilimi, kendini fazla büyük görme",
+      "trine": "Doğal şans ve genişleme, toplumsal başarı",
+      "opposition": "Aşırı iyimserlik, vaat ettiklerini yerine getirememe",
+      "sextile": "Şans ve başarı fırsatları"
+    },
+    "sun_saturn": {
+      "conjunction": "Ciddi, disiplinli, sorumluluk bilinci yüksek",
+      "square": "Engeller, özgüven eksikliği, baba sorunları",
+      "trine": "Olgun, dengeli, disiplinli başarı",
+      "opposition": "Otorite figürleriyle çatışma, kendini sınırlama",
+      "sextile": "Disiplinli ve dengeli ilerleme"
+    },
+    "sun_uranus": {
+      "conjunction": "Özgün, sıra dışı kişilik, devrimci ruh",
+      "square": "Ani değişimler, isyankâr eğilimler",
+      "trine": "Yenilikçi, yaratıcı, özgür düşünce",
+      "opposition": "Özgürlük-güvenlik ikilemi",
+      "sextile": "Yaratıcı ve özgün ifade fırsatları"
+    },
+    "sun_neptune": {
+      "conjunction": "Hayalperest, sezgisel, sanatçı ruh",
+      "square": "Kimlik karmaşası, aldanma eğilimi",
+      "trine": "İlham, maneviyat, sanatsal yetenek",
+      "opposition": "Gerçek ile hayal arasında bocalama",
+      "sextile": "İlham ve sezgisel fırsatlar"
+    },
+    "sun_pluto": {
+      "conjunction": "Güçlü irade, dönüştürücü enerji",
+      "square": "Güç savaşları, obsesif eğilimler",
+      "trine": "Derin güç, liderlik, yeniden doğuş",
+      "opposition": "Kontrol mücadeleleri, kriz yönetimi",
+      "sextile": "Dönüşüm ve güç fırsatları"
+    },
+    "moon_mars": {
+      "conjunction": "Duygusal tepkisellik, hızlı kızma",
+      "square": "İç huzursuzluk, duygusal patlamalar",
+      "trine": "Duygularını eyleme dökme yeteneği",
+      "opposition": "Duygular ve eylemler çatışır",
+      "sextile": "Duygusal motivasyon ve harekete geçme"
+    },
+    "moon_jupiter": {
+      "conjunction": "Duygusal cömertlik, annelik içgüdüsü güçlü",
+      "square": "Aşırı duygusallık, duygusal abartı",
+      "trine": "Duygusal zenginlik, şefkat",
+      "opposition": "Duygusal beklentiler ile gerçeklik çatışması",
+      "sextile": "Duygusal zenginlik ve iç huzur"
+    },
+    "moon_saturn": {
+      "conjunction": "Duygusal ketlenme, ciddiyet",
+      "square": "Duygusal soğukluk, melankolik eğilimler",
+      "trine": "Duygusal olgünlük, sadakat",
+      "opposition": "Duygusal ifade zorluğu",
+      "sextile": "Duygusal olgunluk fırsatları"
+    },
+    "moon_uranus": {
+      "conjunction": "Duygusal dalgalanmalar, sıra dışı tepkiler",
+      "square": "Ani ruh hâli değişimleri",
+      "trine": "Sezgisel zekâ, orijinal duygusal dünya",
+      "opposition": "Bağlanma-özgürlük çelişkisi",
+      "sextile": "Sezgisel anlık kavrayışlar"
+    },
+    "moon_neptune": {
+      "conjunction": "Güçlü sezgi, medyumistik yetenekler",
+      "square": "Duygusal kafa karışıklığı, aldanma",
+      "trine": "Derin empati, sanatsal ilham",
+      "opposition": "Hayal-gerçek karmaşası",
+      "sextile": "Hassas empati ve sanatsal ilham"
+    },
+    "moon_pluto": {
+      "conjunction": "Yoğun duygusal yaşam, obsesif bağlanma",
+      "square": "Duygusal kontrol ihtiyacı, kıskançlık",
+      "trine": "Derin duygusal dönüşüm kapasitesi",
+      "opposition": "Duygusal güç mücadeleleri",
+      "sextile": "Duygusal dönüşüm fırsatları"
+    },
+    "mars_jupiter": {
+      "conjunction": "Büyük enerji, cesaret, macera tutkusu",
+      "square": "Aşırıya kaçma, kontrolsüz genişleme",
+      "trine": "Başarılı girişimler, fiziksel şans",
+      "opposition": "Enerji dağılımında dengesizlik",
+      "sextile": "Enerji ve şansın buluşması"
+    },
+    "mars_saturn": {
+      "conjunction": "Disiplinli enerji, kontrollü güç",
+      "square": "Engeller, hayal kırıklığı, bastırılmış öfke",
+      "trine": "Stratejik güç, dayanıklılık",
+      "opposition": "Eylem ve sınırlar arasında çatışma",
+      "sextile": "Disiplinli ve stratejik enerji"
+    },
+    "jupiter_saturn": {
+      "conjunction": "Genişleme ve sınırlama dengesi, yeni döngü",
+      "square": "İyimserlik-kötümserlik arasında salınım",
+      "trine": "Dengeli büyüme, olgun başarı",
+      "opposition": "Özgürlük ve sorumluluk çatışması",
+      "sextile": "Dengeli büyüme ve yapılandırma"
+    },
+    "mars_neptune": {
+      "conjunction": "Hayaller için mücadele, idealist savaşçı",
+      "square": "Enerjinin dağılması, yanlış yöne gitmek",
+      "trine": "Yaratıcı enerji, ilham",
+      "opposition": "Eylem ve hayal arasında bocalama",
+      "sextile": "Hayaller için cesur adımlar"
+    },
+    "jupiter_uranus": {
+      "conjunction": "Büyük fırsatlar, ani şans",
+      "trine": "Yenilikçi genişleme, özgür büyüme",
+      "square": "Aşırı risk alma, dengesiz genişleme",
+      "opposition": "Geleneksel ve yenilikçi değerler çatışması",
+      "sextile": "Yenilikçi fırsatlar"
+    },
+    "jupiter_pluto": {
+      "conjunction": "Büyük güç, dönüştürücü genişleme",
+      "trine": "Derin başarı, etki alanı genişlemesi",
+      "square": "Güç ve genişleme mücadelesi, aşırı hırs",
+      "opposition": "Büyük güç-büyük sorumluluk dengeleme",
+      "sextile": "Dönüştürücü fırsatlar"
+    },
+    "saturn_uranus": {
+      "conjunction": "Eski-yeni çatışması, yapısal devrim",
+      "square": "Gelenekler ve yenilik arasında sıkışma",
+      "trine": "Yapısal yenilik, kontrollü devrim",
+      "opposition": "Eski düzen ile yeni düzen çatışması",
+      "sextile": "Yenilikçi yapılandırma"
+    },
+    "saturn_neptune": {
+      "conjunction": "Hayallerin yapılanması veya çökmesi",
+      "square": "İdealler ve gerçeklik çatışması",
+      "trine": "Hayalleri yapılandırma, pratik spiritüalite",
+      "opposition": "İdealler ve gerçeklik arasında büyük çatışma",
+      "sextile": "Disiplinli hayal gücü"
+    },
+    "saturn_pluto": {
+      "conjunction": "Büyük dönüşüm, güç yeniden yapılanması",
+      "square": "Otorite ve güç mücadeleleri",
+      "trine": "Derin yapısal dönüşüm, kalıcı güç",
+      "opposition": "Otorite ve güç arasında büyük sınavlar",
+      "sextile": "Kontrollü ve kalıcı dönüşüm"
+    },
+    "mercury_moon": {
+      "conjunction": "Duygularını söze dökme yeteneği, hafıza güçlü, konuşkan",
+      "square": "Duygusal düşünce karmaşası, aşırı kaygılı zihin",
+      "trine": "Sezgisel iletişim, empati yeteneği güçlü",
+      "opposition": "Mantık ve duygu çatışması, kararsızlık",
+      "sextile": "Duygusal zekâ ile zihinsel zekânın uyumu"
+    },
+    "mercury_sun": {
+      "conjunction": "Güçlü ifade yeteneği, zeki ve ikna edici kişilik"
+    },
+    "mercury_mars": {
+      "conjunction": "Keskin zekâ, tartışmacı, hızlı düşünce",
+      "square": "Agresif iletişim, kavgacı konuşma tarzı, sabırsız zihin",
+      "trine": "Stratejik düşünce, keskin analiz yeteneği",
+      "opposition": "Söz ve eylem arasında çatışma",
+      "sextile": "Cesur ve doğrudan iletişim"
+    },
+    "mercury_jupiter": {
+      "conjunction": "Geniş vizyon, felsefi düşünce, öğretici yetenek",
+      "square": "Abartılı düşünce, detayları kaçırma, geveze",
+      "trine": "Doğal öğretmen, geniş perspektif, yabancı dil yeteneği",
+      "opposition": "Büyük düşünüp küçük ayrıntıları kaçırma",
+      "sextile": "Entelektüel genişleme, eğitimde şans"
+    },
+    "mercury_saturn": {
+      "conjunction": "Disiplinli düşünce, ciddi iletişim, matematiksel zekâ",
+      "square": "Düşüncede engeller, kekemelik riski, olumsuz düşünce kalıpları",
+      "trine": "Sistematik zekâ, planlı düşünce, pratik akıl",
+      "opposition": "Otoriteyle iletişim çatışması, ketum yapı",
+      "sextile": "Disiplinli öğrenme, akademik başarı"
+    },
+    "mercury_uranus": {
+      "conjunction": "Dahiyane fikirler, sıra dışı düşünce, ani kavrayışlar",
+      "square": "Huzursuz zihin, dağınık düşünce, sinir sistemi gerginliği",
+      "trine": "Orijinal ve yenilikçi zekâ, teknoloji yeteneği",
+      "opposition": "Aşırı farklı fikirler, anlaşılmama hissi",
+      "sextile": "Yaratıcı ve bağımsız düşünce"
+    },
+    "mercury_neptune": {
+      "conjunction": "Hayalperest düşünce, sezgisel zekâ, sanatçı ruh",
+      "square": "Kafa karışıklığı, aldanma eğilimi, odaklanamama",
+      "trine": "Görsel ve sezgisel zekâ, şiirsel ifade yeteneği",
+      "opposition": "Gerçek ile hayal arasında zihinsel bocalama",
+      "sextile": "İlham dolu düşünce, sanatsal iletişim"
+    },
+    "mercury_pluto": {
+      "conjunction": "Penetran zekâ, psikolojik derinlik, araştırmacı",
+      "square": "Obsesif düşünce, manipülatif iletişim, takıntılı zihin",
+      "trine": "Derin analiz yeteneği, gizli gerçekleri ortaya çıkarma",
+      "opposition": "Düşüncelerde güç mücadelesi, kontrol etme arzusu",
+      "sextile": "Dönüştürücü düşünce gücü"
+    },
+    "chiron_sun": {
+      "conjunction": "Kimlik yarası, öz güven sınavları. Şifa: başkalarına ilham verme.",
+      "square": "Benlik ve yara arasında gerilim, otoriteyle çatışma",
+      "trine": "Yaralarından öğrenme yeteneği, doğal şifacı",
+      "opposition": "Kimlik krizi yoluyla şifa, karşıdakinin aynası olma",
+      "sextile": "Acı deneyimlerden bilgelik çıkarma"
+    },
+    "chiron_moon": {
+      "conjunction": "Duygusal yara, anneyle ilgili acılar. Şifa: koşulsuz sevgi.",
+      "square": "Duygusal güvensizlik, terk edilme korkusu",
+      "trine": "Empatik şifa yeteneği, duygusal bilgelik",
+      "opposition": "Duygusal kalıpları fark edip dönüştürme",
+      "sextile": "Şefkat ve merhamet yoluyla iyileşme"
+    },
+    "chiron_mercury": {
+      "conjunction": "İletişim yarası, yanlış anlaşılma acısı. Şifa: yazarlık ve öğretmenlik.",
+      "square": "Düşünce ve ifadede zorluklar, öğrenme güçlükleri",
+      "trine": "Yaralayıcı deneyimlerden bilgelik, şifacı söz",
+      "opposition": "Söz ile eylem arasındaki yara",
+      "sextile": "Yazarak ve konuşarak iyileşme"
+    },
+    "chiron_mars": {
+      "conjunction": "İrade ve güç yarası. Fiziksel yaralanma eğilimi. Şifa: kontrollü enerji.",
+      "square": "Öfke ve şiddet kalıpları, bastırılmış enerji",
+      "trine": "Savaşçı şifacı, enerji çalışması yeteneği",
+      "opposition": "Eylem ve yara arasında denge",
+      "sextile": "Mücadele yoluyla iyileşme"
+    },
+    "chiron_jupiter": {
+      "conjunction": "İnanç yarası, anlam arayışı. Şifa: manevi öğretmenlik.",
+      "square": "Aşırı iyimserlik veya inançsızlık arasında salınım",
+      "trine": "Büyük şifa kapasitesi, doğal öğretmen",
+      "opposition": "Büyüme ve yara arasında denge"
+    },
+    "chiron_saturn": {
+      "conjunction": "Otorite yarası, sorumluluk acısı. Şifa: olgun bilgelik.",
+      "square": "Yapısal korkular, başarısızlık kaygısı",
+      "trine": "Disiplin yoluyla şifa, yapılandırılmış iyileşme",
+      "opposition": "Sınırlar ve yaralar arasında denge"
+    },
+    "neptune_uranus": {
+      "conjunction": "Büyük nesil dönüşümü, spiritüel ve teknolojik devrim",
+      "square": "İdealler ve yenilik arasında gerilim",
+      "trine": "Spiritüel ve bilimsel uyum, kolektif ilerleme",
+      "sextile": "Yaratıcı ilham ve yenilik fırsatları"
+    },
+    "pluto_uranus": {
+      "conjunction": "Radikal dönüşüm, devrimci güç, köklü toplumsal değişim",
+      "square": "Büyük yapısal krizler, güç ve özgürlük çatışması",
+      "trine": "Evrimsel dönüşüm, yapıcı devrim",
+      "opposition": "Güç ve özgürlük arasında büyük gerilim",
+      "sextile": "Dönüşüm ve yenilik fırsatları"
+    },
+    "neptune_pluto": {
+      "conjunction": "Derin kolektif dönüşüm, spiritüel devrim (çok nadir, ~500 yılda bir)",
+      "sextile": "Nesiller arası spiritüel ve güç dönüşümü (20.yüzyıl boyunca aktif)"
+    }
+  },
+  "planet_in_sign": {
+    "sun_description": "Kimlik gostergesi, kişilik, benlik duygusu, baba, başarı, özgüven, irade gücü. Güneş'in düştüğü ev/burc yerlsimi kişiye başarı sansi verir.",
+    "sun_aries": "Özgüveni yüksek, savaşma gücü yüksek, sağlam fiziksel yapi. 1.evde kişiyi özgüvenli hale getirir.",
+    "sun_taurus": "Maddi gelirlerin ölümlu, parasal fayda ve kazanc verir, maddi anlamda rahat eder.",
+    "sun_gemini": "Zeka kapasitesi, yetenekleri ve kardeslerle olan ilişkiler gösterir.",
+    "sun_cancer": "Aileye ve yuvaya bağlılık, güzel hafiza.",
+    "sun_leo": "Dogal evi. Ozgüvenli, babacan, oyuncu ruhlu. Yaraticilik, ask, sahne.",
+    "sun_virgo": "Hastaliklari ve çalışma hayatinda nasil oldugunu gösterir. Detayci, mükemmeliyetci.",
+    "sun_libra": "İliskileri, evlilik hayatini ve ortaklik ilişkileri gösterir.",
+    "sun_scorpio": "Gizli sakli yanlar, iyi sirdas, olaylarin perde arkasi.",
+    "sun_sagittarius": "Inancli, entelektüel, yurt disi ile bağlantıli konularda başarılı.",
+    "sun_capricorn": "Is ve mesleki hayat, sorumluluk, disiplin, metodik çalışkanlik.",
+    "sun_aquarius": "Aykiriliklar, arkadas ilişkileri, takim oyunu, bireysellik yerine toplumsallik.",
+    "sun_pisces": "Hayaller, farkindalik, maneviyat, sezgisel farkindalik, soyut konular.",
+    "moon_description": "Duygu dunyamiz, duygu durumumuz, ruh halimizden sorumlu. Bizi en çok etkileyen gok cismi.",
+    "moon_aries": "Hassas, huzursuz, çabuk tepki veren, hazircevap. Erkek haritasinda: atilgan, güçlü es.",
+    "moon_taurus": "Yücelir. Gercekci, ayaklari yere sağlam basan, soğukkanlı. Erkek: zengin es.",
+    "moon_gemini": "Hafizasi güçlü, konuşmaya yatkın, kolay öğrenir, görüşel hafiza güçlü. Erkek: zeki es.",
+    "moon_cancer": "Kendi evinde güçlü. Aile ve yuvaya çok önem verir, kutsaldir. Erkek: çok iyi yemek yapan es.",
+    "moon_leo": "Çocuk ruhlu, çocuklarla arasi iyidir, romantizmden hoslanan. Erkek: gösterişli es.",
+    "moon_virgo": "Az zararli. Takintili mizac, hassas sağlık. Erkek: detayci, sorgücü es.",
+    "moon_libra": "Adil, uyumlu, kibar. Erkek: çok güzel es.",
+    "moon_scorpio": "Zararli. Sezgisel, kıskanç, kinci. Erkek: seksapalitesi yüksek es.",
+    "moon_sagittarius": "Gezgin ruhlu, neşeli, pozitif düşünceli. Erkek: esprili, seyahat eden es.",
+    "moon_capricorn": "Düşüşte. Karamsar, içe donuk. Erkek: ağır başlı, kendi parasini kazanan es.",
+    "moon_aquarius": "Toplumsal konularda farkli, teknolojiye yönel. Erkek: zeki, marjinal es.",
+    "moon_pisces": "12.evde güçlü. Sezgisel, medyumistik yetenek, ruyalari doğru çıkar. Erkek: aşırı duygusal es.",
+    "mercury_description": "Zeka, iletişim, yetenekler, konuşma, öğrenme. Merkur hangi evdeyse zihinsel enerjimiz o evin konularina akar.",
+    "mercury_aries": "Net ve seri iletişim, hizli düşünur. Ölümlu: esprili. Ölümsuz: tartismaci.",
+    "mercury_taurus": "Sabit fikirli, maddi konularda zeki. İletisimden para kazanir.",
+    "mercury_gemini": "Yonetiçi konumda. İletisim güçlü, yetenekli, ellerini iyi kullanir.",
+    "mercury_cancer": "Güçlü hafiza, tarih bilinci. Duygusal iletişim baskın.",
+    "mercury_leo": "Esprili, yetenekli, insanları eglendiren. Cift karakterli burcta ikiz çocuk işareti.",
+    "mercury_virgo": "Güçlü. Detayci, analizci. Ölümsuz: sınır sistemi rahatsızlıklari.",
+    "mercury_libra": "Uyumlu, uzlasmaci. Kendini insanlara konuşmalari ile kolay sevdirir.",
+    "mercury_scorpio": "Derin analiz, psikoloji, gizem cozme. Sivri dilli.",
+    "mercury_sagittarius": "Zararli. Dikkati dagink, geveze, yüzeysel. Dil öğrenmede kolaylık.",
+    "mercury_capricorn": "Matematiksel zeka, garantici, ketum. Ölümsuz: kekemelik riski.",
+    "mercury_aquarius": "Yücelir. Üstün zeka, araştırmacı ruh.",
+    "mercury_pisces": "Zararli. Sezgisel zeka, dalginlik, dikkat daginkligi.",
+    "venus_description": "Boga/2.ev ve Terazi/7.ev yöneticisi. Toprak yonu: para. Hava yonu: ilişkiler. %80 iyicil.",
+    "venus_aries": "Erkek haritada: Güçlü, bağımsız, cinsel çekiciliği yüksek kadınlardan hoşlanır. Kadın haritada: Benmerkezci, kıskançlık/adrenalin ihtiyacı duyar.",
+    "venus_taurus": "Erkek haritada: Zengin, konfor seven kadınlardan hoşlanır. Kadın haritada: Konfor odaklı, maddi tatmin bekler. Venüs hâkim konumunda.",
+    "venus_gemini": "Erkek haritada: Zeki kadınlardan hoşlanır. Kadın haritada: İletişim ağırlıklı, entelektüel partner ister.",
+    "venus_cancer": "Erkek haritada: İyi yemek yapan, annesine benzeyen kadınlardan hoşlanır. Kadın haritada: Sürekli ilgi ve şefkat ihtiyacı, kedi gibi.",
+    "venus_leo": "Erkek haritada: Gösterişli kadınlardan hoşlanır (düşük kıskançlık eşiği). Kadın haritada: Sürekli beğenilme, şımartılma ihtiyacı.",
+    "venus_virgo": "Erkek haritada: Hizmetkar ruhlu, bankacı/sağlıkçı kadınlardan hoşlanır. Kadın haritada: Sistematik, düzenli ilişki ister. Venüs düşüş konumunda.",
+    "venus_libra": "Erkek haritada: Çok güzel, hanımefendi kadınlardan hoşlanır. Kadın haritada: Birliktelik, huzur, pozitif ilişki ister. Venüs hâkim konumunda.",
+    "venus_scorpio": "Erkek haritada: Seksi, cinsel çekiciliği yüksek kadınlardan hoşlanır. Kadın haritada: Gizli, gizemli, cinsellik ön planda. Venüs düşüş konumunda.",
+    "venus_sagittarius": "Erkek haritada: Kültürlü, sosyal, çok dil bilen, gezmeyi seven kadınlardan hoşlanır. Kadın haritada: Seyahat/macera arkadaşı ister.",
+    "venus_capricorn": "Erkek haritada: Çalışan kadınlardan hoşlanır. Kadın haritada: İşe destek veren, duygusal olmayan ilişki.",
+    "venus_aquarius": "Erkek haritada: Akıllı, marjinal, teknoloji meraklısı, bakımı kolay kadınlardan hoşlanır. Kadın haritada: Kuralsız, açık ilişki ister.",
+    "venus_pisces": "Erkek haritada: Duygusal, romantik, güzel gözlü kadınlardan hoşlanır. Kadın haritada: Duygusal destek, romantizm, terapötik ilişki ister. Venüs yücelme konumunda.",
+    "venus_in_male_chart": {
+      "venus_aries": "Güçlü, bağımsız, cinsel çekiciliği yüksek kadınlardan hoşlanır.",
+      "venus_taurus": "Zengin, konfor seven kadınlardan hoşlanır.",
+      "venus_gemini": "Zeki kadınlardan hoşlanır.",
+      "venus_cancer": "İyi yemek yapan, annesine benzeyen kadınlardan hoşlanır.",
+      "venus_leo": "Gösterişli kadınlardan hoşlanır (düşük kıskançlık eşiği).",
+      "venus_virgo": "Hizmetkar ruhlu, bankacı/sağlıkçı kadınlardan hoşlanır.",
+      "venus_libra": "Çok güzel, hanımefendi kadınlardan hoşlanır.",
+      "venus_scorpio": "Seksi, cinsel çekiciliği yüksek kadınlardan hoşlanır.",
+      "venus_sagittarius": "Kültürlü, sosyal, çok dil bilen, gezmeyi seven kadınlardan hoşlanır.",
+      "venus_capricorn": "Çalışan kadınlardan hoşlanır.",
+      "venus_aquarius": "Akıllı, marjinal, teknoloji meraklısı, bakımı kolay kadınlardan hoşlanır.",
+      "venus_pisces": "Duygusal, romantik, güzel gözlü kadınlardan hoşlanır."
+    },
+    "venus_in_female_chart": {
+      "venus_aries": "Benmerkezci, kıskançlık/adrenalin ihtiyacı duyar.",
+      "venus_taurus": "Konfor odaklı, maddi tatmin bekler. Venüs hâkim konumunda.",
+      "venus_gemini": "İletişim ağırlıklı, entelektüel partner ister.",
+      "venus_cancer": "Sürekli ilgi ve şefkat ihtiyacı, kedi gibi.",
+      "venus_leo": "Sürekli beğenilme, şımartılma ihtiyacı.",
+      "venus_virgo": "Sistematik, düzenli ilişki ister. Venüs düşüş konumunda.",
+      "venus_libra": "Birliktelik, huzur, pozitif ilişki ister. Venüs hâkim konumunda.",
+      "venus_scorpio": "Gizli, gizemli, cinsellik ön planda. Venüs düşüş konumunda.",
+      "venus_sagittarius": "Seyahat/macera arkadaşı ister.",
+      "venus_capricorn": "İşe destek veren, duygusal olmayan ilişki.",
+      "venus_aquarius": "Kuralsız, açık ilişki ister.",
+      "venus_pisces": "Duygusal destek, romantizm, terapötik ilişki ister. Venüs yücelme konumunda."
+    },
+    "mars_description": "Mucadele sekli, fiziksel efor, fiziksel yapi. %80 kötücül. Düstügu yere yara/ben izi verir.",
+    "mars_aries": "Çok güçlü, doğrudan, savasci, aktif enerji.",
+    "mars_taurus": "Zararli. Enerji yavasl, inatcilik, maddiyata aşırı odaklanma.",
+    "mars_gemini": "Zihinsel enerjiyi yukseltir, konusarak mücadele.",
+    "mars_cancer": "Zararli. Enerji duygulara akar, pasif-agresif tepkiler.",
+    "mars_leo": "Ahenkli. Enerji gösterişli, yaratiçi ve gururlu kullanilir.",
+    "mars_virgo": "Enerji detaylara, çalışma hayatina akar, elestirel guc.",
+    "mars_libra": "Düşüş. İliskilerde mücadele, pasif agresif davranislar.",
+    "mars_scorpio": "Çok güçlü. Icsel guc, kriz yönetimi, yoğun cinsellik.",
+    "mars_sagittarius": "Enerji macera, kesif ve inanclar uzerine.",
+    "mars_capricorn": "Yücelim. Stratejik mücadele, hedef odakli enerji, zirveye çıkış.",
+    "mars_aquarius": "Zararli. Enerji asi, başına buyruk, toplumsal kavgalar.",
+    "mars_pisces": "Zararli. Enerji dağılir, pasiflik, duygusal savrulmalar.",
+    "jupiter_description": "Şans, genişleme, büyüme, bereket, inanç ve felsefe gezegeni. Yay/9.ev yöneticisi. Düştüğü burçta ve evde bolluğu, şansı ve büyümeyi gösterir. 1 yıl burçta kalır.",
+    "jupiter_aries": "Cesur girişimler, öncü projeler, liderlikte şans. Harekete geçme kapasitesi yüksek.",
+    "jupiter_taurus": "Maddi bereket, finansal şans, konfor ve bolluk. Yatırımlarda başarı potansiyeli.",
+    "jupiter_gemini": "Sürgünde. Bilgi dağılması, çok yönlü ama odaklanamama. Eğitim ve iletişimde genişleme.",
+    "jupiter_cancer": "Yücelmede. Aile ve duygusal alanda bereket. Güçlü sezgi, koruyucu şans.",
+    "jupiter_leo": "Yaratıcılık, sahne ve liderlikte şans. Cömert, gösterişli genişleme.",
+    "jupiter_virgo": "Detaycı çalışmada şans. Sağlık alanında gelişme. Hizmette bereket.",
+    "jupiter_libra": "İlişkilerde şans, diplomatik başarı, sanat ve estetikte genişleme.",
+    "jupiter_scorpio": "Derin araştırma ve dönüşümde şans. Gizli kaynaklar, miras potansiyeli.",
+    "jupiter_sagittarius": "Hâkim. En güçlü konumu. Felsefe, seyahat, eğitimde büyük şans ve genişleme.",
+    "jupiter_capricorn": "Düşüşte. Kariyer ve disiplinde yavaş ama kalıcı büyüme. Şans sabır gerektirir.",
+    "jupiter_aquarius": "Toplumsal projelerde şans. Teknoloji ve yenilikçilikte genişleme.",
+    "jupiter_pisces": "Çok güçlü. Manevi derinlik, sezgisel şans, sanatsal ilham. Merhamet ve cömertlik.",
+    "saturn_description": "Sınırlama, yapılandırma, disiplin, sorumluluk ve olgunlaşma gezegeni. Oğlak/10.ev yöneticisi. Düştüğü yerde sınavlar ve olgunlaşma yaşanır. 2.5 yıl burçta kalır.",
+    "saturn_aries": "Düşüşte. İnisiyatif almada zorluk, liderlikte sınavlar. Sabırla güçlü irade geliştirir.",
+    "saturn_taurus": "Maddi güvenlikte sınavlar. Tutumlu, sabırlı birikim. Maddi disiplin.",
+    "saturn_gemini": "İletişimde zorluklar, düşüncede derinlik. Ciddi ve sistematik öğrenme.",
+    "saturn_cancer": "Sürgünde. Aile ve duygusal alanda sınavlar. Duygusal olgunlaşma süreci.",
+    "saturn_leo": "Yaratıcılıkta engeller, otoritede sınavlar. Alçakgönüllülük dersi.",
+    "saturn_virgo": "Detaylara odaklanmada disiplin. Sağlık bilinci, çalışma hayatında zorluklar.",
+    "saturn_libra": "Yücelmede. İlişkilerde olgunluk, adalet duygusu güçlü, dengeli yapılandırma.",
+    "saturn_scorpio": "Derin dönüşüm sınavları. Güç ve kontrol üzerine dersler. İç dünyada yeniden yapılanma.",
+    "saturn_sagittarius": "İnanç ve felsefede sınavlar. Dogmatizmden uzak, olgun dünya görüşü geliştirir.",
+    "saturn_capricorn": "Hâkim. En güçlü konumu. Kariyer ve disiplinde doğal otorite, başarı.",
+    "saturn_aquarius": "Güçlü konum. Toplumsal sorumluluk, yenilikçi yapılandırma, bilimsel disiplin.",
+    "saturn_pisces": "Manevi sınavlar, hayallerin gerçekle sınanması. Spiritüel disiplin öğrenme.",
+    "uranus_description": "Özgünlük, bağımsızlık, devrim, ani değişimler ve teknoloji gezegeni. Kova/11.ev yöneticisi. 7 yıl burçta kalır — nesil etkisi.",
+    "uranus_aries": "Bireysel devrimler, cesur yenilikler. Bağımsızlık arzusu güçlü nesil.",
+    "uranus_taurus": "Düşüşte. Maddi düzende devrim, finans teknolojisi, değer sistemlerinde kırılma.",
+    "uranus_gemini": "İletişimde devrim, teknolojik yenilikler, bilgi çağı nesli.",
+    "uranus_cancer": "Aile yapısında köklü değişimler, duygusal özgürlük arayışı.",
+    "uranus_leo": "Yaratıcılıkta devrim, bireysel ifadede özgünlük. Sanat ve eğlencede yenilik.",
+    "uranus_virgo": "Sağlık teknolojisi, çalışma düzeninde devrim, analitik yenilikçilik.",
+    "uranus_libra": "İlişki biçimlerinde devrim, evlilik anlayışında köklü değişim.",
+    "uranus_scorpio": "Yücelmede. Derin dönüşümler, psikolojik devrimler, güç yapılarında kırılma.",
+    "uranus_sagittarius": "Eğitim ve felsefede devrim, küreselleşme, dijital seyahat.",
+    "uranus_capricorn": "Kurumsal yapılarda devrim, otorite anlayışında kırılma.",
+    "uranus_aquarius": "Hâkim. En güçlü konumu. Dehaların nesli. Teknoloji ve bilimde çığır açan yenilikler.",
+    "uranus_pisces": "Spiritüel uyanış, sanat ve müzikte devrim, bilinçaltı keşifleri.",
+    "neptune_description": "Hayaller, sezgi, maneviyat, ilham, yanılsama ve bilinçaltı gezegeni. Balık/12.ev yöneticisi. 14 yıl burçta kalır — derin nesil etkisi.",
+    "neptune_aries": "Bireysel manevi arayış, idealist savaşçı nesil, spiritüel cesaret.",
+    "neptune_taurus": "Maddi değerlerde yanılsama, doğaya dönüş, duyusal spiritüalite.",
+    "neptune_gemini": "İletişimde hayal gücü, bilgi ve maneviyatın buluşması.",
+    "neptune_cancer": "Yücelmede. Duygusal derinlik, güçlü sezgi, aile ve yuva idealleştirmesi.",
+    "neptune_leo": "Sanatsal ilham, yaratıcı hayaller, sahne ve sinema altın çağı.",
+    "neptune_virgo": "Sürgünde. Pratik ile hayal arasında sıkışma. Sağlıkta alternatif yaklaşımlar.",
+    "neptune_libra": "İlişkilerde idealleştirme, barış idealleri, sanatsal uyum arayışı.",
+    "neptune_scorpio": "Derin psikolojik keşifler, gizemcilik, bilinçaltı dönüşümleri.",
+    "neptune_sagittarius": "Dini ve felsefi idealleştirme, spiritüel yolculuklar, inançlarda yanılsama.",
+    "neptune_capricorn": "Düşüşte. Kurumsal yapılarda çözülme, otoritenin sorgulanması.",
+    "neptune_aquarius": "Toplumsal hayaller, kolektif bilinç, teknoloji ve maneviyatın birleşmesi.",
+    "neptune_pisces": "Hâkim. En güçlü konumu. Derin spiritüel uyanış, evrensel merhamet, sanatsal zirve.",
+    "pluto_description": "Dönüşüm, güç, yeniden doğuş, kriz ve derinlik gezegeni. Akrep/8.ev yöneticisi. 14-24 yıl burçta kalır — köklü nesil dönüşümleri.",
+    "pluto_aries": "Bireysel güç devrimi, savaşçı dönüşüm, ego yeniden yapılanması.",
+    "pluto_taurus": "Sürgünde. Maddi düzenin köklü dönüşümü, ekonomik yeniden yapılanma.",
+    "pluto_gemini": "İletişim ve bilgide köklü dönüşüm, medya devrimleri.",
+    "pluto_cancer": "Aile ve yuva kavramında derin dönüşüm, kök salma ve köksüzleşme.",
+    "pluto_leo": "Yücelmede. Yaratıcı güç, liderlik dönüşümü, bireysel ifadede devrim.",
+    "pluto_virgo": "Sağlık ve çalışma sistemlerinde köklü dönüşüm, analitik güç.",
+    "pluto_libra": "İlişki yapılarında derin dönüşüm, adalet ve denge mücadelesi.",
+    "pluto_scorpio": "Hâkim. En güçlü konumu. Derin psikolojik dönüşüm, güç ve kontrol üzerine büyük sınavlar.",
+    "pluto_sagittarius": "İnanç sistemlerinde köklü dönüşüm, küresel güç mücadeleleri.",
+    "pluto_capricorn": "Kurumsal yapıların yıkılıp yeniden inşası, otorite dönüşümü, ekonomik krizler.",
+    "pluto_aquarius": "Düşüşte. Toplumsal yapılarda köklü devrim, teknolojik güç dönüşümü.",
+    "pluto_pisces": "Spiritüel dönüşüm, bilinçaltı devrimleri, evrensel merhamet dönüşümü.",
+    "chiron_description": "Yara, şifa, öğretme ve deneyim yoluyla olgunlaşma gezegeni. Başak/6.ev yöneticisi (AstroHarmony ekolü). Düştüğü burçta kişinin en derin yarası ve şifa potansiyeli bulunur.",
+    "chiron_aries": "Kimlik ve benlik yarası. Kendini ifade etmede zorluk. Şifa: kendi gücünü keşfetmek.",
+    "chiron_taurus": "Öz değer ve maddi güvenlik yarası. Yetmezlik hissi. Şifa: kendi değerini bilmek.",
+    "chiron_gemini": "İletişim ve düşünce yarası. Anlaşılmama korkusu. Şifa: sözün gücünü keşfetmek.",
+    "chiron_cancer": "Aile ve aidiyet yarası. Terk edilme korkusu. Şifa: kendi yuvasını yaratmak.",
+    "chiron_leo": "Yaratıcılık ve kendini gösterme yarası. Görülmeme acısı. Şifa: özgün ifade.",
+    "chiron_virgo": "Hâkim. Mükemmeliyetçilik yarası. Yeterince iyi olmama hissi. Şifa: kusursuzluğu bırakmak.",
+    "chiron_libra": "İlişki yarası. Reddedilme korkusu. Şifa: kendi kendine yeterli olmayı öğrenmek.",
+    "chiron_scorpio": "Güç ve kontrol yarası. Güven kırılması. Şifa: savunmasızlığı kabul etmek.",
+    "chiron_sagittarius": "İnanç ve anlam yarası. Anlamsızlık hissi. Şifa: kendi felsefesini oluşturmak.",
+    "chiron_capricorn": "Otorite ve başarı yarası. Yetersizlik korkusu. Şifa: kendi otoritesini tanımak.",
+    "chiron_aquarius": "Aidiyet ve farklılık yarası. Dışlanma hissi. Şifa: benzersizliği kucaklamak.",
+    "chiron_pisces": "Ruhsal ve manevi yara. Evrensel acı hissi. Şifa: koşulsuz merhamet.",
+    "venus_aries": "Tutkulu ve ateşli sevgi anlayışı. Hızlı aşık olur, fethetmek ister. Bağımsız, kendine odaklı ilişki tarzı. Erkekte: güçlü, cesur kadınlara çekim.",
+    "venus_taurus": "Hâkim. Sadık, duyusal ve sahiplenici. Fiziksel dokunma ve konfor önemli. Maddi güvenlik = duygusal güvenlik. Erkekte: zarif, varlıklı kadınlara çekim.",
+    "venus_gemini": "İletişim ve zihinsel bağ ön planda. Değişken ama eğlenceli aşk. Sıkılmaktan korkar. Erkekte: zeki, konuşkan kadınlara çekim.",
+    "venus_cancer": "Yücelmede. Şefkatli, koruyucu sevgi. Aile odaklı ilişki. Güvene dayalı derin bağlar. Erkekte: bakımlı, iyi yemek yapan kadınlara çekim.",
+    "venus_leo": "Gösterişli ve cömert aşk. Beğenilmek ve övülmek ister. Sadık ama dikkat isteyen. Erkekte: gösterişli, karizmatik kadınlara çekim.",
+    "venus_virgo": "Düşüşte. Sistematik, düzenli ilişki anlayışı. Eleştirel ama özenli sevgi. Mükemmeliyetçi partner. Erkekte: düzenli, becerikli kadınlara çekim.",
+    "venus_libra": "Hâkim. Uyumlu, nazik, barışçıl ilişkiler. Estetik ve romantizm ön planda. Birlikte hareket eden partner. Erkekte: güzel, zarif kadınlara çekim.",
+    "venus_scorpio": "Sürgünde. Derin, tutkulu, yoğun aşk. Kıskançlık ve sahiplenme. Cinsellik ön planda. Erkekte: gizemli, seksi kadınlara çekim.",
+    "venus_sagittarius": "Özgür ve maceracı aşk. Birlikte keşfetmek, gezmek ister. Bağlanmakta zorlanır. Erkekte: kültürlü, gezgin kadınlara çekim.",
+    "venus_capricorn": "Ciddi, sabırlı, geleneksel ilişki. Geç ama kalıcı aşk. Statü ve güvenlik önemli. Erkekte: kariyer sahibi, olgun kadınlara çekim.",
+    "venus_aquarius": "Kuralsız, özgür ilişki anlayışı. Arkadaşlık temelli aşk. Farklı ve sıra dışı bağlar. Erkekte: zeki, marjinal kadınlara çekim.",
+    "venus_pisces": "Yücelmede. Romantik, hayalperest, fedakâr sevgi. Ruh eşi arayışı. Derin duygusal bağlar. Erkekte: hassas, duygusal, güzel gözlü kadınlara çekim.",
+    "north_node_description": "Kuzey Düğümü kişinin bu yaşamda gelişmesi gereken yönü gösterir. KAD'ın bulunduğu burç ve ev, kişinin en zorlandığı ama en çok büyüdüğü alandır.",
+    "north_node_aries": "Bağımsızlık, cesaret ve öz güveni geliştirme. Başkalarına bağımlılıktan kurtulup kendi ayakları üzerinde durma.",
+    "north_node_taurus": "Maddi güvenlik, sabır ve kararlılık öğrenme. Kaos ve krizlerden uzaklaşıp istikrar kurma.",
+    "north_node_gemini": "İletişim, merak ve çok yönlülük geliştirme. Dogmatik bakış açısından çıkıp öğrenmeye açılma.",
+    "north_node_cancer": "Duygusal bağlar, aile ve yuva değerlerini öğrenme. Kariyer odaklılıktan duygusal derinliğe geçiş.",
+    "north_node_leo": "Yaratıcılık, kendini ifade etme ve sahne alma. Kalabalıkta kaybolmaktan bireysel parlamaya geçiş.",
+    "north_node_virgo": "Detaycılık, hizmet ve pratik beceriler geliştirme. Hayallerden gerçekliğe, düzen ve disipline geçiş.",
+    "north_node_libra": "İlişki, diplomasi ve uzlaşma öğrenme. Bencillikten ortaklık bilincine geçiş.",
+    "north_node_scorpio": "Derinlik, dönüşüm ve duygusal cesaret geliştirme. Konfor alanından köklü değişime açılma.",
+    "north_node_sagittarius": "Felsefe, inanç ve geniş vizyon geliştirme. Detaylarda kaybolmaktan büyük resmi görmeye geçiş.",
+    "north_node_capricorn": "Sorumluluk, disiplin ve kariyer bilinci geliştirme. Duygusal bağımlılıktan olgunluğa geçiş.",
+    "north_node_aquarius": "Toplumsal bilinç, özgünlük ve insanlık idealleri geliştirme. Ego merkezlilikten evrensel bakışa geçiş.",
+    "north_node_pisces": "Maneviyat, sezgi ve koşulsuz merhamet geliştirme. Kontrol ihtiyacından teslimiyete geçiş.",
+    "south_node_description": "Güney Düğümü kişinin geçmişten getirdiği doğal yetenekleri ve bırakması gereken kalıpları gösterir. KAD'ın karşı burcundadır.",
+    "south_node_aries": "Geçmişten gelen bağımsızlık ve savaşçı ruh. Bu yaşamda ortaklık ve diplomasi öğrenilmeli (KAD Terazi).",
+    "south_node_taurus": "Geçmişten gelen maddi güvenlik ve konfor alışkanlığı. Bu yaşamda dönüşüm ve derinliğe açılmalı (KAD Akrep).",
+    "south_node_gemini": "Geçmişten gelen iletişim yeteneği ve bilgi birikimi. Bu yaşamda inanç ve felsefe geliştirilmeli (KAD Yay).",
+    "south_node_cancer": "Geçmişten gelen aile bağları ve duygusal derinlik. Bu yaşamda kariyer ve sorumluluk öğrenilmeli (KAD Oğlak).",
+    "south_node_leo": "Geçmişten gelen bireysel parlama ve yaratıcılık. Bu yaşamda toplumsal bilinç geliştirilmeli (KAD Kova).",
+    "south_node_virgo": "Geçmişten gelen detaycılık ve hizmet anlayışı. Bu yaşamda maneviyat ve sezgi geliştirilmeli (KAD Balık).",
+    "south_node_libra": "Geçmişten gelen ilişki ve uyum yeteneği. Bu yaşamda bağımsızlık ve cesaret öğrenilmeli (KAD Koç).",
+    "south_node_scorpio": "Geçmişten gelen dönüşüm gücü ve derinlik. Bu yaşamda sabır ve istikrar öğrenilmeli (KAD Boğa).",
+    "south_node_sagittarius": "Geçmişten gelen geniş vizyon ve felsefi bakış. Bu yaşamda iletişim ve detay öğrenilmeli (KAD İkizler).",
+    "south_node_capricorn": "Geçmişten gelen disiplin ve kariyer başarısı. Bu yaşamda duygusal bağlar ve yuva öğrenilmeli (KAD Yengeç).",
+    "south_node_aquarius": "Geçmişten gelen toplumsal bilinç ve özgünlük. Bu yaşamda bireysel yaratıcılık öğrenilmeli (KAD Aslan).",
+    "south_node_pisces": "Geçmişten gelen maneviyat ve sezgi. Bu yaşamda pratik beceriler ve düzen öğrenilmeli (KAD Başak).",
+    "lilith_description": "Lilith (Kara Ay) bastırılmış arzuları, tabuları ve içgüdüsel gücü temsil eder. Düştüğü burç, kişinin en derin ve karanlık tutkularını gösterir.",
+    "lilith_aries": "Bastırılmış öfke ve bağımsızlık arzusu. Güç gösterisi ihtiyacı. Kontrol edilemeyen savaşçı ruh.",
+    "lilith_taurus": "Bastırılmış maddi hırs ve sahiplenme. Aşırı duyusal arzular. Kontrol edilemeyen iştah.",
+    "lilith_gemini": "Bastırılmış entelektüel isyan. Manipülatif iletişim potansiyeli. Yasak bilgi arayışı.",
+    "lilith_cancer": "Bastırılmış duygusal ihtiyaçlar. Aşırı koruyuculuk veya terk etme. Anne figürüyle çatışma.",
+    "lilith_leo": "Bastırılmış dikkat ve beğenilme arzusu. Gösteri düşkünlüğü. Ego ve gurur mücadelesi.",
+    "lilith_virgo": "Bastırılmış mükemmeliyetçilik. Eleştiri gücü. Kontrol ve düzen takıntısı.",
+    "lilith_libra": "Bastırılmış ilişki bağımlılığı. Adalet tutkusu. Manipülatif cazibe.",
+    "lilith_scorpio": "En güçlü konumu. Bastırılmış cinsel güç ve kontrol arzusu. Derin karanlık cazibe. Tabularla yüzleşme.",
+    "lilith_sagittarius": "Bastırılmış özgürlük arzusu. Ahlaki sınırları zorlama. İnançlarda aşırılık.",
+    "lilith_capricorn": "Bastırılmış hırs ve güç arzusu. Otorite ile çatışma. Karanlık liderlik potansiyeli.",
+    "lilith_aquarius": "Bastırılmış isyankârlık. Toplumsal normlara meydan okuma. Marjinal eğilimler.",
+    "lilith_pisces": "Bastırılmış kurban rolü. Bağımlılık eğilimi. Bilinçaltı korkular ve hayaller.",
+    "fortune_description": "Şans Noktası (Pars Fortunae) kişinin doğal şans ve bolluk kaynağını gösterir. ASC + Ay - Güneş formülüyle hesaplanır.",
+    "fortune_aries": "Şans cesaret ve inisiyatif almaktan gelir. Bireysel girişimlerde bereket.",
+    "fortune_taurus": "Şans maddi birikimden ve sabırdan gelir. Finansal bereket potansiyeli.",
+    "fortune_gemini": "Şans iletişim ve bilgi alışverişinden gelir. Ticaret ve eğitimde bereket.",
+    "fortune_cancer": "Şans aile ve duygusal bağlardan gelir. Ev ve mülk alanında bereket.",
+    "fortune_leo": "Şans yaratıcılık ve kendini ifade etmekten gelir. Sahne ve sanatta bereket.",
+    "fortune_virgo": "Şans detaylı çalışma ve hizmetten gelir. Sağlık sektörü ve organizasyonda bereket.",
+    "fortune_libra": "Şans ilişkiler ve ortaklıklardan gelir. Sanat ve hukukta bereket.",
+    "fortune_scorpio": "Şans dönüşüm ve derinlikten gelir. Miras, yatırım ve psikoloji alanında bereket.",
+    "fortune_sagittarius": "Şans eğitim, seyahat ve felsefeden gelir. Yurtdışı ve akademik alanda bereket.",
+    "fortune_capricorn": "Şans disiplin ve kariyer çalışmasından gelir. Yönetim ve iş dünyasında bereket.",
+    "fortune_aquarius": "Şans yenilikçilik ve toplumsal projelerden gelir. Teknoloji ve bilim alanında bereket.",
+    "fortune_pisces": "Şans sezgi ve maneviyattan gelir. Sanat, müzik ve yardım alanında bereket."
+  },
+  "planet_in_house": {
+    "sun_in_houses": {
+      "1": "Özgüven, liderlik, dikkat çekme arzusu. Ego görünür.",
+      "2": "Maddiyatla özdeşleşmis kimlik. Para uzerinden değer algisi.",
+      "3": "Bilgiyle ego gelişimi. Konuşkanlik, entektuel gurur.",
+      "4": "Aile ve kökenler kimligin temeli. Aileden onay beklentisi.",
+      "5": "Güneş'in doğal evi. Yaraticilik, ask, sahne.",
+      "6": "Is ve görevle özdeş ego. Caliskanlik, mükemmeliyetcilik.",
+      "7": "İliskiler yoluyla benlik gelişimi. Evlilikte denge arayisi.",
+      "8": "Krizlerle ego dönüşümu. Güç arzusu, sirlar.",
+      "9": "Dunya görüşu ile benlik insasi. Bilgelik ya da fanatizm.",
+      "10": "Kariyerle kimlik gelişimi. Tanınma ihtiyaci.",
+      "11": "Düşüşte. Arkadaslar ve ekip çalışmasi. Bireysellik yerine toplumsallik.",
+      "12": "Icsel benlik arayisi, sezgi, maneviyat. Ego bastirilmis olabilir."
+    },
+    "moon_in_houses": {
+      "1": "Hassas, duyarlı, duygusal, heyecanli. Güzel yüz verir.",
+      "2": "Yücelir. Gercekci, maddiyatin değerini bilen.",
+      "3": "Hafizasi güçlü, konuşmaya yatkın, duygusal iletişim.",
+      "4": "Kendi evinde güçlü. Aile ve yuvaya önem verir.",
+      "5": "Çocuk ruhlu, romantik, duygusal inişler çıkışlar.",
+      "6": "Az zararli. Takintili mizac, hassas sağlık.",
+      "7": "Adil, uyumlu. Erkekte: anneye benzer es.",
+      "8": "Zararli. Sezgisel, psikolojik sıkıntılı yapi.",
+      "9": "Gezgin ruhlu, neşeli, pozitif. Yurtdisinda yasayabilir.",
+      "10": "Düşüşte. Karamsar, içe donuk, gozü zirvede.",
+      "11": "Toplumsal konularda farkli, teknolojiye yönelim.",
+      "12": "Güçlü. Sezgisel, ruyalari doğru çıkar, fedakâr."
+    },
+    "mars_in_houses": {
+      "1": "Çok güçlü, enerjik, cesur. Alinda yara/ben olabilir.",
+      "2": "Enerji para ve maddi güvenceye harcanir. Boyun/bel fitigi riski.",
+      "3": "Enerji iletişim ve yakin cevreye yönelir. Hazircevap. El-kol yaralanmalari.",
+      "4": "Enerji aile ve duygulara. Sindirim sistemi sorunlari. Psikolojik savaslar.",
+      "5": "Enerji ask, çocuklar, riskli işlere. Babayla sorun potansiyeli.",
+      "6": "Enerji sağlık ve is alanina. Kronik hastalık riskleri.",
+      "7": "Düşüşte. Evlilikte mücadele, bosanma riski.",
+      "8": "Çok güçlü. Derin ilişkiler, borclar, cinsellik, krizler.",
+      "9": "Enerji seyahat, eğitim, inanclar alanina.",
+      "10": "Yücelim. Kariyer ve statüye harcanan enerji. Liderlik potansiyeli.",
+      "11": "Enerji hedeflere, arkadaslara. Otoriteyle kavga.",
+      "12": "Enerji manevi alanlara. Psikolojik hassasiyet."
+    },
+    "mercury_in_houses": {
+      "1": "Hizli zihin, net ifade. Ölümsuz: tartismaci.",
+      "2": "Sabit fikirli, maddi konularda zeki. İletisimden para.",
+      "3": "Yonetici. İletisim güçlü, yetenekli.",
+      "4": "Güçlü hafiza, aile/soy bilinci.",
+      "5": "Esprili, tiyatral yetenekler. Cift burcta ikiz çocuk.",
+      "6": "Güçlü. Detayci, analizci, becerikli.",
+      "7": "Ahenkli iletişim. Zeki es.",
+      "8": "Derin analiz, psikoloji. Sivri dilli.",
+      "9": "Zararli. Dikkati daginkik, som ağızli. Dil öğrenmede kolaylık.",
+      "10": "Matematiksel zeka, garantici, ketum.",
+      "11": "Yücelir. Üstün zeka, araştırmacı.",
+      "12": "Zararli. Sezgisel zeka, dalginlik."
+    },
+    "venus_in_houses": {
+      "1": "Zararli (7.ev karisti). Karsi cinse cinsel çekicilik. Tipoloji: gamze, yüz güzelliği.",
+      "2": "Kendi evi. Gelirler sansli, zenginlik potansiyeli.",
+      "3": "Güzel ifade, hitabet, espritüellik. İletisim işlerinden para.",
+      "4": "Ahenkli, yücelir. Aile ile uyumlu, anneden miras.",
+      "5": "Sanat alaninda şöhret. Güzel çocuklar, flortoz yapi.",
+      "6": "Düşüşte. Sağlık zayifligi, evlilikte gecikme.",
+      "7": "Sansli evlilik. Cekiçi güzellik, simetrik fizik.",
+      "8": "Düşüşte. Cinsellikte iyi. Finans sektorunde başarı.",
+      "9": "Çok sansli. Yurtdisi seyahat, yabanci dil kolayligi.",
+      "10": "Yaptigi iste başarılı, para kazandirir.",
+      "11": "Arkadaslar arasinda sevilen. Hedeflerine ulasin.",
+      "12": "Yücelir. Parayi ceken miknatisgibi. Sagduyulu, fedakâr."
+    },
+    "jupiter_in_houses": {
+      "1": "Şanslı ve iyimser kişilik. Fiziksel olarak gösterişli yapı. Cömert ve geniş görüşlü.",
+      "2": "Maddi şans ve bereket. Kolay para kazanma potansiyeli. Cömert harcama eğilimi.",
+      "3": "Eğitim ve iletişimde şans. Kardeşlerle iyi ilişkiler. Geniş düşünce yapısı.",
+      "4": "Aile ve yuvada bereket. Geniş ve konforlu ev. Köklü aile bağları.",
+      "5": "Aşk ve yaratıcılıkta şans. Çocuklarla bereketli ilişki. Şans oyunlarında talih.",
+      "6": "Sağlıkta genel koruma. İş hayatında bereket ama aşırıya kaçma riski.",
+      "7": "Evlilikte şans. Zengin veya statü sahibi eş potansiyeli. Ortaklıklarda bereket.",
+      "8": "Miras ve başkalarının parasından şans. Derin spiritüel koruma.",
+      "9": "Doğal evi. Yüksek eğitim, yurtdışı, felsefe ve seyahatte büyük şans.",
+      "10": "Kariyer ve toplumsal statüde şans. Yüksek mevkiler, saygınlık.",
+      "11": "Arkadaş çevresinde bereket. Hedeflere ulaşmada şans. Toplumsal başarı.",
+      "12": "Manevi şans ve koruma. Gizli yardımlar. Spiritüel bereket."
+    },
+    "saturn_in_houses": {
+      "1": "Ciddi ve olgun kişilik. Fiziksel olarak kemikli, ince yapı. Erken olgunlaşma.",
+      "2": "Maddi zorluklar ve sınavlar. Sabırla birikim. Geç gelen ama kalıcı zenginlik.",
+      "3": "İletişimde zorluk, ketum yapı. Eğitimde engeller ama derin öğrenme.",
+      "4": "Aile ve çocuklukta sınavlar. Soğuk aile ortamı. Geç yaşta huzurlu yuva.",
+      "5": "Aşk ve yaratıcılıkta engeller. Çocuk konusunda gecikmeler. Ciddi romantizm.",
+      "6": "Sağlıkta kronik eğilimler. İş disiplini güçlü. Rutinde mükemmel.",
+      "7": "Evlilikte gecikme veya yaş farkı. Ciddi, sadık ama zorlu ilişkiler.",
+      "8": "Krizlerle olgunlaşma. Borç ve mali sınavlar. Derin psikolojik dönüşüm.",
+      "9": "Eğitimde engeller ama azimle başarı. Dogmatik olma riski. Geç yurtdışı.",
+      "10": "Güçlü kariyer konumu. Yavaş ama sağlam yükselme. Otorite figürü.",
+      "11": "Seçici arkadaşlıklar. Az ama kaliteli dostlar. Hedeflere sabırla ulaşma.",
+      "12": "Yalnızlık ve içe dönüklük sınavları. Bilinçaltı korkular. Manevi olgunlaşma."
+    },
+    "uranus_in_houses": {
+      "1": "Sıra dışı kişilik, özgün görünüm. Farklı ve dikkat çekici dış imaj.",
+      "2": "Gelirde ani dalgalanmalar. Alışılmadık yollardan para kazanma. Teknoloji ile gelir.",
+      "3": "Orijinal düşünce tarzı. Sıra dışı iletişim. Teknolojiye yatkınlık.",
+      "4": "Aile yapısında farklılıklar. Ani taşınmalar. Ev ortamında özgürlük ihtiyacı.",
+      "5": "Ani aşklar, sıra dışı hobiler. Yaratıcılıkta özgünlük. Farklı çocuk ilişkisi.",
+      "6": "Sıra dışı sağlık sorunları. Alışılmadık çalışma düzeni. Rutin düşmanı.",
+      "7": "Ani evlilikler veya boşanmalar. Sıra dışı partner. Bağımsızlık ihtiyacı.",
+      "8": "Ani krizler ve dönüşümler. Sıra dışı cinsellik. Beklenmedik miras.",
+      "9": "Orijinal felsefe ve inanç sistemi. Ani yurtdışı fırsatları. Farklı eğitim.",
+      "10": "Sıra dışı kariyer yolu. Teknolojide başarı. Ani kariyer değişiklikleri.",
+      "11": "Doğal evi. Özgün arkadaş çevresi. Toplumsal devrimcilik. İdealcilik.",
+      "12": "Bilinçaltında devrimci fikirler. Ani spiritüel uyanışlar. Gizli isyan."
+    },
+    "neptune_in_houses": {
+      "1": "Balık kişilik etkisi. Renkli gözler, büyümüş göz çukurları, kiloya eğilimli. Sürekli terleme. Hızla kilo alıp verebilir. Dekan konusunda yetersizlik hissi.",
+      "2": "İyi açılar = Neptün alanlarından para, bereketli finans. Karmik = iflas, borç kayıpları. Kolayca para verir ama kolayca da kaybeder. Borç vermeye hayır diyemez.",
+      "3": "Solak olabilir. Sanatsal yetenekler, sezgisel zekâ. Kötü açılar = dekan konularında aldatılma.",
+      "4": "Üvey aile durumları. Tarih/soy takıntısı. Büyükanne/büyükbaba tarafından yetiştirilebilir. Genetik lenf sistemi sorunları. Kötü açılar = miras sorunları, ev aldatmacası.",
+      "5": "Güçlü yaratıcı potansiyel. Sanatsal hobiler. Balık tipi duygusal çocuklar. Oyunculuk/eğlence yetenekleri. Aşkta aldatılabilir. Kötü açılar = kumar bağımlılığı, kötü şöhret.",
+      "6": "Neptün hastalıkları. Kolay hastalanma. Su burçları = ödem. Toprak burçları = kilo artışı, yağlı cilt, alerjiler. Ateş burçları = duygu durum bozuklukları, stres. Hava burçları = hızlı metabolizma, zayıflık, sinirlilik.",
+      "7": "Asil konum. Kendi burcu/çift karakterli burçlarda = aldatılma, boşanma göstergesi. Rahat burç = adanmışlık, fedakârlık. Kötü açılar = dolandırıcılık, eş aldatması, hukuki sorunlar, belge sahteciliği.",
+      "8": "Derin sezgi, metafizik ilgi. Gerçekçi olmayan cinsel fanteziler. Eş Neptün alanlarından kazanır. Miras zorlukları. İyi açılar = kimse para harcatmaz; okültizmde başarı.",
+      "9": "Yücelme konumu. Güçlü 6. his, önsezi yeteneği. İyi açılar = yüksek eğitim başarısı. Kötü açılar = dini kararsızlık. 1. evden Güneş + Jüpiter üçgeni = dini lider, aziz.",
+      "10": "Zararlı konum. Kötü açılar = istediği kariyer bulamaz, iş yeri aldatması. İyi açılar = hayal gerçekleşmesi. Ticari isimle tanınabilir. Kötü açılar = hoş olmayan lakaplar.",
+      "11": "İdealist ama hayalleri gerçekle karıştırabilir. Sosyal kafa karışıklığı, amaçsızlık. Arkadaş aldatmaları. Kötü Merkür-Neptün = zekâsını kullanamaz. İyi açılar = idealler gerçekleşir.",
+      "12": "Güçlü konum. Medyumsal yetenekler. Kişisel gezegen açıları iyi = sezgisel zekâ, empatik, mistik. İyi Plüton-Neptün = karmik işaret. Kötü açılar = gizli düşmanlar, psikosomatik hastalıklar."
+    },
+    "pluto_in_houses": {
+      "1": "Güçlü, manyetik kişilik. Dönüştürücü aura. Yoğun ilk izlenim.",
+      "2": "Maddi yaşamda köklü dönüşümler. Güç ile para ilişkisi. Kaynak kontrolü.",
+      "3": "Derin ve penetran düşünce. İkna gücü yüksek. Araştırmacı zekâ.",
+      "4": "Aile kökenlerinde derin dönüşüm. Güçlü genetik miras. Ev ortamında güç dinamikleri.",
+      "5": "Yoğun tutkulu aşk. Yaratıcılıkta dönüşüm gücü. Çocukla derin bağ.",
+      "6": "Sağlıkta krizler yoluyla dönüşüm. İş hayatında güç mücadeleleri.",
+      "7": "İlişkilerde güç dinamikleri. Derin ve yoğun bağlar. Kontrol mücadelesi.",
+      "8": "Doğal evi. Çok güçlü sezgi. Derin psikolojik dönüşüm. Miras ve güç.",
+      "9": "İnançlarda köklü dönüşüm. Derin felsefi arayış. Güçlü dünya görüşü.",
+      "10": "Kariyerde güç ve otorite. Toplumsal dönüşüm lideri. Büyük başarı potansiyeli.",
+      "11": "Toplumsal yapılarda dönüştürücü güç. Güçlü idealler. Etkileyici liderlik.",
+      "12": "Bilinçaltında derin dönüşüm. Gizli güçler. Spiritüel krizler yoluyla uyanış."
+    },
+    "chiron_in_houses": {
+      "1": "Kimlik ve benlik yarası. Kendini ifade etmede zorluk ama başkalarına yol gösterme yeteneği.",
+      "2": "Öz değer ve maddi güvenlik yarası. Değersizlik hissi. Şifa: kendi değerini bilmek.",
+      "3": "İletişim ve öğrenme yarası. Anlaşılmama korkusu. Şifa: bilgiyi paylaşma gücü.",
+      "4": "Aile ve aidiyet yarası. Kök ve yuva konusunda derin acılar. Şifa: kendi yuvasını yaratmak.",
+      "5": "Yaratıcılık ve kendini gösterme yarası. Beğenilmeme korkusu. Şifa: özgün ifade.",
+      "6": "Doğal evi. Sağlık ve hizmet yarası. Kronik sağlık sorunları. Şifa: başkalarına şifa verme yeteneği.",
+      "7": "İlişki yarası. Reddedilme ve terk edilme korkusu. Şifa: sağlıklı ilişki modeli oluşturma.",
+      "8": "Güven ve kontrol yarası. Derin kayıp deneyimleri. Şifa: teslim olmayı öğrenme.",
+      "9": "İnanç ve anlam yarası. Hayatın anlamını sorgulama. Şifa: kendi felsefesini oluşturma.",
+      "10": "Kariyer ve otorite yarası. Başarı baskısı. Şifa: kendi yolunu çizme.",
+      "11": "Aidiyet ve topluluk yarası. Dışlanma hissi. Şifa: benzersizliği kucaklama.",
+      "12": "Ruhsal ve bilinçaltı yarası. Evrensel acı hissi. Şifa: koşulsuz merhamet ve maneviyat."
+    },
+    "north_node_in_houses": {
+      "1": "Kişisel kimlik ve bağımsızlığı geliştirme. Kendini öne çıkarmayı öğrenme.",
+      "2": "Öz değer ve maddi güvenlik bilinci geliştirme. Başkalarının kaynaklarından kendi kaynaklarına geçiş.",
+      "3": "İletişim becerileri ve yakın çevre ilişkilerini geliştirme. Öğrenme ve paylaşma.",
+      "4": "Aile, yuva ve duygusal güvenlik inşa etme. Köklere bağlanma.",
+      "5": "Yaratıcılık, aşk ve kendini ifade etmeyi öğrenme. İçindeki çocuğu keşfetme.",
+      "6": "Hizmet, sağlık ve günlük rutinlerde düzen kurma. Pratik beceriler geliştirme.",
+      "7": "İlişki ve ortaklık bilinci geliştirme. Başkalarıyla uyum içinde çalışmayı öğrenme.",
+      "8": "Derin dönüşüm ve paylaşımı öğrenme. Güven ve kontrolü bırakma.",
+      "9": "Geniş perspektif ve felsefe geliştirme. Yeni kültürler ve inançlarla tanışma.",
+      "10": "Kariyer ve toplumsal sorumluluk alma. Liderlik ve otorite geliştirme.",
+      "11": "Topluluk bilinci ve idealizm geliştirme. Grup çalışması ve arkadaşlık öğrenme.",
+      "12": "Maneviyat ve bilinçaltı çalışması. Teslim olma ve evrensel bağlantı kurma."
+    },
+    "south_node_in_houses": {
+      "1": "Geçmişten gelen güçlü bireysellik. İlişkilerde denge öğrenilmeli (KAD 7. ev).",
+      "2": "Geçmişten gelen maddi güvence alışkanlığı. Paylaşım ve dönüşüm öğrenilmeli (KAD 8. ev).",
+      "3": "Geçmişten gelen iletişim yeteneği. Derin felsefe ve vizyon geliştirilmeli (KAD 9. ev).",
+      "4": "Geçmişten gelen güçlü aile bağları. Kariyer ve toplumsal sorumluluk öğrenilmeli (KAD 10. ev).",
+      "5": "Geçmişten gelen yaratıcılık ve ego. Topluluk bilinci geliştirilmeli (KAD 11. ev).",
+      "6": "Geçmişten gelen hizmet alışkanlığı. Maneviyat ve teslim olma öğrenilmeli (KAD 12. ev).",
+      "7": "Geçmişten gelen ilişki deneyimi. Bireysellik ve bağımsızlık öğrenilmeli (KAD 1. ev).",
+      "8": "Geçmişten gelen dönüşüm gücü. Öz değer ve maddi güvenlik öğrenilmeli (KAD 2. ev).",
+      "9": "Geçmişten gelen felsefi derinlik. İletişim ve pratik öğrenme geliştirilmeli (KAD 3. ev).",
+      "10": "Geçmişten gelen kariyer başarısı. Aile ve duygusal güvenlik öğrenilmeli (KAD 4. ev).",
+      "11": "Geçmişten gelen topluluk bilinci. Bireysel yaratıcılık geliştirilmeli (KAD 5. ev).",
+      "12": "Geçmişten gelen maneviyat. Pratik hizmet ve düzen öğrenilmeli (KAD 6. ev)."
+    },
+    "lilith_in_houses": {
+      "1": "Güçlü ve manyetik kişilik. Başkalarını rahatsız eden bir cazibe. Kimlikte karanlık güç.",
+      "2": "Maddi hırsta bastırılmış arzular. Parayı kontrol etme veya savurma uçları.",
+      "3": "İletişimde manipülasyon gücü. Yasak bilgi ve gizli fikirler.",
+      "4": "Aile içi bastırılmış dinamikler. Anne ile derin çatışma potansiyeli.",
+      "5": "Tutkulu ve yoğun aşk hayatı. Yaratıcılıkta karanlık temalar. Yasak ilişkiler.",
+      "6": "İş ortamında güç mücadeleleri. Sağlıkta bastırılmış stres. Kontrol arzusu.",
+      "7": "İlişkilerde güç oyunları. Karşı cinsle karmaşık dinamikler. Çekici ama tehlikeli bağlar.",
+      "8": "Çok güçlü konum. Derin cinsellik, tabular, ölüm-kalım meseleleri. Gizli güçler.",
+      "9": "İnanç ve ahlak konusunda isyan. Yasak felsefeler. Geleneksel değerlere meydan okuma.",
+      "10": "Kariyerde bastırılmış hırs. Güç ve otorite arayışı. Skandal potansiyeli.",
+      "11": "Topluluk içinde dışlanma veya marjinallik. İsyankâr idealler.",
+      "12": "Bilinçaltının en karanlık köşeleri. Bastırılmış korkular. Gizli düşmanlar."
+    },
+    "fortune_in_houses": {
+      "1": "Şans kişisel girişimlerde. Fiziksel sağlık ve görünümde bereket.",
+      "2": "Şans finansal konularda. Doğal para kazanma yeteneği.",
+      "3": "Şans eğitim ve iletişimde. Kardeşlerle şanslı bağ.",
+      "4": "Şans ev ve aile konularında. Mülk edinmede bereket.",
+      "5": "Şans yaratıcılık ve aşkta. Çocuklar aracılığıyla bereket.",
+      "6": "Şans sağlık ve iş hayatında. Hizmette başarı.",
+      "7": "Şans evlilik ve ortaklıklarda. Partner aracılığıyla bereket.",
+      "8": "Şans miras ve yatırımlarda. Başkalarının kaynaklarından bereket.",
+      "9": "Şans yurtdışı ve eğitimde. Seyahat ve felsefede bereket.",
+      "10": "Şans kariyer ve toplumsal statüde. Mesleki başarı.",
+      "11": "Şans arkadaşlıklar ve topluluk projelerinde. Hedeflere ulaşmada bereket.",
+      "12": "Şans maneviyat ve bilinçaltı çalışmalarında. Gizli yardımlar."
+    }
+  },
+  "element_balance": {
+    "fire_dominant": "Ateş baskınlığı: Coşku, enerji, dürtüsellik, spontanlık, yaratıcılık, özgüven, idealizm, iyimserlik, liderlik, bağımsızlık, cesaret, vizyon, eylem odaklılık. İnsanları rahatlatır, aydınlatır, yönlendirir, cesaretlendirir, güçlü sever, inisiyatif alır, geleceğe yöneliktir, en iyi insan yöneticileridir.",
+    "fire_lacking": "Ateş eksikliği: Yalnızlık, içe kapanıklık, kolay moral bozulması, korkaklık, pasiflik, düşük özgüven, kendini ifade edememe, motivasyon eksikliği, karamsarlık, düşük hırs. Telafi için 1., 5., 9. evleri kontrol edin.",
+    "fire_excess": "Ateş fazlalığı: Aşırı özgüven, aşırı hırs, bencillik, ego, aşırı risk alma, kibir, cilt kızarması, güneş alerjisi, göz sorunları.",
+    "earth_dominant": "Toprak baskınlığı: Pratik, maddesel, yerleşik, güvenlik odaklı, gerçekçi, üretken, metodik, dayanıklı, mükemmeliyetçi, düzenli, sabırlı, kararlı, güvenilir. Soğukkanlı, yapıcı, güvenilir, parayla dikkatli, en sadık/vefalı, en gerçekçi, en çalışkan, iyi dinleyici, sır tutar, aşırılıktan kaçınır, kontrollü, ahlaklı, en istikrarlı.",
+    "earth_lacking": "Toprak eksikliği: Maddi değer bilmeme, savurganlık, iş istikrarsızlığı, yoksulluk potansiyeli, köksüz hissetme, fiziksel ihtiyaçları ihmal, biriktirme/yatırım beceriksizliği, odaklanamama, dağınıklık. Telafi için 2., 6., 10. evleri kontrol edin.",
+    "earth_excess": "Toprak fazlalığı: Materyalist, yeniliğe kapalı, aşırı muhafazakâr, vizyonsuz, dar görüşlü, mükemmeliyetçi, inatçı, değişime dirençli, aşırı tutumlu.",
+    "air_dominant": "Hava baskınlığı: Entelektüel, sorgulayıcı, sentezci, gözlemci, objektif, mesafeli, kararsız, konuşkan, işbirlikçi. Harika ikna kabiliyeti, en zeki/en akıllı, en espritüel, objektif, adil, çok yetenekli, ellerini kullanmada başarılı, mükemmel halkla ilişkiler, doğal öğretmenler.",
+    "air_lacking": "Hava eksikliği: Zoraki konuşmacılar, ciddi/somurtkan, sübjektif, soyut konulardan kaçınma, eğitim zorlukları, kendini değerlendirememe, kaygı, zayıf sinirler, dağınıklık, psikosomatik hastalıklar, gruplardan kaçınma. Telafi için 3., 7., 11. evleri kontrol edin.",
+    "air_excess": "Hava fazlalığı: Kafasında yaşar, parayla savurgan, özgürlük takıntısı, aşırı konuşkan, alaycı, ilişki sınırı yok, hep fikir üretir/hiç uygulamaz.",
+    "water_dominant": "Su baskınlığı: Duygusal, sezgisel, merhametli, değişken, ruh hali değişimleri, hassas, empatik, reaktif, bağımlı, koruyucu, gizemli, adaptif, pasif, romantik. Şefkatli, insan psikolojisini anlar, en sempatik, rahatlatıcı enerji, en sezgisel, bilinmeyene meraklı, en fedakâr, zayıflara yardım eder, en empatik, telepatik, aşka saygılı, toleranslı. Özel: Su elementi baskın kişiler erken ergenliğe girer. Toprak ile en verimli/üretken. Paranoyaya eğilimli.",
+    "water_lacking": "Su eksikliği: Duygusuz, acımasız, başkalarına duyarsız, sezgisiz, aşka inanmama, güçlü nefret. Telafi için 4., 8., 12. evleri kontrol edin.",
+    "water_excess": "Su fazlalığı: Kırılgan, küskün, alıngan, kaygılı, aşırı sübjektif, başkaları için kendini ihmal, hayal dünyasında yaşama, gizemli/derin düşünce.",
+    "calculation_note": "Güneş ve Ay 2 puan, diğer gezegenler (ASC, MC dahil) 1 puan. Toplam: 15 puan."
+  },
+  "modality_balance": {
+    "cardinal_dominant": "Öncü baskınlığı: İnisiyatif, doğrudan yaklaşım, stratejik, aktif, girişimci, güçlü ilişkiler, risk alan, yenilikçi, sabırsız, dışa odaklı. Pozitif öncüler (Koç-Terazi): Geleceğe bakarak şimdide hareket eder. Negatif öncüler (Yengeç-Oğlak): Geçmişe bağlı.",
+    "cardinal_lacking": "Öncü eksikliği: Strateji yok, amaçsız, bağımsız hareket edemez, risk almaktan kaçınır, içe kapanık.",
+    "cardinal_excess": "Öncü fazlalığı: Aşırı özgüven, durumları zorlar, gereksiz çatışma.",
+    "fixed_dominant": "Sabit baskınlığı: Azim, inatçılık, amaç odaklı, değişime dirençli, atalet ilkesi, konsantrasyon, dayanıklılık. 'Şimdi ve burada' yaşar. Değerli şeylere, hedeflere, tatmine odaklanır. Net plan = hazır olduğunda güçlü eylem. Yönlendirilmeyi/zorlanmayı/baskılanmayı reddeder.",
+    "fixed_lacking": "Sabit eksikliği: Dayanıklılık yok, başladığını bitiremez, temelsiz, sahip olduklarını koruyamaz, istikrarsız.",
+    "fixed_excess": "Sabit fazlalığı: Esneklik yok, inatçılık, fikir/duygularda bükülemez, yeniliğe kapalı.",
+    "mutable_dominant": "Değişken baskınlığı: Uyumlu, çok yönlü, değişken, kararsız, arkadaş canlısı, huzursuz, irade zayıflığı, kararsız, kolay etkilenen, hizmet odaklı. Aşağı spiral: Başak-Balık (geçmişe bağlı). Yukarı spiral: İkizler-Yay (geleceğe yönelir). Kişisel ilişkilere odaklanır. Akışına bırakır, insanlara ve koşullara kolayca uyum sağlar.",
+    "mutable_lacking": "Değişken eksikliği: Hoşgörüsüz, uyum sağlayamaz, başkalarının uyum sağlamasını ister, kendini değiştiremez, fikir/duygularını paylaşamaz, iletişim sorunları.",
+    "mutable_excess": "Değişken fazlalığı: Hizmet yoluyla kendini ihmal, projeleri bitiremez, aşırı yayılma, aşırı uyum, kendi fikirlerini savunamaz, dayanıklılık yok.",
+    "cardinal_signs": "Koç, Yengeç, Terazi, Oğlak",
+    "fixed_signs": "Boğa, Aslan, Akrep, Kova",
+    "mutable_signs": "İkizler, Başak, Yay, Balık"
+  },
+  "general_rules": [
+    "Kadınlarda Güneş ve Mars, erkeklerde Ay ve Venus evliligi tayin eder.",
+    "ASC ve Güneş'in bulundugu evler ana temalari veriyor.",
+    "Isiklar (Güneş ve Ay) + Kisisel Gezegenler dönüştürülelebilir, farkindalikla yonettilebilir.",
+    "Jenerasyon Gezegenleri degistilemez ama önlem ve bilincle yönlendirilebilir.",
+    "Gezegen son 5 dereceye geldiginde sonraki eve daha çok etki ediyor.",
+    "Güneş dogasi geregi BEN der, bu yuzden topluluk etkili evlerde rahat edemez (3-7-11-12).",
+    "Ay'a hangi gezegen açı yaparsa yapsin bizi etkiler, Ay tum açılari alir.",
+    "Mars düştüğü yerin bölgesine göre yara/ben izi verir.",
+    "Jupiter vucutta büyüklük verir, Mars vucutta ben/yara verir.",
+    "Venüs düştüğü evin bölgesine güzellik verir.",
+    "Kisi baliginin ve Neptün'unun oldugu yer kendini kurban ettigi yer.",
+    "KAD kişinin en zorlandigi noktalardir. KAD'a gitmek zordur ama istedigini yapınca pozitif gelismeler yaşanır.",
+    "Dispozitor: Bir gezegen hangi burctaysa, o burcun yöneticisi o gezegenin dispozitoru olur.",
+    "Bir gezegen hangi eve düstüyse o evde kendini zaman içerişinde adapte eder.",
+    "Element eksikliklerini gidermek için desteklenen evlere bakilir: Ates(1,5,9), Toprak(2,6,10), Hava(3,7,11), Su(4,8,12).",
+    "Stelyum: 3 veya daha fazla gezegenin ayni burç/evde toplanmasi. O evin konulari çok one çıkar.",
+    "Güneş 5.ev/Aslan'da yönetir, 11.ev/Kova'da düşüşte, 1.ev/Koc'ta yücelir, 7.ev/Terazi'de zararli.",
+    "Ay 4.ev/Yengec'i yönetir, 10.ev/Oglak'ta düşüşte, 2.ev/Boga'da yücelir, 8.ev/Akrep'te zararli.",
+    "Mars 1.ev/Koc'u yönetir, 7.ev/Terazi'de düşüşte, 10.ev/Oglak'ta yücelir, 4.ev/Yengec'te zararli.",
+    "Venus %80 iyicil. Koc-Akrep-Başak disinda ölümlu çalışir.",
+    "Mars %80 kötücül, %20 iyicil. Gücünun düşük oldugu yerleşimlerde etkişi azalir.",
+    "3-9 aksi kistirilmis: Kisi bu evlerin konularinda kendini tam gosteremiyor.",
+    "6-12 kistirilmis: Hayatin düzeniyle maneviyat arasindaki dengeyi kuramaz.",
+    "Ay insanların nasil makyaj yaptigini gösterir (kadın haritasi).",
+    "Evlilik için: 7.evin girisi, dekan yöneticisi gezegeni ve o gezegenin durumu, Venus'un durumu beraber yorumlanir.",
+    "Çocuk için: 5.evin ilk dekani, Ay'in durumu, gezegenlerin 5.ev 1.dekana açılari incelenir.",
+    "Meslek için: 10.ev, MC noktasi, 6.ev 2.dekan (is ortami), 10.ev 2.dekan (işten kazanilan para) incelenir.",
+    "Sağlık için: 6.ev 1.dekan, Chiron'un durumu, gezegenlerin verdigi hastalıklar incelenir.",
+    "Para için: 2.ev dekanlari, Venus'un durumu, 10.ev 2.dekan incelenir.",
+    "Bir gezegen köşe evde (1, 4, 7, 10) veya ev ucunda ise o evin enerjisini artırır",
+    "Savurgan burçlarda Mars (Aslan, Kova, Koç, Yay, İkizler, Balık): Mars 2. evde bu burçlarda = para tutamaz",
+    "11. evde Uranüs, Merkür, Plüton veya Güneş/Ay iyi açılarla; Ay 11. evde; Mars 11. evde Uranüs ile; Neptün 8. evde Uranüs + Jüpiter iyi açılarla = astroloji başarısı",
+    "Element eksikliğinde telafi evleri: Ateş eksikliği = 1, 5, 9. evler; Toprak eksikliği = 2, 6, 10. evler; Hava eksikliği = 3, 7, 11. evler; Su eksikliği = 4, 8, 12. evler",
+    "Değişken burç spiral yönleri: Aşağı (geçmişe bağlı) = Başak-Balık; Yukarı (geleceğe yönelir) = İkizler-Yay",
+    "Neptün = Rol yapma. Petrol/petrokimya = Neptün + Plüton",
+    "Çocuk haritasında Mars Balık'ta = çocuk kavga edemez, iç ego/cesaret için teşvik gerekir",
+    "Gezegen fayda/zarar yüzdeleri: Jüpiter %90 faydalı (Baş Hayırsever), Venüs yüksek faydalı, Mars %80 zararlı, Satürn %90 zararlı, Merkür %50-%50",
+    "Su elementi baskın kişiler erken ergenliğe girer",
+    "Horoskopte 6 Venüs dekanı vardır ve TÜM Venüs dekanları hem ilişki (Terazi yönü) hem finansal kazanç (Boğa yönü) gösterir",
+    "Mars'ın aşırı güçlü olduğu pozisyonlarda kişi 'güç sarhoşluğu' yaşayabilir"
+  ],
+  "typology": {
+    "aries": {
+      "face": "Keskin, enerjik hatlar, belirgin elmacık kemikleri, büyük kafa (erkeklerde)",
+      "expression": "Kızgın, enerjik ifade",
+      "eyes": {
+        "color": "Büyük, parlak gözler",
+        "shape": "Sağ göz daha büyük olabilir, çabuk kızaran, birbirine yakın gözler",
+        "gaze": "Delici ve sert bakış"
+      },
+      "ears": "Küçük, başa yapışık",
+      "skin": "Beyaz/açık ten",
+      "build": "Atletik, kaslı, fit",
+      "lips": "İnce-orta, keskin hatlar",
+      "eyebrows": "Kalın, belirgin, kemerli",
+      "hair": "Kalın, dalgalı/kıvırcık, koyu (siyah/kahverengi)",
+      "birthmarks": "Gözler ve alın bölgesi",
+      "walk": "Hızlı ve enerjik, başı öne eğik, acelesili",
+      "hands": "Sıcak, biraz büyük",
+      "nose": "Kadınlarda büyük/karakteristik; erkeklerde simetrik",
+      "height": {
+        "female": "~170cm",
+        "male": "~180cm"
+      },
+      "feet": "Kadınlarda küçük; erkeklerde orta/güçlü",
+      "hand_temperature": "Her zaman sıcak, biraz büyük",
+      "overall": "Atletik, enerjik, savaşçı görünüm. Mars etkisiyle güçlü fiziksel yapı."
+    },
+    "taurus": {
+      "face": "İyi burun-dudak mesafesi, kısa kalın boyun, geniş alın, yuvarlak hatlar, dolgun dudaklar",
+      "expression": "Sert, sakin, dengeli",
+      "eyes": {
+        "color": "Kahverengi/yeşil/bal",
+        "shape": "Büyük, etkileyici gözler",
+        "gaze": "Yukarıdan bakan, boğa gibi"
+      },
+      "ears": "Küçük, yassı",
+      "build": "Güçlü, dayanıklı, kiloya eğilimli (tiroid bağlantılı obezite riski)",
+      "lips": "Dolgun, biçimli",
+      "eyebrows": "Kalın, düz",
+      "hair": "Kalın, parlak, sağlıklı, koyu, düz (nadiren dalgalı). Yağlı cilt/saça eğilimli",
+      "birthmarks": "Boyun, dudak üstü",
+      "walk": "Ağır, kararlı, yavaş ama güçlü. Öküz gibi, üst gövde ağır, ince bacaklar",
+      "hands": "Soğuk ve kuru",
+      "skin": "Buğday/esmer",
+      "voice": "Erkeklerde ince; kadınlarda kalın. Güzel şarkı sesi ama akıcı konuşma değil",
+      "height": {
+        "female": "~163cm",
+        "male": "~175cm"
+      },
+      "nails": "Kadınlarda uzun/bakımlı; erkeklerde kısa/temiz",
+      "hand_temperature": "Soğuk ve kuru",
+      "overall": "Güçlü, sağlam yapılı, Venüs güzelliği. Kiloya eğilimli ama dayanıklı."
+    },
+    "gemini": {
+      "face": "Meraklı gözler, çevik ifade, ince/narin hatlar",
+      "expression": "Hareketli, değişken yüz",
+      "eyes": {
+        "color": "Mavi/yeşil/ela",
+        "shape": "Meraklı, sürekli hareket eden, küçük, yuvarlak",
+        "gaze": "Araştırmacı"
+      },
+      "nose": "Kadınlarda okka (tombul); erkeklerde belirgin büyük",
+      "build": "İnce, çevik, sıska, kemikli",
+      "lips": "İnce-orta",
+      "eyebrows": "İnce, kemerli",
+      "hair": "İnce, açık renkli, dalgalı; açık tonlar (sarı, açık kahve)",
+      "birthmarks": "Eller ve kollar",
+      "walk": "Ya çok hızlı ya çok yavaş, eller/gözler sürekli hareket halinde, sürekli el kol hareketi",
+      "hands": "Soğuk, küçük parmaklar",
+      "skin": "Beyaz/açık, mavi alt ton",
+      "height": {
+        "female": "~175cm",
+        "male": "~185cm"
+      },
+      "hand_temperature": "Soğuk, küçük parmaklar",
+      "overall": "İnce, çevik, genç görünümlü. Merkür etkisiyle hareketli ve anlatımcı."
+    },
+    "cancer": {
+      "face": "Yuvarlak, yumuşak hatlar, büyük duygusal gözler, yağlı cilt",
+      "expression": "Masum, ay yüzlü",
+      "eyes": {
+        "color": "Mavi/gri/kahverengi",
+        "shape": "Göz altı torbaları belirgin",
+        "gaze": "Duygusal, derin, melankolik"
+      },
+      "ears": "Kepçe",
+      "build": "Kısa/orta boy, kiloya eğilimli, karın/göğüs bölgesinde yağlanma, yuvarlak hatlar",
+      "lips": "Dolgun, yumuşak",
+      "hair": "Yumuşak, dalgalı/düz, koyu, ince dokulu",
+      "birthmarks": "Göğüs ve mide bölgesi",
+      "walk": "Yana yana yengeç gibi, sekiz çizen yürüyüş",
+      "hands": "Sıcak, hafif nemli (sanki ellerini yeni yıkamış gibi)",
+      "skin": "Kadınlarda beyaz; erkeklerde buğday",
+      "height": {
+        "female": "~160cm (±5)",
+        "male": "~175cm"
+      },
+      "hand_temperature": "Sıcak, hafif nemli",
+      "overall": "Yuvarlak, yumuşak, anne/baba figürü. Ay etkisiyle duygusal yüz ifadesi."
+    },
+    "leo": {
+      "face": "Keskin karakteristik hatlar, aslan gibi, belirgin çene, gür saç",
+      "expression": "Gülen gözler",
+      "eyes": {
+        "color": "Kehribar/yeşil/kahverengi (Güneş burcuna göre değişir)",
+        "shape": "Büyük, badem şekilli",
+        "gaze": "Görkemli, kendinden emin"
+      },
+      "build": "Geniş güçlü omuzlar, hakim duruş",
+      "lips": "Dolgun, biçimli",
+      "eyebrows": "Kalın, kemerli",
+      "hair": "Kalın, parlak, dalgalı, koyu/kızıl. Erkekler saçı uzatma eğiliminde. 30'dan sonra incelir, kellik riski",
+      "birthmarks": "Omuz, sırt, göğüsler arası, yüz",
+      "walk": "Kedi gibi, uyanık, dikkatli",
+      "hands": "Ateş gibi sıcak, yıl boyunca",
+      "skin": "Açık, kızıl tonlar (güneş yanığı gibi kızarıklık)",
+      "height": {
+        "female": "~170cm",
+        "male": "~180cm"
+      },
+      "hand_temperature": "Ateş gibi sıcak, yıl boyunca",
+      "overall": "Görkemli, asil duruş. Güneş etkisiyle parlak, dikkat çekici görünüm."
+    },
+    "virgo": {
+      "face": "Erkeklerde kare/dikdörtgen; kadınlarda oval. İnce, narin",
+      "expression": "Genellikle mutsuz, temiz/bakımlı",
+      "eyes": {
+        "color": "Kahverengi",
+        "shape": "Net, keskin bakış",
+        "gaze": "Analitik, değerlendirici"
+      },
+      "build": "İnce, uzun. Kadınlarda küçük göğüs, dar omuzlar. Erkeklerde ince, narin, uzun boylu, uzun ince boyun",
+      "lips": "İnce/orta, düz hatlar, özellikle ince üst dudak",
+      "eyebrows": "İnce, düz",
+      "hair": "Düz, bakımlı, koyu. Orta yaşta incelir/beyazlar",
+      "birthmarks": "Karın bölgesi, bel çevresi",
+      "walk": "Sessiz, hızlı adımlar, çekingen",
+      "hands": "Buz gibi soğuk, asla tam tokalaşmaz",
+      "skin": "Açık kahverengi/zeytine yakın",
+      "height": {
+        "female": "~170cm",
+        "male": "~185cm (±5)"
+      },
+      "hand_temperature": "Buz gibi soğuk, asla tam tokalaşmaz",
+      "overall": "Temiz, bakımlı, detaycı görünüm. Chiron etkisiyle şüpheci/tehlikeli ilk izlenim (Akrep yükselen ile birlikte)."
+    },
+    "libra": {
+      "face": "Güzel, estetik, dengeli, uyumlu, yanakta gamze",
+      "expression": "Zarif, çekici",
+      "eyes": {
+        "color": "Mavi/yeşil/ela",
+        "shape": "Badem şekilli, büyük, büyüleyici",
+        "gaze": "Sıcak, davetkar"
+      },
+      "ears": "Venüs açılarına göre belirlenir",
+      "build": "Zarif, dengeli, orantılı. Yaşla kilo alır. Güzel kalçalar/bacaklar",
+      "lips": "Dolgun, biçimli",
+      "eyebrows": "Kemerli, orta kalınlıkta",
+      "hair": "Dalgalı veya düz, parlak, açık renkler",
+      "birthmarks": "Kulaklar, bel çevresi",
+      "walk": "Sağa sola sallanan, denizci gibi",
+      "hands": "Havaya göre değişir, yumuşak ve güzel",
+      "skin": "Beyaz/açık",
+      "height": {
+        "female": "~165cm (±5)",
+        "male": "~180cm (±5)"
+      },
+      "hand_temperature": "Havaya göre değişir, güzel eller",
+      "overall": "En estetik yükselen. Vücut simetrisi belirgin. Venüs güzelliği hâkim."
+    },
+    "scorpio": {
+      "face": "Gizemli, manyetik, keskin hatlar, yoğun",
+      "expression": "Derin, nüfuz edici",
+      "eyes": {
+        "color": "Tip 1: Koyu kahve/siyah; Tip 2: Renkli gözler",
+        "shape": "Belirgin göz altı torbaları (koyu mor). Derin, manyetik, sabit delici bakış",
+        "gaze": "Hipnotize edici, X-ray gibi"
+      },
+      "nose": "Erkeklerde kartal gagası; kadınlarda aşağı kıvrılan, belirgin burun",
+      "build": "Tip 1: Kısa, ağır, koyu. Tip 2: Uzun, ince, açık tenli",
+      "lips": "Tip 1: Dolgun/keskin; Tip 2: İnce/düz üst dudak",
+      "hair": "Erkeklerde ince, düz; Tip 1 kadın kıvırcık; Tip 2 kadın dalgalı; koyu kahve/siyah",
+      "birthmarks": "Özel/genital bölge",
+      "walk": "Hızlı/gizli veya yavaş/devriye gibi, çevreyi kontrol eder",
+      "hands": "Kalın, buz gibi soğuk yıl boyunca",
+      "skin": "Tip 1: Koyu; Tip 2: Açık",
+      "height": {
+        "female": "Tip 1 ~160cm, Tip 2 ~168cm",
+        "male": "Tip 1 ~170cm, Tip 2 ~180cm"
+      },
+      "hand_temperature": "Buz gibi soğuk, kalın/etli eller",
+      "overall": "İki farklı tip. Gizemli, manyetik, yoğun enerji. Plüton etkisiyle dönüştürücü aura."
+    },
+    "sagittarius": {
+      "face": "Geniş, açık ifade, gülen gözler, enerjik",
+      "expression": "Yaramaz çocuk gibi",
+      "eyes": {
+        "color": "Mavi/yeşil/ela",
+        "shape": "Parlak, ışıltılı, büyük badem gözler",
+        "gaze": "Yaramaz çocuk bakışı"
+      },
+      "nose": "Erkeklerde künt; kadınlarda küçük/düğme burun",
+      "build": "Erkeklerde ince/atletik; kadınlarda gençken fit, yaşla ağırlaşır. İkinci en fazla obeziteye eğilimli burç. Uzun atletik bacaklar, güçlü kalçalar",
+      "ears": "Büyük ama kepçe değil",
+      "eyebrows": "Kısa uçlu, yukarı bakan",
+      "hair": "Düz, nadiren dalgalı",
+      "birthmarks": "Kalça/popo",
+      "walk": "Geniş, uzun, rahat adımlar, sallanan",
+      "hands": "Sıcak, geniş avuç, bakımlı",
+      "skin": "Beyaz/turuncu",
+      "height": {
+        "female": "~170cm",
+        "male": "~185cm (±5)"
+      },
+      "hand_temperature": "Sıcak, geniş avuç, bakımlı",
+      "overall": "Neşeli, sportif, canlı görünüm. Jüpiter etkisiyle geniş, rahat duruş. Diyabete bağlı kilo artışı eğilimi."
+    },
+    "capricorn": {
+      "face": "Sivri/üçgen yüz",
+      "expression": "Ciddi, kararlı, güçlü kemik yapısı",
+      "eyes": {
+        "color": "Kahverengi/ela",
+        "shape": "Ciddi, derin gözler. Nadiren şaşılık",
+        "gaze": "Otoriter, mesafeli"
+      },
+      "nose": "Erkeklerde büyük küçük burun delikleri; kadınlarda daha güzel",
+      "build": "Büyük kemikli ama normal kilolu. Kemik yapısı belirgin. Gençken yaşlı, yaşlıyken genç/karizmatik görünür. Bacaklar eğri olabilir. El/ayak vücuda göre küçük. Çok hassas cilt",
+      "ears": "Üstten açık, kepçe değil",
+      "hair": "Kıvırcık veya dalgalı",
+      "birthmarks": "Tüm vücutta",
+      "walk": "Hızlı, dikkatli, kambur duruş, ip üstünde yürüyormuş gibi",
+      "hands": "Soğuk, buz gibi",
+      "skin": "Koyu esmer/zeytin",
+      "height": {
+        "female": "~165cm",
+        "male": "~175cm (±5)"
+      },
+      "hand_temperature": "Buz gibi soğuk",
+      "overall": "Kemikli, ciddi, otoriter görünüm. Satürn etkisiyle yaşla güzelleşen tip."
+    },
+    "aquarius": {
+      "face": "Kadınlarda yuvarlak; erkeklerde kare",
+      "expression": "Hümanist, samimi ama kendine özgü. Gözler çok belirgin",
+      "eyes": {
+        "color": "Mavi/yeşil/gri",
+        "shape": "Parlak, meraklı. Bir göz diğerinden büyük",
+        "gaze": "Sizi yukarıdan/arkadan inceleyen"
+      },
+      "build": "Fit. Uzun, zarif bacaklar. İnce/çevik bilekler. Parlak cilt, geniş alın. Cüce/dev uçlar mümkün (Uranüs dekanına bağlı). Estetik ameliyat bağımlılığı",
+      "ears": "Erkeklerde üstten açık; kadınlarda normal",
+      "hair": "Dalgalı/düz, parlak, kahverengi. Statikleşme/kabarma eğilimi",
+      "birthmarks": "Bacak, alın",
+      "walk": "Asimetrik, uzun/kısa adım değişimi",
+      "hands": "Buz gibi soğuk",
+      "skin": "Açık ten",
+      "height": {
+        "female": "~168cm",
+        "male": "~180cm (±5)"
+      },
+      "hand_temperature": "Buz gibi soğuk",
+      "overall": "Kendine özgü, sıra dışı görünüm. Uranüs etkisiyle asimetrik güzellik."
+    },
+    "pisces": {
+      "face": "Yuvarlak, tatlı, neşeli",
+      "expression": "Geniş gülümseyen yüz, hayalperest bakış, masum",
+      "eyes": {
+        "color": "Mavi/yeşil/ela",
+        "shape": "Büyük, duygusal gözler. Üzgün/ölü balık/uykulu bakış",
+        "gaze": "Rüya gibi, dalgın"
+      },
+      "build": "Ödeme/şişmeye eğilimli, kilolu, yuvarlak vücut hatları. Yıl boyunca terler. Küçük narin ayaklar. Göz altı torbaları, yağlı cilt. Tüm burçların özelliklerini taşıyabilir",
+      "hair": "Yumuşak, ince dokulu, düz, seyrek",
+      "birthmarks": "Ayaklar",
+      "walk": "Süzülerek/yüzüyormuş gibi kayar",
+      "hands": "Yıl boyunca terli",
+      "skin": "Açık ten",
+      "height": {
+        "female": "~155cm",
+        "male": "~170cm (±5)"
+      },
+      "hand_temperature": "Yıl boyunca terli",
+      "overall": "Yumuşak, rüya gibi görünüm. Neptün etkisiyle değişken, adaptif fizik."
+    }
+  },
+  "medical_rules": [
+    {
+      "condition": "mars_in_house_2_6_10",
+      "description": "Mars 2., 6. veya 10. evde = disk hernisi (boyun/sırt) riski"
+    },
+    {
+      "condition": "mars_virgo_sun_conjunction",
+      "description": "Mars Başak'ta + Mars-Güneş kavuşumu = apandisit"
+    },
+    {
+      "condition": "mars_aries_sun_conjunction",
+      "description": "Mars Koç'ta + Mars-Güneş kavuşumu = baş/göz yaralanmaları, yanıklar, patlamalar"
+    },
+    {
+      "condition": "mars_neptune_conjunction_6th",
+      "description": "Mars-Neptün kavuşumu 6. evde = ruh sağlığı sorunları"
+    },
+    {
+      "condition": "sun_diseases",
+      "description": "Güneş hastalıkları = kalp, kalp krizi, göz hastalıkları"
+    },
+    {
+      "condition": "jupiter_1st_house",
+      "description": "Jüpiter 1. evde = diyabet, yağlı karaciğer"
+    },
+    {
+      "condition": "jupiter_2nd_house",
+      "description": "Jüpiter 2. evde = bel genişlemesi, kalça sorunları, tiroid (kötü açılar)"
+    },
+    {
+      "condition": "neptune_6th_water",
+      "description": "Neptün 6. evde + Su burçları = ödem"
+    },
+    {
+      "condition": "neptune_6th_earth",
+      "description": "Neptün 6. evde + Toprak burçları = obezite, yağlı cilt, alerjiler"
+    },
+    {
+      "condition": "neptune_6th_fire",
+      "description": "Neptün 6. evde + Ateş burçları = duygu durum bozuklukları, stres"
+    },
+    {
+      "condition": "neptune_6th_air",
+      "description": "Neptün 6. evde + Hava burçları = hızlı metabolizma, zayıflık, sinirlilik"
+    },
+    {
+      "condition": "neptune_4th",
+      "description": "Neptün 4. evde = genetik lenf sistemi sorunları"
+    },
+    {
+      "condition": "taurus_rising",
+      "description": "Boğa yükselen = tiroid bağlantılı obezite riski"
+    },
+    {
+      "condition": "sagittarius_rising",
+      "description": "Yay yükselen = diyabete bağlı kilo artışı, ikinci en obeziteye eğilimli"
+    },
+    {
+      "condition": "pisces_rising",
+      "description": "Balık yükselen = ödeme eğilimli, terleme"
+    },
+    {
+      "condition": "mercury_diseases",
+      "description": "Merkür hastalıkları = sinir sistemi, ruhsal hastalık, konuşma bozuklukları"
+    },
+    {
+      "condition": "12th_house_rule",
+      "description": "12. evdeki gezegenler = %80 zararlı, %20 faydalı"
+    }
+  ],
+  "body_parts_by_house": {
+    "1": "Baş bölgesi",
+    "2": "Boyun-bel arası",
+    "3": "Eller, kollar, parmaklar, burun",
+    "4": "Göğüs/memeler (kadın), çene (erkek), mide",
+    "5": "Gözler, saç dolgunluğu, sırt",
+    "6": "Alt karın (göbek-genital arası)",
+    "7": "Kulaklar, böbrek bölgesi, bel çevresi",
+    "8": "Erkek genital bölgesi",
+    "9": "Üst bacak, kalça, bacak uzunluğu",
+    "10": "Tüm kemikler, iskelet sistemi, saç/vücut kılları",
+    "11": "Dizler, diz kapakları, diz-ayak arası",
+    "12": "Ayak bileği ve altı, gözler (parıltı, gülüş)"
+  },
+  "relationship_rules": {
+    "female_marriage": "Kadın haritasında: Güneş ve Mars evliliği belirler",
+    "male_marriage": "Erkek haritasında: Ay ve Venüs evliliği belirler",
+    "spouse_houses": {
+      "1st_spouse": "7. ev",
+      "2nd_spouse": "9. ev",
+      "3rd_spouse": "11. ev",
+      "4th_spouse": "1. ev"
+    },
+    "children_houses": {
+      "1st_child": "5. ev",
+      "2nd_child": "7. ev",
+      "3rd_child": "9. ev",
+      "4th_child": "11. ev"
+    },
+    "divorce_indicator": "Mars 7. evde (Mars güçlü bir burçtaysa hasar ikiye katlanır)",
+    "multiple_marriage_indicator": "Merkür 7. evde çift karakterli burçta; Neptün 7. evde çift karakterli burçta",
+    "venus_saturn_positive": "Venüs-Satürn olumlu açı = kişiyi daha ahlaklı ve erdemli yapar",
+    "venus_chiron_negative": "Venüs-Chiron olumsuz açı = kronik bekaretlik/yalnızlık göstergesi",
+    "twin_indicator": "Merkür 5. evde ve çift karakterli burçta (İkizler, Yay, Balık) = ikiz çocuk göstergesi (Başak hariç)",
+    "child_gender_rule": "Ay 5. ev 1. dekanda = ilk çocuk kız olabilir; Venüs 5. ev 1. dekanda = ilk çocuk güzel ve kız"
+  },
+  "career_by_house": {
+    "1": "Mankenlik, oyunculuk, spor",
+    "2": "Finans, gurme/yemek",
+    "3": "İletişim, pazarlama, satış, reklamcılık, şoförlük",
+    "4": "Ev tabanlı iş, restoran, emlak, miras yönetimi",
+    "5": "Çocuklarla ilgili iş, tiyatro, oyunculuk, hobi-kariyer",
+    "6": "Doktor (1. dekan), veteriner (3. dekan), sağlık sektörü, eczane, hizmet sektörü",
+    "7": "Nikah memurluğu, ilişki terapisti, ortaklıklar",
+    "8": "Sigorta, bankacılık, finans",
+    "9": "Otelcilik, öğretmenlik, akademi, diplomasi, yurt dışı bağlantılı iş",
+    "10": "Profesyonel kariyer (Venüs elementi: Hava = entelektüel; Toprak = finansal)",
+    "11": "Dernekler, gruplar, arkadaş işbirlikleri, astroloji, bilgisayar, teknoloji, elektrik/elektronik",
+    "12": "Din adamlığı, sanat, soyut alanlar"
+  },
+  "career_by_planet": {
+    "neptune": "İllüzyonist, sihirbaz, oyuncu, sinemacı, şair, yazar, internet, sinema, petrol",
+    "mars": "Spor, askerlik, metal işleri, cerrahi",
+    "mercury": "İletişim, öğretmenlik, arabuluculuk, komisyonculuk, yazarlık",
+    "venus": "Sanat, moda, güzellik, gastronomi",
+    "jupiter": "Hukuk, din, eğitim, yayıncılık",
+    "saturn": "İnşaat, mühendislik, devlet, bürokrasi",
+    "uranus": "Teknoloji, astroloji, havacılık, elektrik/elektronik",
+    "pluto": "Psikoloji, dedektiflik, araştırma, madencilik"
+  }
+}

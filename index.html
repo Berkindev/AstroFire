@@ -31,6 +31,7 @@
         <button class="main-tab" data-main-tab="solar">☀️ Solar Return</button>
         <button class="main-tab" data-main-tab="lunar">🌙 Lunar Return</button>
         <button class="main-tab" data-main-tab="transit">🔄 Transitler</button>
+        <button class="main-tab" data-main-tab="analysis">📊 Analiz</button>
       </div>
 
       <!-- Input Panel (toggle edilebilir) -->
@@ -515,6 +516,24 @@
 
             <!-- SR Dekanlar (her zaman görünür) -->
             <div id="srDecansDisplay" class="decans-section"></div>
+          </div>
+        </section>
+      </section>
+
+      <!-- ANALYSIS PANEL -->
+      <section class="main-tab-content" id="mainTab-analysis">
+        <section class="panel analysis-panel" id="analysisPanel">
+          <h2 class="panel-title">
+            <span class="panel-icon">📊</span>
+            Harita Analizi
+          </h2>
+
+          <div class="analysis-no-chart" id="analysisNoChart">
+            <p>Analiz yapabilmek için önce bir natal harita hesaplayın.</p>
+          </div>
+
+          <div class="analysis-content hidden" id="analysisContent">
+            <div id="analysisRuleResults" class="analysis-sections"></div>
           </div>
         </section>
       </section>
