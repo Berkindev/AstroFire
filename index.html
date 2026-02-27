@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌙</text></svg>">
+  <title>AstroFire - Astroharmony Astroloji Hesaplama Aracı</title>
+  <meta name="description" content="Astroharmony Astroloji Hesaplama Aracı">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-brand" id="headerBrand" style="cursor:pointer;">
+        <span class="brand-icon">🔥</span>
+        <h1 class="brand-title">AstroFire</h1>
+        <span class="brand-subtitle">Astroharmony Astroloji Hesaplama Aracı</span>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+      <!-- Ana Sekmeler (Natal / 7'ler / Solar Return) — her zaman üstte -->
+      <div class="main-tabs" id="mainTabs">
+        <button class="main-tab active" data-main-tab="natal">🔮 Natal Harita</button>
+        <button class="main-tab" data-main-tab="sevens">7️⃣ 7'ler Kanunu</button>
+        <button class="main-tab" data-main-tab="solar">☀️ Solar Return</button>
+        <button class="main-tab" data-main-tab="lunar">🌙 Lunar Return</button>
+        <button class="main-tab" data-main-tab="transit">🔄 Transitler</button>
+      </div>
+
+      <!-- Input Panel (toggle edilebilir) -->
+      <section class="panel input-panel">
+        <div class="form-toggle" id="formToggle">
+          <span class="form-toggle-title">
+            <span class="panel-icon">📋</span>
+            Doğum Bilgileri
+          </span>
+          <span class="toggle-icon" id="toggleIcon">▼</span>
+        </div>
+
+        <div id="formContent" class="form-collapsible">
+        <form id="birthForm" class="birth-form">
+          <!-- Tarih -->
+          <div class="form-row">
+            <div class="form-group">
+              <label for="birthDay">Gün</label>
+              <input type="number" id="birthDay" min="1" max="31" required>
+            </div>
+            <div class="form-group">
+              <label for="birthMonth">Ay</label>
+              <input type="number" id="birthMonth" min="1" max="12" required>
+            </div>
+            <div class="form-group">
+              <label for="birthYear">Yıl</label>
+              <input type="number" id="birthYear" min="1" max="2100" required>
+            </div>
+          </div>
+
+          <!-- Saat -->
+          <div class="form-row">
+            <div class="form-group">
+              <label for="birthHour">Saat</label>
+              <input type="number" id="birthHour" min="0" max="23" required>
+            </div>
+            <div class="form-group">
+              <label for="birthMinute">Dakika</label>
+              <input type="number" id="birthMinute" min="0" max="59" required>
+            </div>
+          </div>
+
+          <!-- Yer Arama -->
+          <div class="form-group full-width">
+            <label for="citySearch">Doğum Yeri</label>
+            <div class="city-search-wrapper">
+              <input type="text" id="citySearch" autocomplete="off">
+              <div id="cityDropdown" class="city-dropdown hidden"></div>
+            </div>
+            <div class="quick-city-buttons" id="quickCityButtons">
+              <button type="button" class="quick-city-btn" data-city="istanbul">İstanbul</button>
+              <button type="button" class="quick-city-btn" data-city="ankara">Ankara</button>
+              <button type="button" class="quick-city-btn" data-city="izmir">İzmir</button>
+              <button type="button" class="quick-city-btn" data-city="antalya">Antalya</button>
+              <button type="button" class="quick-city-btn" data-city="eskisehir">Eskişehir</button>
+            </div>
+          </div>
+
+          <!-- Seçili Yer Bilgisi -->
+          <div id="locationInfo" class="location-info hidden">
+            <div class="location-detail">
+              <span class="detail-label">Koordinat:</span>
+              <span id="coordDisplay" class="detail-value"></span>
+            </div>
+            <div class="location-detail">
+              <span class="detail-label">Timezone:</span>
+              <span id="timezoneDisplay" class="detail-value"></span>
+            </div>
+            <div class="location-detail">
+              <span class="detail-label">O tarihteki saat dilimi:</span>
+              <span id="utcOffsetDisplay" class="detail-value highlight"></span>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" id="calculateBtn" class="btn-calculate" disabled>
+              <span class="btn-icon">✨</span>
+              Harita Hesapla
+            </button>
+            <button type="button" id="clearFormBtn" class="btn-clear">
+              <span class="btn-icon">🗑️</span>
+              Temizle
+            </button>
+          </div>
+        </form>
+        </div>
+      </section>
+
+      <!-- NATAL PANEL -->
+      <section class="main-tab-content active" id="mainTab-natal">
+        <section class="panel results-panel hidden" id="resultsPanel">
+          <!-- Natal Sub-Tabs -->
+          <div class="tabs">
+            <button class="tab active" data-tab="chart">🗺️ Harita</button>
+            <button class="tab" data-tab="planets">🪐 Gezegenler</button>
+            <button class="tab" data-tab="houses">🏠 Evler</button>
+            <button class="tab" data-tab="aspects">🔗 Aspektler</button>
+            <button class="tab" data-tab="debug">📊 Ham Veri</button>
+            <button class="tab" data-tab="chartinfo" id="chartInfoToggle">📋 Harita Bilgileri</button>
+          </div>
+
+          <!-- Chart Info Side Panel -->
+          <div id="chartInfoPanel" class="chart-info-panel chart-info-closed">
+            <div class="chart-info-header">
+              <h3>📋 Harita Bilgileri</h3>
+              <button id="chartInfoClose" class="chart-info-close">&times;</button>
+            </div>
+            <div id="chartInfoContent" class="chart-info-content"></div>
+          </div>
+
+          <!-- Tab Contents -->
+          <div id="tab-chart" class="tab-content active">
+            <div class="chart-canvas-container">
+              <canvas id="natalChartCanvas" width="1200" height="1200"></canvas>
+            </div>
+            <label class="chart-overlay-toggle" id="decanOverlayToggle">
+              <input type="checkbox" id="decanOverlayCheck" checked>
+              <span>Dekanları Göster</span>
+            </label>
+          </div>
+
+          <div id="tab-planets" class="tab-content">
+            <div id="planetsTable"></div>
+          </div>
+
+          <div id="tab-houses" class="tab-content">
+            <div id="housesTable"></div>
+          </div>
+
+          <div id="tab-aspects" class="tab-content">
+            <div id="aspectsTable"></div>
+          </div>
+
+          <div id="tab-debug" class="tab-content">
+            <pre id="debugOutput" class="debug-output"></pre>
+          </div>
+
+          <!-- Dekanlar (her zaman görünür) -->
+          <div id="decansDisplay" class="decans-section"></div>
+        </section>
+      </section>
+
+      <!-- 7'LER KANUNU PANEL -->
+      <section class="main-tab-content" id="mainTab-sevens">
+        <section class="panel sevens-panel">
+          <div class="chart-canvas-container">
+            <canvas id="sevensChartCanvas" width="1200" height="1200"></canvas>
+          </div>
+          <div id="sevensDisplay"></div>
+        </section>
+      </section>
+
+      <!-- LUNAR RETURN PANEL -->
+      <section class="main-tab-content" id="mainTab-lunar">
+        <section class="panel lr-panel" id="lunarReturnPanel">
+          <h2 class="panel-title">
+            <span class="panel-icon">🌙</span>
+            Lunar Return
+          </h2>
+
+          <div class="lr-form">
+            <!-- Ay ve Yıl girişi -->
+            <div class="form-row lr-input-row">
+              <div class="form-group">
+                <label for="lrMonth">Ay</label>
+                <select id="lrMonth">
+                  <option value="1">Ocak</option>
+                  <option value="2">Şubat</option>
+                  <option value="3">Mart</option>
+                  <option value="4">Nisan</option>
+                  <option value="5">Mayıs</option>
+                  <option value="6">Haziran</option>
+                  <option value="7">Temmuz</option>
+                  <option value="8">Ağustos</option>
+                  <option value="9">Eylül</option>
+                  <option value="10">Ekim</option>
+                  <option value="11">Kasım</option>
+                  <option value="12">Aralık</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="lrYear">Yıl</label>
+                <input type="number" id="lrYear" min="1900" max="2100" required>
+              </div>
+            </div>
+
+            <!-- Konum seçimi -->
+            <div class="lr-location-section">
+              <label class="lr-location-label">Konum</label>
+              <div class="lr-location-options">
+                <label class="lr-radio-option active" id="lrLocBirthLabel">
+                  <input type="radio" name="lrLocation" value="birth" id="lrLocBirth" checked>
+                  <span class="radio-custom"></span>
+                  <span class="radio-text">Doğum Yeri</span>
+                  <span class="radio-detail" id="lrBirthPlaceName"></span>
+                </label>
+                <label class="lr-radio-option" id="lrLocCustomLabel">
+                  <input type="radio" name="lrLocation" value="custom" id="lrLocCustom">
+                  <span class="radio-custom"></span>
+                  <span class="radio-text">Başka Yer</span>
+                </label>
+              </div>
+
+              <!-- Başka yer şehir arama -->
+              <div class="lr-custom-location hidden" id="lrCustomLocationSection">
+                <div class="form-group full-width">
+                  <div class="city-search-wrapper">
+                    <input type="text" id="lrCitySearch" placeholder="Şehir ara..." autocomplete="off">
+                    <div id="lrCityDropdown" class="city-dropdown hidden"></div>
+                  </div>
+                </div>
+                <div id="lrLocationInfo" class="location-info hidden">
+                  <div class="location-detail">
+                    <span class="detail-label">Koordinat:</span>
+                    <span id="lrCoordDisplay" class="detail-value"></span>
+                  </div>
+                  <div class="location-detail">
+                    <span class="detail-label">Timezone:</span>
+                    <span id="lrTimezoneDisplay" class="detail-value"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <button type="button" id="lrCalculateBtn" class="btn-calculate lr-btn" disabled>
+              <span class="btn-icon">🌙</span>
+              Lunar Return Hesapla
+            </button>
+          </div>
+
+          <!-- LR Results -->
+          <div class="lr-results hidden" id="lrResults">
+            <!-- LR Timing bilgisi -->
+            <div class="lr-timing-card" id="lrTimingCard"></div>
+
+            <!-- LR Tabs -->
+            <div class="tabs lr-tabs">
+              <button class="tab active" data-lr-tab="lr-chart">🗺️ Harita</button>
+              <button class="tab" data-lr-tab="lr-planets">🪐 Gezegenler</button>
+              <button class="tab" data-lr-tab="lr-houses">🏠 Evler</button>
+              <button class="tab" data-lr-tab="lr-aspects">🔗 Aspektler</button>
+              <button class="tab" data-lr-tab="lr-debug">📊 Ham Veri</button>
+            </div>
+
+            <div id="tab-lr-chart" class="tab-content lr-tab-content active">
+              <div class="chart-canvas-container">
+                <canvas id="lrChartCanvas" width="1200" height="1200"></canvas>
+              </div>
+            </div>
+            <div id="tab-lr-planets" class="tab-content lr-tab-content">
+              <div id="lrPlanetsTable"></div>
+            </div>
+            <div id="tab-lr-houses" class="tab-content lr-tab-content">
+              <div id="lrHousesTable"></div>
+            </div>
+            <div id="tab-lr-aspects" class="tab-content lr-tab-content">
+              <div id="lrAspectsTable"></div>
+            </div>
+            <div id="tab-lr-debug" class="tab-content lr-tab-content">
+              <pre id="lrDebugOutput" class="debug-output"></pre>
+            </div>
+
+            <!-- LR Dekanlar (her zaman görünür) -->
+            <div id="lrDecansDisplay" class="decans-section"></div>
+          </div>
+        </section>
+      </section>
+
+      <!-- TRANSIT PANEL -->
+      <section class="main-tab-content" id="mainTab-transit">
+        <section class="panel tr-panel" id="transitPanel">
+          <h2 class="panel-title">
+            <span class="panel-icon">🔄</span>
+            Transitler
+          </h2>
+
+          <div class="tr-form">
+            <!-- Tarih ve Saat girişi -->
+            <div class="form-row tr-input-row">
+              <div class="form-group">
+                <label for="trDay">Gün</label>
+                <input type="number" id="trDay" min="1" max="31" required>
+              </div>
+              <div class="form-group">
+                <label for="trMonth">Ay</label>
+                <input type="number" id="trMonth" min="1" max="12" required>
+              </div>
+              <div class="form-group">
+                <label for="trYear">Yıl</label>
+                <input type="number" id="trYear" min="1900" max="2100" required>
+              </div>
+              <div class="form-group">
+                <label for="trHour">Saat</label>
+                <input type="number" id="trHour" min="0" max="23" required>
+              </div>
+              <div class="form-group">
+                <label for="trMinute">Dakika</label>
+                <input type="number" id="trMinute" min="0" max="59" required>
+              </div>
+              <div class="form-group" style="align-self: flex-end;">
+                <button type="button" id="trNowBtn" class="btn-calculate tr-now-btn">
+                  <span class="btn-icon">⏱️</span>
+                  Şu An
+                </button>
+              </div>
+            </div>
+
+            <!-- Konum seçimi -->
+            <div class="tr-location-section">
+              <label class="tr-location-label">Konum</label>
+              <div class="tr-location-options">
+                <label class="tr-radio-option active" id="trLocBirthLabel">
+                  <input type="radio" name="trLocation" value="birth" id="trLocBirth" checked>
+                  <span class="radio-custom"></span>
+                  <span class="radio-text">Doğum Yeri</span>
+                  <span class="radio-detail" id="trBirthPlaceName"></span>
+                </label>
+                <label class="tr-radio-option" id="trLocCustomLabel">
+                  <input type="radio" name="trLocation" value="custom" id="trLocCustom">
+                  <span class="radio-custom"></span>
+                  <span class="radio-text">Başka Yer</span>
+                </label>
+              </div>
+
+              <!-- Başka yer şehir arama -->
+              <div class="tr-custom-location hidden" id="trCustomLocationSection">
+                <div class="form-group full-width">
+                  <div class="city-search-wrapper">
+                    <input type="text" id="trCitySearch" placeholder="Şehir ara..." autocomplete="off">
+                    <div id="trCityDropdown" class="city-dropdown hidden"></div>
+                  </div>
+                </div>
+                <div id="trLocationInfo" class="location-info hidden">
+                  <div class="location-detail">
+                    <span class="detail-label">Koordinat:</span>
+                    <span id="trCoordDisplay" class="detail-value"></span>
+                  </div>
+                  <div class="location-detail">
+                    <span class="detail-label">Timezone:</span>
+                    <span id="trTimezoneDisplay" class="detail-value"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <button type="button" id="trCalculateBtn" class="btn-calculate tr-btn" disabled>
+              <span class="btn-icon">🔄</span>
+              Transitleri Hesapla
+            </button>
+          </div>
+
+          <!-- TR Results -->
+          <div class="tr-results hidden" id="trResults">
+            <!-- TR Timing bilgisi -->
+            <div class="tr-timing-card" id="trTimingCard"></div>
+
+            <!-- TR Tabs -->
+            <div class="tabs tr-tabs">
+              <button class="tab active" data-tr-tab="tr-chart">🗺️ Harita</button>
+              <button class="tab" data-tr-tab="tr-planets">🪐 Transit Gezegenler</button>
+              <button class="tab" data-tr-tab="tr-natal-aspects">🔗 Transit-Natal Aspektler</button>
+              <button class="tab" data-tr-tab="tr-aspects">🔗 Transit Aspektler</button>
+              <button class="tab" data-tr-tab="tr-debug">📊 Ham Veri</button>
+            </div>
+
+            <div id="tab-tr-chart" class="tab-content tr-tab-content active">
+              <div class="chart-canvas-container">
+                <canvas id="trChartCanvas" width="1800" height="1800"></canvas>
+              </div>
+            </div>
+            <div id="tab-tr-planets" class="tab-content tr-tab-content">
+              <div id="trPlanetsTable"></div>
+            </div>
+            <div id="tab-tr-natal-aspects" class="tab-content tr-tab-content">
+              <div id="trNatalAspectsTable"></div>
+            </div>
+            <div id="tab-tr-aspects" class="tab-content tr-tab-content">
+              <div id="trAspectsTable"></div>
+            </div>
+            <div id="tab-tr-debug" class="tab-content tr-tab-content">
+              <pre id="trDebugOutput" class="debug-output"></pre>
+            </div>
+
+            <!-- TR Dekanlar (her zaman görünür) -->
+            <div id="trDecansDisplay" class="decans-section"></div>
+          </div>
+        </section>
+      </section>
+
+      <!-- SOLAR RETURN PANEL -->
+      <section class="main-tab-content" id="mainTab-solar">
+        <section class="panel sr-panel" id="solarReturnPanel">
+          <h2 class="panel-title">
+            <span class="panel-icon">☀️</span>
+            Solar Return
+          </h2>
+
+          <div class="sr-form">
+            <!-- Yıl girişi -->
+            <div class="form-row sr-input-row">
+              <div class="form-group">
+                <label for="srYear">Solar Return Yılı</label>
+                <input type="number" id="srYear" min="1900" max="2100" required>
+              </div>
+            </div>
+
+            <!-- Konum seçimi -->
+            <div class="sr-location-section">
+              <label class="sr-location-label">Konum</label>
+              <div class="sr-location-options">
+                <label class="sr-radio-option active" id="srLocBirthLabel">
+                  <input type="radio" name="srLocation" value="birth" id="srLocBirth" checked>
+                  <span class="radio-custom"></span>
+                  <span class="radio-text">Doğum Yeri</span>
+                  <span class="radio-detail" id="srBirthPlaceName"></span>
+                </label>
+                <label class="sr-radio-option" id="srLocCustomLabel">
+                  <input type="radio" name="srLocation" value="custom" id="srLocCustom">
+                  <span class="radio-custom"></span>
+                  <span class="radio-text">Başka Yer</span>
+                </label>
+              </div>
+
+              <!-- Başka yer şehir arama -->
+              <div class="sr-custom-location hidden" id="srCustomLocationSection">
+                <div class="form-group full-width">
+                  <div class="city-search-wrapper">
+                    <input type="text" id="srCitySearch" placeholder="Şehir ara..." autocomplete="off">
+                    <div id="srCityDropdown" class="city-dropdown hidden"></div>
+                  </div>
+                </div>
+                <div id="srLocationInfo" class="location-info hidden">
+                  <div class="location-detail">
+                    <span class="detail-label">Koordinat:</span>
+                    <span id="srCoordDisplay" class="detail-value"></span>
+                  </div>
+                  <div class="location-detail">
+                    <span class="detail-label">Timezone:</span>
+                    <span id="srTimezoneDisplay" class="detail-value"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <button type="button" id="srCalculateBtn" class="btn-calculate sr-btn" disabled>
+              <span class="btn-icon">☀️</span>
+              Solar Return Hesapla
+            </button>
+          </div>
+
+          <!-- SR Results -->
+          <div class="sr-results hidden" id="srResults">
+            <!-- SR Timing bilgisi -->
+            <div class="sr-timing-card" id="srTimingCard"></div>
+
+            <!-- SR Tabs -->
+            <div class="tabs sr-tabs">
+              <button class="tab active" data-sr-tab="sr-chart">🗺️ Harita</button>
+              <button class="tab" data-sr-tab="sr-planets">🪐 Gezegenler</button>
+              <button class="tab" data-sr-tab="sr-houses">🏠 Evler</button>
+              <button class="tab" data-sr-tab="sr-aspects">🔗 Aspektler</button>
+              <button class="tab" data-sr-tab="sr-debug">📊 Ham Veri</button>
+            </div>
+
+            <div id="tab-sr-chart" class="tab-content sr-tab-content active">
+              <div class="chart-canvas-container">
+                <canvas id="srChartCanvas" width="1200" height="1200"></canvas>
+              </div>
+            </div>
+            <div id="tab-sr-planets" class="tab-content sr-tab-content">
+              <div id="srPlanetsTable"></div>
+            </div>
+            <div id="tab-sr-houses" class="tab-content sr-tab-content">
+              <div id="srHousesTable"></div>
+            </div>
+            <div id="tab-sr-aspects" class="tab-content sr-tab-content">
+              <div id="srAspectsTable"></div>
+            </div>
+            <div id="tab-sr-debug" class="tab-content sr-tab-content">
+              <pre id="srDebugOutput" class="debug-output"></pre>
+            </div>
+
+            <!-- SR Dekanlar (her zaman görünür) -->
+            <div id="srDecansDisplay" class="decans-section"></div>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <footer class="app-footer">
+      Değerli hocalarım Beyza &amp; Serkan Aslan için hazırlanmıştır. ❤️ Kerem
+    </footer>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
