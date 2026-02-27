@@ -6,18 +6,18 @@
 import { SIGNS } from './constants.js';
 
 // SVG imports (Vite ?raw)
-import ariesSvg from '../../Symbols/aries-symbol-icon.svg?raw';
-import taurusSvg from '../../Symbols/taurus-symbol-icon.svg?raw';
-import geminiSvg from '../../Symbols/gemini-symbol-icon.svg?raw';
-import cancerSvg from '../../Symbols/cancer-symbol-icon.svg?raw';
-import leoSvg from '../../Symbols/leo-symbol-icon.svg?raw';
-import virgoSvg from '../../Symbols/virgo-symbol-icon.svg?raw';
-import libraSvg from '../../Symbols/libra-symbol-icon.svg?raw';
-import scorpioSvg from '../../Symbols/scorpio-symbol-icon.svg?raw';
-import sagittariusSvg from '../../Symbols/sagittarius-symbol-icon.svg?raw';
-import capricornSvg from '../../Symbols/capricorn-symbol-icon.svg?raw';
-import aquariusSvg from '../../Symbols/aquarius-symbol-icon.svg?raw';
-import piscesSvg from '../../Symbols/pisces-symbol-icon.svg?raw';
+import ariesSvg from '../../public/Symbols/aries-symbol-icon.svg?raw';
+import taurusSvg from '../../public/Symbols/taurus-symbol-icon.svg?raw';
+import geminiSvg from '../../public/Symbols/gemini-symbol-icon.svg?raw';
+import cancerSvg from '../../public/Symbols/cancer-symbol-icon.svg?raw';
+import leoSvg from '../../public/Symbols/leo-symbol-icon.svg?raw';
+import virgoSvg from '../../public/Symbols/virgo-symbol-icon.svg?raw';
+import libraSvg from '../../public/Symbols/libra-symbol-icon.svg?raw';
+import scorpioSvg from '../../public/Symbols/scorpio-symbol-icon.svg?raw';
+import sagittariusSvg from '../../public/Symbols/sagittarius-symbol-icon.svg?raw';
+import capricornSvg from '../../public/Symbols/capricorn-symbol-icon.svg?raw';
+import aquariusSvg from '../../public/Symbols/aquarius-symbol-icon.svg?raw';
+import piscesSvg from '../../public/Symbols/pisces-symbol-icon.svg?raw';
 
 const SIGN_SVGS = [
   ariesSvg, taurusSvg, geminiSvg, cancerSvg, leoSvg, virgoSvg,
