@@ -11,4 +11,5 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ['swisseph-wasm'],
   },
+  assetsInclude: ['**/*.wasm'],
 });
