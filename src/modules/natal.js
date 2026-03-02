@@ -3,7 +3,7 @@
  * Tam natal harita: gezegenler, evler, aspektler, Şans Noktası, kıstırılmışlar
  */
 
-import { NATAL_PLANETS, ASPECTS, SIGNS, PLANETS } from './constants.js';
+import { NATAL_PLANETS, MAJOR_ASPECTS, SIGNS, PLANETS } from './constants.js';
 import {
   initEphemeris,
   calculateJulianDay,
@@ -205,7 +205,7 @@ function calculateAspects(planets) {
       if (angle > 180) angle = 360 - angle;
       
       // Hangi aspekte yakın?
-      for (const aspectDef of ASPECTS) {
+      for (const aspectDef of MAJOR_ASPECTS) {
         const diff = Math.abs(angle - aspectDef.angle);
         if (diff <= aspectDef.orb) {
           aspects.push({

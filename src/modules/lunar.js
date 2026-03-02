@@ -4,7 +4,7 @@
  * SolarFire uyumlu: ±1 saniye hassasiyet
  */
 
-import { NATAL_PLANETS, PLANETS, ASPECTS } from './constants.js';
+import { NATAL_PLANETS, PLANETS, MAJOR_ASPECTS } from './constants.js';
 import {
   initEphemeris,
   calculateJulianDay,
@@ -112,11 +112,14 @@ function jdToLocal(jd, timezone) {
  * @param {number} natalMoonLon - Natal Ay ekliptik boylamı (0-360)
  * @param {number} year - Lunar Return yılı
  * @param {number} month - Lunar Return ayı (1-12)
+ * @param {number} [day=1] - Lunar Return günü (1-31), bu güne en yakın LR bulunur
  * @returns {number} Lunar Return anı (Julian Day)
  */
-export function findLunarReturnMoment(natalMoonLon, year, month) {
-  // İlk tahmin: ayın 1'i
-  const startJD = calculateJulianDay(year, month, 1, 0);
+export function findLunarReturnMoment(natalMoonLon, year, month, day) {
+  // İlk tahmin: verilen gün (veya ayın 1'i)
+  const refDay = day || 1;
+  const startJD = calculateJulianDay(year, month, refDay, 0);
+  const hasDay = !!day;
 
   // Ay'ın mevcut pozisyonunu al ve natal pozisyona olan farkı hesapla
   const moonStart = calculatePlanetPosition(startJD, PLANETS.MOON.id);
@@ -127,33 +130,74 @@ export function findLunarReturnMoment(natalMoonLon, year, month) {
   // Tahmini gün farkı: açı farkı / ~13.2°/gün
   let jd = startJD + diff0 / 13.2;
 
-  // Newton-Raphson iterasyonu
-  const MAX_ITER = 50;
-  const TOLERANCE = 1 / 86400; // 1 saniye
+  /**
+   * Bir LR noktası bul (Newton-Raphson).
+   * Verilen jd'ye yakın olan Lunar Return JD'yi döndürür.
+   */
+  function findNearestLR(jdGuess) {
+    let jdIter = jdGuess;
+    const MAX_ITER = 50;
+    for (let i = 0; i < MAX_ITER; i++) {
+      const moonPos = calculatePlanetPosition(jdIter, PLANETS.MOON.id);
+      let diff = natalMoonLon - moonPos.longitude;
+      if (diff > 180) diff -= 360;
+      if (diff < -180) diff += 360;
+      if (Math.abs(diff) < 0.00001) return jdIter;
+      jdIter += diff / moonPos.speed;
+    }
+    // Convergence kontrolü
+    const moonCheck = calculatePlanetPosition(jdIter, PLANETS.MOON.id);
+    const finalDiff = Math.abs(normalizeDegree(moonCheck.longitude - natalMoonLon));
+    if (finalDiff > 0.01 && finalDiff < 359.99) {
+      throw new Error(`Lunar Return yakınsamadı. Fark: ${finalDiff.toFixed(4)}°`);
+    }
+    return jdIter;
+  }
 
+  if (hasDay) {
+    // Gün verilmişse: verilen güne en yakın LR'yi bul
+    // Önce doğrudan yakınsama dene
+    const lr1 = findNearestLR(jd);
+    // startJD'ye olan uzaklık
+    const dist1 = Math.abs(lr1 - startJD);
+
+    // Bir önceki/sonraki döngüyü de dene, en yakınını seç
+    const lr2 = findNearestLR(lr1 - 27.3);
+    const lr3 = findNearestLR(lr1 + 27.3);
+
+    const candidates = [lr1, lr2, lr3];
+    let best = lr1;
+    let bestDist = dist1;
+    for (const c of candidates) {
+      const d = Math.abs(c - startJD);
+      if (d < bestDist) {
+        best = c;
+        bestDist = d;
+      }
+    }
+    return best;
+  }
+
+  // Gün verilmemişse: eski davranış — ayın içindeki LR'yi bul
+  const MAX_ITER = 50;
   for (let i = 0; i < MAX_ITER; i++) {
     const moonPos = calculatePlanetPosition(jd, PLANETS.MOON.id);
     const moonLon = moonPos.longitude;
-    const moonSpeed = moonPos.speed; // derece/gün
+    const moonSpeed = moonPos.speed;
 
-    // Açı farkı (kısa yolu bul)
     let diff = natalMoonLon - moonLon;
     if (diff > 180) diff -= 360;
     if (diff < -180) diff += 360;
 
-    // Yeterli hassasiyet?
-    if (Math.abs(diff) < 0.00001) { // ~0.036 arcsecond
-      // Bulunan JD verilen ayın içinde mi kontrol et
+    if (Math.abs(diff) < 0.00001) {
       const lrUTC = jdToUTC(jd);
       if (lrUTC.year === year && lrUTC.month === month) {
         return jd;
       }
-      // Ayın dışına çıktıysa ~29.53 gün ekle/çıkar
       if (jd < startJD) {
         jd += 29.53;
         continue;
       }
-      // Sonraki aya taştıysa geri al
       const endJD = calculateJulianDay(year, month + 1, 1, 0);
       if (jd >= endJD) {
         jd -= 29.53;
@@ -162,12 +206,10 @@ export function findLunarReturnMoment(natalMoonLon, year, month) {
       return jd;
     }
 
-    // Newton-Raphson düzeltmesi: Δt = Δlon / speed
     const correction = diff / moonSpeed;
     jd += correction;
   }
 
-  // Convergence kontrolü
   const moonCheck = calculatePlanetPosition(jd, PLANETS.MOON.id);
   const finalDiff = Math.abs(normalizeDegree(moonCheck.longitude - natalMoonLon));
   if (finalDiff > 0.01 && finalDiff < 359.99) {
@@ -183,6 +225,7 @@ export function findLunarReturnMoment(natalMoonLon, year, month) {
  * @param {Object} natalChart - calculateNatalChart() sonucu
  * @param {number} year - LR yılı
  * @param {number} month - LR ayı (1-12)
+ * @param {number} [day=1] - LR günü (1-31), bu güne en yakın LR bulunur
  * @param {Object} location - LR konumu
  * @param {number} location.latitude
  * @param {number} location.longitude
@@ -190,7 +233,7 @@ export function findLunarReturnMoment(natalMoonLon, year, month) {
  * @param {string} [location.name] - Konum adı (opsiyonel)
  * @returns {Promise<Object>} Lunar Return harita verisi
  */
-export async function calculateLunarReturn(natalChart, year, month, location) {
+export async function calculateLunarReturn(natalChart, year, month, day, location) {
   await initEphemeris();
 
   // Natal Ay boylamı
@@ -201,7 +244,7 @@ export async function calculateLunarReturn(natalChart, year, month, location) {
   const natalMoonLon = natalMoon.longitude;
 
   // Lunar Return anını bul (JD)
-  const lrJD = findLunarReturnMoment(natalMoonLon, year, month);
+  const lrJD = findLunarReturnMoment(natalMoonLon, year, month, day);
 
   // LR anını UTC'ye çevir
   const lrUTC = jdToUTC(lrJD);
@@ -355,7 +398,7 @@ function calculateLRAspects(planets) {
       let angle = Math.abs(p1.longitude - p2.longitude);
       if (angle > 180) angle = 360 - angle;
 
-      for (const aspectDef of ASPECTS) {
+      for (const aspectDef of MAJOR_ASPECTS) {
         const diff = Math.abs(angle - aspectDef.angle);
         if (diff <= aspectDef.orb) {
           const relativeSpeed = (p1.speed || 0) - (p2.speed || 0);

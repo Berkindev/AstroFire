@@ -726,8 +726,9 @@ export function drawChartWheel(canvas, chartData, options = {}) {
 // SEVEN YEAR OVERLAY
 // ============================================
 
-export function drawSevenYearOverlay(canvas, chartData, sevensData) {
+export function drawSevenYearOverlay(canvas, chartData, sevensData, options = {}) {
   if (!canvas || !chartData || !sevensData) return;
+  const { showAges = true } = options;
 
   const ctx = canvas.getContext('2d');
   const size = Math.min(canvas.width, canvas.height);
@@ -738,56 +739,57 @@ export function drawSevenYearOverlay(canvas, chartData, sevensData) {
   const innerR   = size * 0.25;
   const ascLon = chartData.houses?.ascendant ?? 0;
 
-  for (const house of sevensData) {
-    for (const year of house.years) {
-      const startAngle = lonToAngle(year.startLongitude, ascLon);
-      const endAngle = lonToAngle(year.endLongitude, ascLon);
+  if (showAges) {
+    for (const house of sevensData) {
+      for (const year of house.years) {
+        const startAngle = lonToAngle(year.startLongitude, ascLon);
+        const endAngle = lonToAngle(year.endLongitude, ascLon);
 
-      const element = year.decanSign?.element || 'fire';
+        const element = year.decanSign?.element || 'fire';
 
-      // Draw divider line between years (skip first year in each house)
-      if (year.yearIndex > 0) {
-        const p1 = polarToXY(cx, cy, houseInR - 2, startAngle);
-        const p2 = polarToXY(cx, cy, innerR + 2, startAngle);
+        // Draw divider line between years (skip first year in each house)
+        if (year.yearIndex > 0) {
+          const p1 = polarToXY(cx, cy, houseInR - 2, startAngle);
+          const p2 = polarToXY(cx, cy, innerR + 2, startAngle);
+          ctx.save();
+          ctx.strokeStyle = 'rgba(140,120,200,0.4)';
+          ctx.lineWidth = 0.8;
+          ctx.setLineDash([3, 3]);
+          ctx.beginPath();
+          ctx.moveTo(p1.x, p1.y);
+          ctx.lineTo(p2.x, p2.y);
+          ctx.stroke();
+          ctx.restore();
+        }
+
+        // Age label at the center of the segment
+        let midAngle;
+        let diff = endAngle - startAngle;
+        // Normalize diff to [-PI, PI]
+        while (diff > Math.PI) diff -= 2 * Math.PI;
+        while (diff < -Math.PI) diff += 2 * Math.PI;
+        midAngle = startAngle + diff / 2;
+
+        // Age number at outer edge, no background
+        const AGE_COLORS = {
+          fire:  '#ff0000',
+          earth: '#00cc00',
+          air:   '#00ccc8',
+          water: '#1b00ff',
+        };
+        const agePos = polarToXY(cx, cy, houseInR - 12, midAngle);
         ctx.save();
-        ctx.strokeStyle = 'rgba(140,120,200,0.4)';
-        ctx.lineWidth = 0.8;
-        ctx.setLineDash([3, 3]);
-        ctx.beginPath();
-        ctx.moveTo(p1.x, p1.y);
-        ctx.lineTo(p2.x, p2.y);
-        ctx.stroke();
+        ctx.font = 'bold 9px Inter, sans-serif';
+        ctx.fillStyle = AGE_COLORS[element] || '#666';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(`${year.age}-${year.age + 1}`, agePos.x, agePos.y);
         ctx.restore();
       }
-
-      // Age label at the center of the segment
-      let midAngle;
-      let diff = endAngle - startAngle;
-      // Normalize diff to [-PI, PI]
-      while (diff > Math.PI) diff -= 2 * Math.PI;
-      while (diff < -Math.PI) diff += 2 * Math.PI;
-      midAngle = startAngle + diff / 2;
-      const labelR = (houseInR + innerR) / 2;
-
-      // Age number at outer edge, no background
-      const AGE_COLORS = {
-        fire:  '#ff0000',
-        earth: '#00cc00',
-        air:   '#00ccc8',
-        water: '#1b00ff',
-      };
-      const agePos = polarToXY(cx, cy, houseInR - 12, midAngle);
-      ctx.save();
-      ctx.font = 'bold 10px Inter, sans-serif';
-      ctx.fillStyle = AGE_COLORS[element] || '#666';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(String(year.age + 1), agePos.x, agePos.y);
-      ctx.restore();
     }
   }
 
-  // Draw aspects on top of the overlay
+  // Draw aspects on top of the overlay (always)
   if (chartData.aspects && chartData.planets) {
     drawAspects(ctx, cx, cy, chartData.planets, chartData.aspects, innerR, ascLon, chartData.partOfFortune);
   }

@@ -3,7 +3,7 @@
  * Belirli bir tarih için transit gezegenleri hesaplar ve natal haritayla karşılaştırır
  */
 
-import { NATAL_PLANETS, PLANETS, ASPECTS } from './constants.js';
+import { NATAL_PLANETS, PLANETS, MAJOR_ASPECTS } from './constants.js';
 import {
   initEphemeris,
   calculateJulianDay,
@@ -129,7 +129,7 @@ export function calculateTransitNatalAspects(transitPlanets, natalPlanets) {
       if (angle > 180) angle = 360 - angle;
 
       // Hangi aspekte yakın?
-      for (const aspectDef of ASPECTS) {
+      for (const aspectDef of MAJOR_ASPECTS) {
         const diff = Math.abs(angle - aspectDef.angle);
         if (diff <= aspectDef.orb) {
           // Applying/separating: transit gezegenin hızına göre
@@ -170,7 +170,7 @@ function calculateTransitTransitAspects(transitPlanets) {
       let angle = Math.abs(p1.longitude - p2.longitude);
       if (angle > 180) angle = 360 - angle;
 
-      for (const aspectDef of ASPECTS) {
+      for (const aspectDef of MAJOR_ASPECTS) {
         const diff = Math.abs(angle - aspectDef.angle);
         if (diff <= aspectDef.orb) {
           const relativeSpeed = (p1.speed || 0) - (p2.speed || 0);

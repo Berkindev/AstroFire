@@ -4,7 +4,7 @@
  * SolarFire uyumlu: ±1 saniye hassasiyet
  */
 
-import { NATAL_PLANETS, PLANETS, ASPECTS, SIGNS } from './constants.js';
+import { NATAL_PLANETS, PLANETS, MAJOR_ASPECTS, SIGNS } from './constants.js';
 import { getDecanSign } from './decans.js';
 import {
   initEphemeris,
@@ -390,7 +390,7 @@ function calculateSRAspects(planets) {
       let angle = Math.abs(p1.longitude - p2.longitude);
       if (angle > 180) angle = 360 - angle;
       
-      for (const aspectDef of ASPECTS) {
+      for (const aspectDef of MAJOR_ASPECTS) {
         const diff = Math.abs(angle - aspectDef.angle);
         if (diff <= aspectDef.orb) {
           // Applying/separating

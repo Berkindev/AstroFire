@@ -106,6 +106,7 @@ const elements = {
   srDecansDisplay: $('srDecansDisplay'),
   // Lunar Return elements
   lunarReturnPanel: $('lunarReturnPanel'),
+  lrDay: $('lrDay'),
   lrYear: $('lrYear'),
   lrMonth: $('lrMonth'),
   lrLocBirth: $('lrLocBirth'),
@@ -156,6 +157,7 @@ const elements = {
   trDecansDisplay: $('trDecansDisplay'),
   mainTabs: $('mainTabs'),
   sevensDisplay: $('sevensDisplay'),
+  sevensAgeCheck: $('sevensAgeCheck'),
   formToggle: $('formToggle'),
   formContent: $('formContent'),
   toggleIcon: $('toggleIcon'),
@@ -304,7 +306,8 @@ function setupEventListeners() {
     tab.addEventListener('click', () => switchLRTab(tab.dataset.lrTab));
   });
 
-  // LR yıl/ay değişince buton durumunu güncelle
+  // LR gün/yıl/ay değişince buton durumunu güncelle
+  elements.lrDay.addEventListener('input', updateLRButtonState);
   elements.lrYear.addEventListener('input', updateLRButtonState);
   elements.lrMonth.addEventListener('change', updateLRButtonState);
 
@@ -1129,7 +1132,7 @@ function renderPlanetAspectsList(planetName, aspects) {
   return `<div class="planet-aspects hidden">${items}</div>`;
 }
 
-function renderPlanetRow(p, aspects) {
+function renderPlanetRow(p, aspects, decanTiming) {
   const pPos = formatLongitude(p.longitude, false);
   const pSign = SIGNS[p.signIndex];
   const aspectCount = getAspectCountForPlanet(p.name, aspects);
@@ -1138,11 +1141,13 @@ function renderPlanetRow(p, aspects) {
     : '';
   const aspectsList = renderPlanetAspectsList(p.name, aspects);
 
+  const timingStr = decanTiming ? `<span class="decan-planet-date">📅 ${decanTiming}</span>` : '';
+
   return `
     <div class="decan-planet-row">
       <span class="decan-planet-left-border element-border-${pSign.element}"></span>
       <span class="decan-planet-info">
-        ${p.symbol} ${p.name} • ${pSign.name} ${signImgFromSign(pSign)} • ${pPos.degree}°${String(pPos.minute).padStart(2, '0')}' ${aspectBadge}
+        ${p.symbol} ${p.name} • ${pSign.name} ${signImgFromSign(pSign)} • ${pPos.degree}°${String(pPos.minute).padStart(2, '0')}' ${timingStr} ${aspectBadge}
       </span>
     </div>
     ${aspectsList}`;
@@ -1194,7 +1199,25 @@ function renderDecanHTML(decanData, aspects, houseTiming) {
             const startSign = SIGNS[Math.floor(d.startLongitude / 30)];
             const decanSign = d.decanSign;
             const startPos = formatDecanDegree(d.startLongitude);
-            const planetRows = d.planets.map(p => renderPlanetRow(p, aspects)).join('');
+            const planetRows = d.planets.map(p => {
+              let planetDateStr = null;
+              if (timing) {
+                // Gezegenin dekan içindeki fraksiyonel pozisyonunu hesapla
+                const decanStartLon = d.startLongitude;
+                const decanEndLon = decanStartLon + (h.span / 3);
+                let pOffset = p.longitude - decanStartLon;
+                if (pOffset < 0) pOffset += 360;
+                const decanSpan = h.span / 3;
+                if (pOffset <= decanSpan) {
+                  const pFraction = pOffset / decanSpan;
+                  const f0 = d.index / 3;
+                  const f1 = (d.index + 1) / 3;
+                  const planetFraction = f0 + pFraction * (f1 - f0);
+                  planetDateStr = timingDateStr(timing.enterDate, timing.durationDays, planetFraction);
+                }
+              }
+              return renderPlanetRow(p, aspects, planetDateStr);
+            }).join('');
 
             // Dekan tarih aralığı (varsa)
             const decanTiming = timing ? (() => {
@@ -1281,19 +1304,29 @@ function renderSevens(chart) {
   // Natal harita + 7'ler overlay
   const canvas = $('sevensChartCanvas');
   if (canvas) {
-    const bd = chart.birthData;
-    const months = ['', 'Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz', 'Tem', 'Ağu', 'Eyl', 'Eki', 'Kas', 'Ara'];
-    const dateStr = `${bd.day} ${months[bd.month]} ${bd.year}`;
-    const timeStr = `${String(bd.hour).padStart(2, '0')}:${String(bd.minute).padStart(2, '0')}`;
-    const cityName = selectedCity ? formatCityName(selectedCity) : '';
+    const drawSevensChart = () => {
+      const bd = chart.birthData;
+      const months = ['', 'Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz', 'Tem', 'Ağu', 'Eyl', 'Eki', 'Kas', 'Ara'];
+      const dateStr = `${bd.day} ${months[bd.month]} ${bd.year}`;
+      const timeStr = `${String(bd.hour).padStart(2, '0')}:${String(bd.minute).padStart(2, '0')}`;
+      const cityName = selectedCity ? formatCityName(selectedCity) : '';
 
-    drawChartWheel(canvas, chart, {
-      title: '7\'ler Kanunu',
-      subtitle: `Natal Chart\n${dateStr}\n${timeStr}  ${getUtcOffsetStr(bd)}\n${bd.timezone}\n${cityName}`,
-      showAspects: false,
-      chartType: 'natal',
-    });
-    drawSevenYearOverlay(canvas, chart, data);
+      drawChartWheel(canvas, chart, {
+        title: '7\'ler Kanunu',
+        subtitle: `Natal Chart\n${dateStr}\n${timeStr}  ${getUtcOffsetStr(bd)}\n${bd.timezone}\n${cityName}`,
+        showAspects: false,
+        chartType: 'natal',
+      });
+      const showAges = elements.sevensAgeCheck ? elements.sevensAgeCheck.checked : true;
+      drawSevenYearOverlay(canvas, chart, data, { showAges });
+    };
+
+    drawSevensChart();
+
+    // Toggle listener
+    if (elements.sevensAgeCheck) {
+      elements.sevensAgeCheck.onchange = drawSevensChart;
+    }
   }
 }
 
@@ -1582,8 +1615,9 @@ function switchSRTab(tabName) {
 // ============================================
 
 function showLunarReturnPanel() {
-  // Mevcut yıl ve ayı default olarak ayarla
+  // Mevcut gün, yıl ve ayı default olarak ayarla
   const now = new Date();
+  elements.lrDay.value = now.getDate();
   elements.lrYear.value = now.getFullYear();
   elements.lrMonth.value = now.getMonth() + 1;
 
@@ -1614,13 +1648,16 @@ function handleLRLocationChange() {
 }
 
 function updateLRButtonState() {
+  const dayVal = parseInt(elements.lrDay.value);
+  const hasDay = !isNaN(dayVal) && dayVal >= 1 && dayVal <= 31;
+
   const yearVal = parseInt(elements.lrYear.value);
   const hasYear = !isNaN(yearVal) && yearVal >= 1900 && yearVal <= 2100;
 
   const isBirth = elements.lrLocBirth.checked;
   const hasLocation = isBirth ? !!selectedCity : !!lrSelectedCity;
 
-  elements.lrCalculateBtn.disabled = !(hasYear && hasLocation);
+  elements.lrCalculateBtn.disabled = !(hasDay && hasYear && hasLocation);
 }
 
 // LR City Search
@@ -1689,6 +1726,7 @@ async function handleLRCalculate() {
     return;
   }
 
+  const day = parseInt(elements.lrDay.value);
   const year = parseInt(elements.lrYear.value);
   const month = parseInt(elements.lrMonth.value);
   const isBirth = elements.lrLocBirth.checked;
@@ -1712,7 +1750,7 @@ async function handleLRCalculate() {
   elements.lrCalculateBtn.innerHTML = '<span class="btn-icon">⏳</span> Hesaplanıyor...';
 
   try {
-    currentLunarReturn = await calculateLunarReturn(currentChart, year, month, location);
+    currentLunarReturn = await calculateLunarReturn(currentChart, year, month, day, location);
     renderLRResults(currentLunarReturn);
     elements.lrResults.classList.remove('hidden');
 

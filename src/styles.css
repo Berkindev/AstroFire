@@ -1785,6 +1785,12 @@ input::placeholder {
   padding-left: 0.75rem;
 }
 
+.decan-planet-date {
+  font-size: 0.7rem;
+  color: #e2b340;
+  margin-left: 0.4rem;
+}
+
 .decan-aspect-count {
   color: #c084fc;
   font-size: 0.8rem;

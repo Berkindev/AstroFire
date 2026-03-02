@@ -55,7 +55,6 @@ export const NATAL_PLANETS = [
   PLANETS.NEPTUNE,
   PLANETS.PLUTO,
   PLANETS.MEAN_NODE,
-  PLANETS.MEAN_LILITH,
   PLANETS.CHIRON,
 ];
 
@@ -82,12 +81,16 @@ export const DEFAULT_HOUSE_SYSTEM = HOUSE_SYSTEMS.PLACIDUS;
 // ASPEKTLER (Aspects)
 // SolarFire default orbları
 // ============================================
-export const ASPECTS = [
+export const MAJOR_ASPECTS = [
   { name: 'Kavuşum', nameEn: 'Conjunction', angle: 0, symbol: '☌', orb: 8 },
   { name: 'Karşıt', nameEn: 'Opposition', angle: 180, symbol: '☍', orb: 8 },
   { name: 'Üçgen', nameEn: 'Trine', angle: 120, symbol: '△', orb: 8 },
   { name: 'Kare', nameEn: 'Square', angle: 90, symbol: '□', orb: 7 },
   { name: 'Altıgen', nameEn: 'Sextile', angle: 60, symbol: '⚹', orb: 6 },
+];
+
+export const ASPECTS = [
+  ...MAJOR_ASPECTS,
   { name: 'Yarı-Kare', nameEn: 'Semi-Square', angle: 45, symbol: '∠', orb: 2 },
   { name: 'Sesqui-Kare', nameEn: 'Sesquiquadrate', angle: 135, symbol: '⚼', orb: 2 },
   { name: 'Yarı-Altıgen', nameEn: 'Semi-Sextile', angle: 30, symbol: '⚺', orb: 2 },
