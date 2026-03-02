@@ -1436,6 +1436,49 @@ input::placeholder {
   background: linear-gradient(135deg, #14b8a6, #0d9488);
 }
 
+/* TR Step Buttons */
+.tr-step-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 0.3rem;
+  margin: 0.5rem 0;
+}
+
+.tr-step-btn {
+  padding: 0.35rem 0.6rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  border: 1px solid var(--border-accent);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: var(--transition);
+  color: var(--text-primary);
+  font-family: 'Inter', sans-serif;
+}
+
+.tr-step-back {
+  background: linear-gradient(135deg, #c2410c, #ea580c);
+}
+
+.tr-step-back:hover:not(:disabled) {
+  box-shadow: 0 2px 12px rgba(234, 88, 12, 0.4);
+  transform: translateY(-1px);
+}
+
+.tr-step-fwd {
+  background: linear-gradient(135deg, #0d9488, #14b8a6);
+}
+
+.tr-step-fwd:hover:not(:disabled) {
+  box-shadow: 0 2px 12px rgba(20, 184, 166, 0.4);
+  transform: translateY(-1px);
+}
+
+.tr-step-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
 /* TR Timing Card */
 .tr-timing-card {
   margin-bottom: 1rem;

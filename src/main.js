@@ -333,6 +333,14 @@ function setupEventListeners() {
   // TR "Şu An" butonu
   elements.trNowBtn.addEventListener('click', handleTRNowClick);
 
+  // TR step buttons
+  document.querySelectorAll('.tr-step-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const minutes = parseInt(btn.dataset.step);
+      handleTRStep(minutes);
+    });
+  });
+
   // TR tab switching
   document.querySelectorAll('.tab[data-tr-tab]').forEach(tab => {
     tab.addEventListener('click', () => switchTRTab(tab.dataset.trTab));
@@ -2164,6 +2172,7 @@ async function handleTRCalculate() {
     currentTransit = await calculateTransits(currentChart, date, location);
     renderTRResults(currentTransit);
     elements.trResults.classList.remove('hidden');
+    setTRStepButtonsEnabled(true);
   } catch (error) {
     console.error('Transit hesaplama hatası:', error);
     alert('Transit hesaplama hatası: ' + error.message);
@@ -2171,6 +2180,31 @@ async function handleTRCalculate() {
     elements.trCalculateBtn.disabled = false;
     elements.trCalculateBtn.innerHTML = '<span class="btn-icon">🔄</span> Transitleri Hesapla';
   }
+}
+
+function handleTRStep(minutes) {
+  const year = parseInt(elements.trYear.value);
+  const month = parseInt(elements.trMonth.value);
+  const day = parseInt(elements.trDay.value);
+  const hour = parseInt(elements.trHour.value);
+  const minute = parseInt(elements.trMinute.value);
+
+  const d = new Date(year, month - 1, day, hour, minute);
+  d.setMinutes(d.getMinutes() + minutes);
+
+  elements.trDay.value = d.getDate();
+  elements.trMonth.value = d.getMonth() + 1;
+  elements.trYear.value = d.getFullYear();
+  elements.trHour.value = d.getHours();
+  elements.trMinute.value = d.getMinutes();
+
+  handleTRCalculate();
+}
+
+function setTRStepButtonsEnabled(enabled) {
+  document.querySelectorAll('.tr-step-btn').forEach(btn => {
+    btn.disabled = !enabled;
+  });
 }
 
 function renderTRResults(tr) {
