@@ -2172,7 +2172,6 @@ async function handleTRCalculate() {
     currentTransit = await calculateTransits(currentChart, date, location);
     renderTRResults(currentTransit);
     elements.trResults.classList.remove('hidden');
-    setTRStepButtonsEnabled(true);
   } catch (error) {
     console.error('Transit hesaplama hatası:', error);
     alert('Transit hesaplama hatası: ' + error.message);
@@ -2199,12 +2198,6 @@ function handleTRStep(minutes) {
   elements.trMinute.value = d.getMinutes();
 
   handleTRCalculate();
-}
-
-function setTRStepButtonsEnabled(enabled) {
-  document.querySelectorAll('.tr-step-btn').forEach(btn => {
-    btn.disabled = !enabled;
-  });
 }
 
 function renderTRResults(tr) {

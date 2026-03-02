@@ -347,22 +347,6 @@
               </div>
             </div>
 
-            <!-- Zaman Adım Butonları -->
-            <div class="tr-step-buttons" id="trStepButtons">
-              <button type="button" class="tr-step-btn tr-step-back" data-step="-1440" disabled>◀◀ 1g</button>
-              <button type="button" class="tr-step-btn tr-step-back" data-step="-720" disabled>◀ 12s</button>
-              <button type="button" class="tr-step-btn tr-step-back" data-step="-360" disabled>◀ 6s</button>
-              <button type="button" class="tr-step-btn tr-step-back" data-step="-60" disabled>◀ 1s</button>
-              <button type="button" class="tr-step-btn tr-step-back" data-step="-5" disabled>◀ 5d</button>
-              <button type="button" class="tr-step-btn tr-step-back" data-step="-1" disabled>◀ 1d</button>
-              <button type="button" class="tr-step-btn tr-step-fwd" data-step="1" disabled>1d ▶</button>
-              <button type="button" class="tr-step-btn tr-step-fwd" data-step="5" disabled>5d ▶</button>
-              <button type="button" class="tr-step-btn tr-step-fwd" data-step="60" disabled>1s ▶</button>
-              <button type="button" class="tr-step-btn tr-step-fwd" data-step="360" disabled>6s ▶</button>
-              <button type="button" class="tr-step-btn tr-step-fwd" data-step="720" disabled>12s ▶</button>
-              <button type="button" class="tr-step-btn tr-step-fwd" data-step="1440" disabled>1g ▶▶</button>
-            </div>
-
             <!-- Konum seçimi -->
             <div class="tr-location-section">
               <label class="tr-location-label">Konum</label>
@@ -422,6 +406,21 @@
             </div>
 
             <div id="tab-tr-chart" class="tab-content tr-tab-content active">
+              <!-- Zaman Adım Butonları -->
+              <div class="tr-step-buttons" id="trStepButtons">
+                <button type="button" class="tr-step-btn tr-step-back" data-step="-1440">◀◀ 1g</button>
+                <button type="button" class="tr-step-btn tr-step-back" data-step="-720">◀ 12s</button>
+                <button type="button" class="tr-step-btn tr-step-back" data-step="-360">◀ 6s</button>
+                <button type="button" class="tr-step-btn tr-step-back" data-step="-60">◀ 1s</button>
+                <button type="button" class="tr-step-btn tr-step-back" data-step="-5">◀ 5d</button>
+                <button type="button" class="tr-step-btn tr-step-back" data-step="-1">◀ 1d</button>
+                <button type="button" class="tr-step-btn tr-step-fwd" data-step="1">1d ▶</button>
+                <button type="button" class="tr-step-btn tr-step-fwd" data-step="5">5d ▶</button>
+                <button type="button" class="tr-step-btn tr-step-fwd" data-step="60">1s ▶</button>
+                <button type="button" class="tr-step-btn tr-step-fwd" data-step="360">6s ▶</button>
+                <button type="button" class="tr-step-btn tr-step-fwd" data-step="720">12s ▶</button>
+                <button type="button" class="tr-step-btn tr-step-fwd" data-step="1440">1g ▶▶</button>
+              </div>
               <div class="chart-canvas-container">
                 <canvas id="trChartCanvas" width="1800" height="1800"></canvas>
               </div>

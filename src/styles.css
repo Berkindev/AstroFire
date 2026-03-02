@@ -1441,7 +1441,7 @@ input::placeholder {
   display: flex;
   justify-content: center;
   gap: 0.3rem;
-  margin: 0.5rem 0;
+  margin-bottom: 0.5rem;
 }
 
 .tr-step-btn {
@@ -1472,11 +1472,6 @@ input::placeholder {
 .tr-step-fwd:hover:not(:disabled) {
   box-shadow: 0 2px 12px rgba(20, 184, 166, 0.4);
   transform: translateY(-1px);
-}
-
-.tr-step-btn:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
 }
 
 /* TR Timing Card */
