@@ -913,6 +913,12 @@ export function drawBiWheel(canvas, natalData, transitData, options = {}) {
   drawSignRing(ctx, cx, cy, { outerR: signOutR, signInR }, ascLon);
   drawHouseBand(ctx, cx, cy, natalData.houses, { signInR, houseInR, innerR }, ascLon);
 
+  // Dış haritanın kendi ev cuspları + numaraları (varsa — progres haritasında)
+  // Transit'te ayrı ev sistemi yok, bu yüzden yalnızca houses içeren bi-wheel'lerde çizilir.
+  if (transitData.houses?.cusps) {
+    drawBiWheelOuterFrame(ctx, cx, cy, transitData.houses, { outerR, signOutR }, ascLon);
+  }
+
   // Dış harita gezegenleri (en dış halka)
   drawBiWheelOuterPlanets(ctx, cx, cy, transitData.planets, outerLayout, ascLon);
 
@@ -933,8 +939,86 @@ export function drawBiWheel(canvas, natalData, transitData, options = {}) {
   // İç harita (natal) gezegenleri (iç halka)
   drawBiWheelInnerPlanets(ctx, cx, cy, natalData.planets, innerLayout, ascLon, natalData.partOfFortune);
 
+  // Dış haritanın açı etiketleri (ASC/MC/DSC/IC) — gezegenlerin ÜSTÜNE, hep görünür
+  if (transitData.houses?.cusps) {
+    drawBiWheelOuterAngleLabels(ctx, cx, cy, transitData.houses, { outerR }, ascLon);
+  }
+
   if (options.title) {
     drawInfoBlock(ctx, options);
+  }
+}
+
+// ============================================
+// BI-WHEEL — DIŞ HARİTA EV ÇERÇEVESİ (progres/transit)
+// Dış halkada dış haritanın ev cuspları, numaraları ve açıları
+// ============================================
+const OUTER_FRAME_COLOR = '#7c3aed'; // mor — dış (progres) harita
+
+function drawBiWheelOuterFrame(ctx, cx, cy, houses, radii, ascLon) {
+  if (!houses || !houses.cusps) return;
+  const { outerR, signOutR } = radii;
+  const numR = outerR - 22;
+
+  for (let i = 0; i < houses.cusps.length; i++) {
+    const cusp = houses.cusps[i];
+    const lon = cusp.longitude;
+    const angle = lonToAngle(lon, ascLon);
+    const isAngular = [1, 4, 7, 10].includes(cusp.house);
+
+    // Cusp çizgisi — zodyak dış kenarından en dış çembere
+    ctx.save();
+    ctx.strokeStyle = isAngular ? OUTER_FRAME_COLOR : 'rgba(124, 58, 237, 0.30)';
+    ctx.lineWidth = isAngular ? 2.2 : 0.8;
+    const p1 = polarToXY(cx, cy, signOutR, angle);
+    const p2 = polarToXY(cx, cy, outerR, angle);
+    ctx.beginPath();
+    ctx.moveTo(p1.x, p1.y);
+    ctx.lineTo(p2.x, p2.y);
+    ctx.stroke();
+    ctx.restore();
+
+    // Ev numarası — evin ortasında, en dış kenarda
+    const nextCusp = houses.cusps[(i + 1) % 12];
+    let midLon = lon + angleBetween(lon, nextCusp.longitude) / 2;
+    if (midLon >= 360) midLon -= 360;
+    const midAngle = lonToAngle(midLon, ascLon);
+    const numPos = polarToXY(cx, cy, numR, midAngle);
+    ctx.save();
+    ctx.font = 'bold 15px Inter, sans-serif';
+    ctx.fillStyle = 'rgba(124, 58, 237, 0.75)';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(cusp.house.toString(), numPos.x, numPos.y);
+    ctx.restore();
+  }
+}
+
+function drawBiWheelOuterAngleLabels(ctx, cx, cy, houses, radii, ascLon) {
+  if (!houses) return;
+  const { outerR } = radii;
+  const labelR = outerR - 48;
+  const angles = [
+    { lon: houses.ascendant, label: 'ASC' },
+    { lon: houses.mc, label: 'MC' },
+    { lon: houses.descendant, label: 'DSC' },
+    { lon: houses.ic, label: 'IC' },
+  ];
+  for (const a of angles) {
+    if (a.lon === undefined || a.lon === null) continue;
+    const angle = lonToAngle(a.lon, ascLon);
+    const pos = polarToXY(cx, cy, labelR, angle);
+    ctx.save();
+    // Okunurluk için arka plan rozeti
+    ctx.font = 'bold 17px Inter, sans-serif';
+    const w = ctx.measureText(a.label).width + 8;
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+    ctx.fillRect(pos.x - w / 2, pos.y - 11, w, 22);
+    ctx.fillStyle = OUTER_FRAME_COLOR;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(a.label, pos.x, pos.y);
+    ctx.restore();
   }
 }
 
