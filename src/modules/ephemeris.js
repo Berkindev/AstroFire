@@ -147,6 +147,62 @@ export function calculateHouses(jd, latitude, longitude, houseSystem = DEFAULT_H
 }
 
 /**
+ * Verilen ARMC (MC'nin sağ açıklığı) ve ekliptik eğimi ile ev hesabı yapar.
+ * Solar arc / Naibod gibi açı progresyon yöntemlerinde, progres MC'den
+ * ASC ve ev cusplarını türetmek için kullanılır (SolarFire "Chart Angle
+ * Progression Type" yöntemleriyle uyumlu).
+ *
+ * @param {number} armc - MC'nin sağ açıklığı (Right Ascension of MC), derece
+ * @param {number} latitude - Coğrafi enlem
+ * @param {number} eps - Ekliptik eğimi (obliquity), derece
+ * @param {string} houseSystem - Ev sistemi kodu (default: 'P')
+ * @returns {{ cusps: number[], ascendant: number, mc: number, armc: number, vertex: number }}
+ */
+export function calculateHousesARMC(armc, latitude, eps, houseSystem = DEFAULT_HOUSE_SYSTEM.code) {
+  const swe = getSwe();
+
+  const result = swe.houses_armc(normalizeDegree(armc), latitude, eps, houseSystem);
+
+  if (!result) {
+    throw new Error('houses_armc ev hesabı yapılamadı');
+  }
+
+  let cusps, ascmc;
+  if (result.cusps && result.ascmc) {
+    cusps = result.cusps;
+    ascmc = result.ascmc;
+  } else if (Array.isArray(result)) {
+    cusps = result.slice(0, 13);
+    ascmc = result.slice(13);
+  } else {
+    throw new Error('Beklenmeyen houses_armc() dönüş formatı');
+  }
+
+  return {
+    cusps: Array.from(cusps),
+    ascendant: ascmc[0],
+    mc: ascmc[1],
+    armc: ascmc[2],
+    vertex: ascmc[3],
+  };
+}
+
+/**
+ * Ekliptik boylamından (enlem 0 varsayımıyla) sağ açıklık (Right Ascension)
+ * hesaplar. MC ve Güneş gibi noktaların RA'sını bulmak için kullanılır.
+ *
+ * @param {number} eclipticLon - Ekliptik boylam (derece)
+ * @param {number} eps - Ekliptik eğimi (derece)
+ * @returns {number} Sağ açıklık (derece, 0-360)
+ */
+export function rightAscensionFromEcliptic(eclipticLon, eps) {
+  const lonRad = (eclipticLon * Math.PI) / 180;
+  const epsRad = (eps * Math.PI) / 180;
+  const ra = Math.atan2(Math.sin(lonRad) * Math.cos(epsRad), Math.cos(lonRad));
+  return normalizeDegree((ra * 180) / Math.PI);
+}
+
+/**
  * Bir gezegenin hangi evde olduğunu belirler
  * @param {number} planetLongitude - Gezegenin ekliptik boylamı
  * @param {number[]} cusps - Ev cusps dizisi [0, cusp1, cusp2, ..., cusp12]

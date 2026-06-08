@@ -31,6 +31,7 @@
         <button class="main-tab" data-main-tab="solar">☀️ Solar Return</button>
         <button class="main-tab" data-main-tab="lunar">🌙 Lunar Return</button>
         <button class="main-tab" data-main-tab="transit">🔄 Transitler</button>
+        <button class="main-tab" data-main-tab="progression">📈 Progres</button>
         <button class="main-tab" data-main-tab="analysis" style="display:none;">📊 Analiz</button>
       </div>
 
@@ -440,6 +441,92 @@
 
             <!-- TR Dekanlar (her zaman görünür) -->
             <div id="trDecansDisplay" class="decans-section"></div>
+          </div>
+        </section>
+      </section>
+
+      <!-- PROGRESYON PANEL -->
+      <section class="main-tab-content" id="mainTab-progression">
+        <section class="panel pr-panel" id="progressionPanel">
+          <h2 class="panel-title">
+            <span class="panel-icon">📈</span>
+            Progres Harita (İkincil Progresyon)
+          </h2>
+
+          <div class="pr-form">
+            <!-- Hedef tarih girişi -->
+            <div class="form-row pr-input-row">
+              <div class="form-group">
+                <label for="prDay">Gün</label>
+                <input type="number" id="prDay" min="1" max="31" required>
+              </div>
+              <div class="form-group">
+                <label for="prMonth">Ay</label>
+                <input type="number" id="prMonth" min="1" max="12" required>
+              </div>
+              <div class="form-group">
+                <label for="prYear">Yıl</label>
+                <input type="number" id="prYear" min="1900" max="2100" required>
+              </div>
+              <div class="form-group" style="align-self: flex-end;">
+                <button type="button" id="prTodayBtn" class="btn-calculate pr-today-btn">
+                  <span class="btn-icon">📅</span>
+                  Bugün
+                </button>
+              </div>
+            </div>
+
+            <!-- Açı progresyon yöntemi (SolarFire: Chart Angle Progression Type) -->
+            <div class="pr-method-section">
+              <label class="pr-method-label" for="prAngleMethod">Açı Yöntemi (ASC/MC/Evler)</label>
+              <select id="prAngleMethod" class="pr-method-select"></select>
+              <p class="pr-method-hint">Gezegenler her zaman "gün=yıl" ile hesaplanır; bu ayar yalnızca açıları etkiler.</p>
+            </div>
+
+            <button type="button" id="prCalculateBtn" class="btn-calculate pr-btn" disabled>
+              <span class="btn-icon">📈</span>
+              Progres Hesapla
+            </button>
+          </div>
+
+          <!-- PR Results -->
+          <div class="pr-results hidden" id="prResults">
+            <!-- PR Timing bilgisi -->
+            <div class="pr-timing-card" id="prTimingCard"></div>
+
+            <!-- PR Tabs -->
+            <div class="tabs pr-tabs">
+              <button class="tab active" data-pr-tab="pr-chart">🗺️ Harita</button>
+              <button class="tab" data-pr-tab="pr-planets">🪐 Progres Gezegenler</button>
+              <button class="tab" data-pr-tab="pr-houses">🏠 Progres Evler</button>
+              <button class="tab" data-pr-tab="pr-natal-aspects">🔗 Progres-Natal Aspektler</button>
+              <button class="tab" data-pr-tab="pr-aspects">🔗 Progres Aspektler</button>
+              <button class="tab" data-pr-tab="pr-debug">📊 Ham Veri</button>
+            </div>
+
+            <div id="tab-pr-chart" class="tab-content pr-tab-content active">
+              <div class="chart-canvas-container">
+                <canvas id="prChartCanvas" width="1800" height="1800"></canvas>
+              </div>
+            </div>
+            <div id="tab-pr-planets" class="tab-content pr-tab-content">
+              <div id="prPlanetsTable"></div>
+            </div>
+            <div id="tab-pr-houses" class="tab-content pr-tab-content">
+              <div id="prHousesTable"></div>
+            </div>
+            <div id="tab-pr-natal-aspects" class="tab-content pr-tab-content">
+              <div id="prNatalAspectsTable"></div>
+            </div>
+            <div id="tab-pr-aspects" class="tab-content pr-tab-content">
+              <div id="prAspectsTable"></div>
+            </div>
+            <div id="tab-pr-debug" class="tab-content pr-tab-content">
+              <pre id="prDebugOutput" class="debug-output"></pre>
+            </div>
+
+            <!-- PR Dekanlar -->
+            <div id="prDecansDisplay" class="decans-section"></div>
           </div>
         </section>
       </section>

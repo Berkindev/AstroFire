@@ -417,3 +417,58 @@ export function formatTransitText(tr) {
 
   return lines.join('\n');
 }
+
+/**
+ * Progres (ikincil progresyon) haritasını metin olarak biçimlendirir
+ */
+export function formatProgressionText(pr) {
+  const lines = [];
+
+  lines.push('═══════════════════════════════════════');
+  lines.push('       PROGRES (İKİNCİL PROGRESYON)');
+  lines.push('═══════════════════════════════════════');
+  lines.push('');
+
+  const t = pr.targetDate;
+  lines.push(`Hedef Tarih: ${String(t.day).padStart(2, '0')}.${String(t.month).padStart(2, '0')}.${t.year}`);
+  lines.push(`Yaş: ${pr.elapsedYears.toFixed(2)} yıl`);
+  const pm = pr.progMoment;
+  lines.push(`Progres Anı (ephemeris): ${String(pm.day).padStart(2, '0')}.${String(pm.month).padStart(2, '0')}.${pm.year} ${String(pm.hour).padStart(2, '0')}:${String(pm.minute).padStart(2, '0')} UTC`);
+  lines.push(`Solar Arc: ${pr.solarArc.toFixed(4)}°`);
+  lines.push(`Açı Yöntemi: ${pr.angleMethod}`);
+  lines.push(`Konum: ${pr.location.latitude.toFixed(4)}N, ${pr.location.longitude.toFixed(4)}E`);
+  lines.push(`Julian Day: ${pr.julianDay.toFixed(6)}`);
+  lines.push('');
+
+  lines.push('─── AÇILAR ───────────────────────────');
+  lines.push(`ASC: ${formatLongitude(pr.houses.ascendant).fullFormatted}`);
+  lines.push(`MC : ${formatLongitude(pr.houses.mc).fullFormatted}`);
+  lines.push('');
+
+  lines.push('─── PROGRES GEZEGENLER ───────────────');
+  for (const planet of pr.planets) {
+    const pos = formatLongitude(planet.longitude);
+    const retro = planet.isRetrograde ? '  R' : '   ';
+    const house = planet.house ? `Ev ${String(planet.house).padStart(2, ' ')}` : '     ';
+    lines.push(
+      `${planet.symbol} ${planet.name.padEnd(20)} ${pos.fullFormatted.padEnd(20)} ${pos.formatted}${retro}  ${house}`
+    );
+  }
+  lines.push('');
+
+  if (pr.progNatalAspects && pr.progNatalAspects.length > 0) {
+    lines.push('─── PROGRES-NATAL ASPEKTLER ──────────');
+    for (const aspect of pr.progNatalAspects) {
+      const orbDeg = Math.floor(aspect.orb);
+      const orbMin = Math.floor((aspect.orb - orbDeg) * 60);
+      const applying = aspect.isApplying ? 'A' : 'S';
+      lines.push(
+        `  p${aspect.transitPlanet.symbol} ${aspect.aspectSymbol} n${aspect.natalPlanet.symbol} (${aspect.aspect}, orb: ${orbDeg}°${String(orbMin).padStart(2, '0')}') ${applying}`
+      );
+    }
+    lines.push('');
+  }
+
+  lines.push('═══════════════════════════════════════');
+  return lines.join('\n');
+}

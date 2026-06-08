@@ -9,10 +9,11 @@ import { getUTCOffsetMinutes, formatUTCOffset } from './modules/datetime.js';
 import { calculateNatalChart } from './modules/natal.js';
 import { calculateSolarReturn, calculateSRHouseTiming } from './modules/solar.js';
 import { calculateLunarReturn } from './modules/lunar.js';
-import { formatLongitude, formatNatalChartText, formatSolarReturnText, formatLunarReturnText, formatTransitText, formatAspect } from './modules/formatting.js';
+import { formatLongitude, formatNatalChartText, formatSolarReturnText, formatLunarReturnText, formatTransitText, formatProgressionText, formatAspect } from './modules/formatting.js';
 import { SIGNS } from './modules/constants.js';
 import { drawChartWheel, drawSevenYearOverlay, drawDecanOverlay, drawBiWheel } from './modules/chartWheelSF.js';
 import { calculateTransits } from './modules/transit.js';
+import { calculateSecondaryProgression, ANGLE_METHODS, DEFAULT_ANGLE_METHOD } from './modules/progression.js';
 import { calculateHouseDecans } from './modules/decans.js';
 import { calculateSevenYearCycles } from './modules/sevens.js';
 import { loadKnowledge, extractChartFacts, generateAnalysis } from './modules/analysis.js';
@@ -55,6 +56,9 @@ let lrSearchTimeout = null;
 let currentTransit = null;
 let trSelectedCity = null;
 let trSearchTimeout = null;
+
+// Progression state
+let currentProgression = null;
 
 // Analysis state
 let analysisKnowledge = null;
@@ -155,6 +159,22 @@ const elements = {
   trAspectsTable: $('trAspectsTable'),
   trDebugOutput: $('trDebugOutput'),
   trDecansDisplay: $('trDecansDisplay'),
+  // Progression elements
+  progressionPanel: $('progressionPanel'),
+  prDay: $('prDay'),
+  prMonth: $('prMonth'),
+  prYear: $('prYear'),
+  prTodayBtn: $('prTodayBtn'),
+  prAngleMethod: $('prAngleMethod'),
+  prCalculateBtn: $('prCalculateBtn'),
+  prResults: $('prResults'),
+  prTimingCard: $('prTimingCard'),
+  prPlanetsTable: $('prPlanetsTable'),
+  prHousesTable: $('prHousesTable'),
+  prNatalAspectsTable: $('prNatalAspectsTable'),
+  prAspectsTable: $('prAspectsTable'),
+  prDebugOutput: $('prDebugOutput'),
+  prDecansDisplay: $('prDecansDisplay'),
   mainTabs: $('mainTabs'),
   sevensDisplay: $('sevensDisplay'),
   sevensAgeCheck: $('sevensAgeCheck'),
@@ -351,6 +371,36 @@ function setupEventListeners() {
     $(id).addEventListener('input', updateTRButtonState);
   });
 
+  // ============================================
+  // PROGRESYON EVENT LISTENERS
+  // ============================================
+
+  // PR açı yöntemi select'ini doldur
+  if (elements.prAngleMethod) {
+    elements.prAngleMethod.innerHTML = ANGLE_METHODS.map(m =>
+      `<option value="${m.key}"${m.key === DEFAULT_ANGLE_METHOD ? ' selected' : ''}>${m.name}</option>`
+    ).join('');
+    elements.prAngleMethod.addEventListener('change', () => {
+      if (currentChart && currentProgression) handlePRCalculate();
+    });
+  }
+
+  // PR hesapla
+  elements.prCalculateBtn.addEventListener('click', handlePRCalculate);
+
+  // PR "Bugün" butonu
+  elements.prTodayBtn.addEventListener('click', handlePRTodayClick);
+
+  // PR tab switching
+  document.querySelectorAll('.tab[data-pr-tab]').forEach(tab => {
+    tab.addEventListener('click', () => switchPRTab(tab.dataset.prTab));
+  });
+
+  // PR tarih değişince buton durumunu güncelle
+  ['prDay', 'prMonth', 'prYear'].forEach(id => {
+    $(id).addEventListener('input', updatePRButtonState);
+  });
+
   // Aspect toggle (event delegation)
   document.addEventListener('click', (e) => {
     const toggle = e.target.closest('.aspect-toggle');
@@ -443,6 +493,7 @@ function handleClearForm() {
   currentSolarReturn = null;
   currentLunarReturn = null;
   currentTransit = null;
+  currentProgression = null;
 }
 
 // ============================================
@@ -570,6 +621,8 @@ async function handleCalculate(e) {
     showLunarReturnPanel();
     // Transit'i hazırla
     showTransitPanel();
+    // Progresyonu hazırla
+    showProgressionPanel();
 
     // Formu kapat ve sonuçlara scroll
     collapseForm();
@@ -799,7 +852,7 @@ function switchMainTab(tabName) {
 // ============================================
 function switchTab(tabName) {
   document.querySelectorAll('.tab[data-tab]').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.tab-content:not(.sr-tab-content):not(.lr-tab-content):not(.tr-tab-content)').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.tab-content:not(.sr-tab-content):not(.lr-tab-content):not(.tr-tab-content):not(.pr-tab-content)').forEach(c => c.classList.remove('active'));
 
   document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
   document.getElementById(`tab-${tabName}`).classList.add('active');
@@ -2411,6 +2464,295 @@ function switchTRTab(tabName) {
   document.querySelectorAll('.tr-tab-content').forEach(c => c.classList.remove('active'));
 
   document.querySelector(`[data-tr-tab="${tabName}"]`).classList.add('active');
+  document.getElementById(`tab-${tabName}`).classList.add('active');
+}
+
+// ============================================
+// PROGRESYON (Secondary Progressions)
+// ============================================
+function showProgressionPanel() {
+  if (!currentChart) return;
+  // Varsayılan hedef: bugün
+  handlePRTodayClick();
+  updatePRButtonState();
+}
+
+function handlePRTodayClick() {
+  const now = new Date();
+  elements.prDay.value = now.getDate();
+  elements.prMonth.value = now.getMonth() + 1;
+  elements.prYear.value = now.getFullYear();
+  updatePRButtonState();
+}
+
+function updatePRButtonState() {
+  if (!currentChart) {
+    elements.prCalculateBtn.disabled = true;
+    return;
+  }
+  const day = parseInt(elements.prDay.value);
+  const month = parseInt(elements.prMonth.value);
+  const year = parseInt(elements.prYear.value);
+  const hasDate = !isNaN(day) && !isNaN(month) && !isNaN(year);
+  elements.prCalculateBtn.disabled = !hasDate;
+}
+
+async function handlePRCalculate() {
+  if (!currentChart) {
+    alert('Lütfen önce natal haritayı hesaplayın.');
+    return;
+  }
+
+  const targetDate = {
+    year: parseInt(elements.prYear.value),
+    month: parseInt(elements.prMonth.value),
+    day: parseInt(elements.prDay.value),
+  };
+
+  const angleMethod = elements.prAngleMethod ? elements.prAngleMethod.value : DEFAULT_ANGLE_METHOD;
+
+  elements.prCalculateBtn.disabled = true;
+  elements.prCalculateBtn.innerHTML = '<span class="btn-icon">⏳</span> Hesaplanıyor...';
+
+  try {
+    currentProgression = await calculateSecondaryProgression(currentChart, targetDate, { angleMethod });
+    renderPRResults(currentProgression);
+    elements.prResults.classList.remove('hidden');
+  } catch (error) {
+    console.error('Progres hesaplama hatası:', error);
+    alert('Progres hesaplama hatası: ' + error.message);
+  } finally {
+    elements.prCalculateBtn.disabled = false;
+    elements.prCalculateBtn.innerHTML = '<span class="btn-icon">📈</span> Progres Hesapla';
+  }
+}
+
+function renderPRResults(pr) {
+  renderPRTimingCard(pr);
+  renderPRChart(pr);
+  renderPRPlanets(pr);
+  renderPRHouses(pr);
+  renderPRNatalAspects(pr);
+  renderPRAspects(pr);
+  renderPRDebug(pr);
+  renderPRDecans(pr);
+}
+
+function renderPRTimingCard(pr) {
+  const t = pr.targetDate;
+  const months = ['', 'Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'];
+  const methodName = ANGLE_METHODS.find(m => m.key === pr.angleMethod)?.name || pr.angleMethod;
+  const ageYears = Math.floor(pr.elapsedYears);
+  const ageMonths = Math.round((pr.elapsedYears - ageYears) * 12);
+  const arcD = Math.floor(pr.solarArc);
+  const arcM = Math.floor((pr.solarArc - arcD) * 60);
+
+  elements.prTimingCard.innerHTML = `
+    <div class="tr-timing-grid">
+      <div class="tr-timing-main">
+        <div class="tr-timing-date">
+          <span class="tr-timing-icon">📈</span>
+          ${t.day} ${months[t.month]} ${t.year}
+        </div>
+        <div class="tr-timing-time">
+          <span class="tr-timing-label">Yaş:</span>
+          <span class="tr-timing-value">${ageYears} yıl ${ageMonths} ay</span>
+        </div>
+        <div class="tr-timing-place">
+          <span class="tr-timing-label">Yöntem:</span>
+          <span class="tr-timing-value">${methodName}</span>
+        </div>
+      </div>
+      <div class="tr-timing-points">
+        <div class="tr-point">
+          <span class="tr-point-label">Solar Arc</span>
+          <span class="tr-point-value">${arcD}°${String(arcM).padStart(2, '0')}'</span>
+        </div>
+        <div class="tr-point">
+          <span class="tr-point-label">Progres Anı (ephemeris)</span>
+          <span class="tr-point-value">${pr.progMoment.day}.${String(pr.progMoment.month).padStart(2,'0')}.${pr.progMoment.year}</span>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderPRChart(pr) {
+  const canvas = $('prChartCanvas');
+  if (!canvas || !currentChart) return;
+
+  const months = ['', 'Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz', 'Tem', 'Ağu', 'Eyl', 'Eki', 'Kas', 'Ara'];
+  const t = pr.targetDate;
+  const targetStr = `${t.day} ${months[t.month]} ${t.year}`;
+  const natalBd = currentChart.birthData;
+  const natalDate = `${natalBd.day} ${months[natalBd.month]} ${natalBd.year}`;
+  const methodName = ANGLE_METHODS.find(m => m.key === pr.angleMethod)?.name || pr.angleMethod;
+
+  // drawBiWheel transit alan adlarını bekler — progres objesi uyumlu (planets + transitNatalAspects)
+  drawBiWheel(canvas, currentChart, pr, {
+    title: 'Progres Bi-Wheel',
+    subtitle: `Natal: ${natalDate}\nProgres: ${targetStr} (${Math.floor(pr.elapsedYears)} yaş)\n${methodName}`,
+  });
+}
+
+function renderPRPlanets(pr) {
+  const rows = pr.planets.map(planet => {
+    const pos = formatLongitude(planet.longitude);
+    const retro = planet.isRetrograde ? '<span class="retro-badge">R</span>' : '';
+    const sign = SIGNS[pos.signIndex];
+    const house = planet.house ? `Ev ${planet.house}` : '';
+    return `
+      <tr class="element-${sign.element}">
+        <td class="planet-symbol">${planet.symbol}</td>
+        <td class="planet-name">${planet.name}</td>
+        <td class="planet-pos">${pos.formatted}</td>
+        <td class="planet-full">${pos.degree}°${pos.minute}'${pos.second}" ${signImgFromSign(sign)} ${sign.name}</td>
+        <td class="planet-retro">${retro}</td>
+        <td class="planet-house">${house}</td>
+      </tr>
+    `;
+  });
+
+  elements.prPlanetsTable.innerHTML = `
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Gezegen</th>
+          <th>Pozisyon</th>
+          <th>Tam Derece</th>
+          <th></th>
+          <th>Progres Ev</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${rows.join('')}
+      </tbody>
+    </table>
+  `;
+}
+
+function renderPRHouses(pr) {
+  const angles = [
+    { label: 'ASC', lon: pr.houses.ascendant },
+    { label: 'MC', lon: pr.houses.mc },
+    { label: 'DSC', lon: pr.houses.descendant },
+    { label: 'IC', lon: pr.houses.ic },
+  ];
+  const angleRows = angles.map(a => {
+    const pos = formatLongitude(a.lon);
+    const sign = SIGNS[pos.signIndex];
+    return `
+      <tr class="element-${sign.element}">
+        <td class="planet-name"><strong>${a.label}</strong></td>
+        <td class="planet-pos">${pos.formatted}</td>
+        <td class="planet-full">${pos.degree}°${pos.minute}'${pos.second}" ${signImgFromSign(sign)} ${sign.name}</td>
+      </tr>
+    `;
+  });
+
+  const cuspRows = pr.houses.cusps.map(c => {
+    const pos = formatLongitude(c.longitude);
+    const sign = SIGNS[pos.signIndex];
+    return `
+      <tr class="element-${sign.element}">
+        <td class="planet-name">Ev ${c.house}</td>
+        <td class="planet-pos">${pos.formatted}</td>
+        <td class="planet-full">${pos.degree}°${pos.minute}'${pos.second}" ${signImgFromSign(sign)} ${sign.name}</td>
+      </tr>
+    `;
+  });
+
+  elements.prHousesTable.innerHTML = `
+    <table class="data-table">
+      <thead><tr><th>Açı</th><th>Pozisyon</th><th>Tam Derece</th></tr></thead>
+      <tbody>${angleRows.join('')}</tbody>
+    </table>
+    <table class="data-table" style="margin-top:1rem;">
+      <thead><tr><th>Ev</th><th>Pozisyon</th><th>Tam Derece</th></tr></thead>
+      <tbody>${cuspRows.join('')}</tbody>
+    </table>
+  `;
+}
+
+function renderPRNatalAspects(pr) {
+  if (!pr.progNatalAspects || pr.progNatalAspects.length === 0) {
+    elements.prNatalAspectsTable.innerHTML = '<p class="no-data">Progres-natal aspekt bulunamadı</p>';
+    return;
+  }
+  const sorted = [...pr.progNatalAspects].sort((a, b) => a.orb - b.orb);
+  const rows = sorted.map(aspect => {
+    const orbDeg = Math.floor(aspect.orb);
+    const orbMin = Math.floor((aspect.orb - orbDeg) * 60);
+    const applying = aspect.isApplying ? '<span class="applying">A</span>' : '<span class="separating">S</span>';
+    return `
+      <tr>
+        <td>p${aspect.transitPlanet.symbol} ${aspect.transitPlanet.name}</td>
+        <td class="aspect-symbol">${aspect.aspectSymbol}</td>
+        <td>n${aspect.natalPlanet.symbol} ${aspect.natalPlanet.name}</td>
+        <td>${aspect.aspect}</td>
+        <td>${orbDeg}°${String(orbMin).padStart(2, '0')}'</td>
+        <td>${applying}</td>
+      </tr>
+    `;
+  });
+  elements.prNatalAspectsTable.innerHTML = `
+    <table class="data-table aspects-table">
+      <thead>
+        <tr><th>Progres Gezegen</th><th></th><th>Natal Gezegen</th><th>Aspekt</th><th>Orb</th><th>A/S</th></tr>
+      </thead>
+      <tbody>${rows.join('')}</tbody>
+    </table>
+  `;
+}
+
+function renderPRAspects(pr) {
+  if (!pr.progAspects || pr.progAspects.length === 0) {
+    elements.prAspectsTable.innerHTML = '<p class="no-data">Progres aspekt bulunamadı</p>';
+    return;
+  }
+  const sorted = [...pr.progAspects].sort((a, b) => a.orb - b.orb);
+  const rows = sorted.map(aspect => {
+    const orbDeg = Math.floor(aspect.orb);
+    const orbMin = Math.floor((aspect.orb - orbDeg) * 60);
+    const applying = aspect.isApplying ? '<span class="applying">A</span>' : '<span class="separating">S</span>';
+    return `
+      <tr>
+        <td>${aspect.planet1.symbol} ${aspect.planet1.name}</td>
+        <td class="aspect-symbol">${aspect.aspectSymbol}</td>
+        <td>${aspect.planet2.symbol} ${aspect.planet2.name}</td>
+        <td>${aspect.aspect}</td>
+        <td>${orbDeg}°${String(orbMin).padStart(2, '0')}'</td>
+        <td>${applying}</td>
+      </tr>
+    `;
+  });
+  elements.prAspectsTable.innerHTML = `
+    <table class="data-table aspects-table">
+      <thead>
+        <tr><th>Gezegen 1</th><th></th><th>Gezegen 2</th><th>Aspekt</th><th>Orb</th><th>A/S</th></tr>
+      </thead>
+      <tbody>${rows.join('')}</tbody>
+    </table>
+  `;
+}
+
+function renderPRDebug(pr) {
+  elements.prDebugOutput.textContent = formatProgressionText(pr);
+}
+
+function renderPRDecans(pr) {
+  if (!elements.prDecansDisplay || !currentChart) return;
+  // Progres dekanlarını progres evler üzerinden hesapla
+  const decanData = calculateHouseDecans(pr.houses, pr.planets);
+  elements.prDecansDisplay.innerHTML = renderDecanHTML(decanData, pr.progAspects);
+}
+
+function switchPRTab(tabName) {
+  document.querySelectorAll('.tab[data-pr-tab]').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.pr-tab-content').forEach(c => c.classList.remove('active'));
+
+  document.querySelector(`[data-pr-tab="${tabName}"]`).classList.add('active');
   document.getElementById(`tab-${tabName}`).classList.add('active');
 }
 

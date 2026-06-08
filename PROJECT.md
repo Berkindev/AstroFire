@@ -183,7 +183,12 @@ npm run dev    # → http://localhost:3000
 7. ✅ Part of Fortune — SR haritasına eklendi
 8. ✅ Hızlı şehir seçim butonları (5 Türk şehri)
 9. ✅ Temizle butonu + form default'ları kaldırıldı
-10. 🔲 **Görsel Harita (Chart Wheel)** — natal + SR
+10. ✅ Görsel Harita (Chart Wheel) — `chartWheelSF.js` (natal/SR/LR tekil + transit/progres bi-wheel)
+11. ✅ Lunar Return, Transit (bi-wheel + zaman adımları), 7'ler Kanunu, Dekanlar, Analiz motoru
+12. ✅ **Progres Harita (İkincil Progresyon)** — `progression.js`, gün=yıl; SolarFire'ın 5 açı yöntemi (default: True Solar Arc in Longitude); transit gibi bi-wheel
+13. 🔲 Sinastri (synastry)
+
+> ⚠️ `src/modules/chartWheel.js` ÖLÜ KOD — hiçbir yerden import edilmiyor, yerini `chartWheelSF.js` aldı. Silinebilir.
 
 ---
 

@@ -2258,3 +2258,89 @@ input::placeholder {
   color: #ef4444;
   font-size: 0.9rem;
 }
+
+/* ============================================
+   PROGRESYON (Secondary Progressions) PANEL
+   Mor/indigo aksan ile transit kalıbı
+   ============================================ */
+.pr-panel {
+  border-color: rgba(139, 92, 246, 0.3);
+}
+
+.pr-panel:hover {
+  border-color: rgba(139, 92, 246, 0.5);
+}
+
+.pr-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.pr-input-row {
+  flex-wrap: wrap;
+}
+
+.pr-method-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.pr-method-label {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.pr-method-select {
+  padding: 0.6rem 0.9rem;
+  background: var(--bg-input);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.pr-method-select:hover,
+.pr-method-select:focus {
+  border-color: rgba(139, 92, 246, 0.5);
+  outline: none;
+}
+
+.pr-method-hint {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  opacity: 0.8;
+  margin: 0;
+}
+
+.pr-btn {
+  background: linear-gradient(135deg, #8b5cf6, #6366f1);
+}
+
+.pr-btn:hover:not(:disabled) {
+  box-shadow: 0 4px 20px rgba(139, 92, 246, 0.4);
+}
+
+.pr-today-btn {
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+  margin-top: 0;
+  background: linear-gradient(135deg, #8b5cf6, #6366f1);
+}
+
+.pr-timing-card {
+  margin-bottom: 1rem;
+}
+
+/* Progres timing kartı transit grid sınıflarını kullanır; mor tonla override */
+.pr-timing-card .tr-timing-grid {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.08), rgba(99, 102, 241, 0.04));
+  border: 1px solid rgba(139, 92, 246, 0.2);
+}

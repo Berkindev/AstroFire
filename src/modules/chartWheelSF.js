@@ -881,27 +881,46 @@ export function drawBiWheel(canvas, natalData, transitData, options = {}) {
   ctx.fillStyle = '#FFFFFF';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  const outerR    = size * 0.47;
-  const signInR   = size * 0.42;
-  const houseInR  = size * 0.395;
-  const transitR  = size * 0.34;
-  const dividerR  = size * 0.27;
-  const natalR    = size * 0.21;
-  const innerR    = size * 0.15;
+  // ── Astro-Seek tarzı çift halka ──────────────────────────────
+  // Dıştan içe: [dış harita gezegenleri] · zodyak · [ev no'ları] · [iç/natal gezegenleri] · aspekt çemberi
+  const outerR    = size * 0.49;    // en dış çember (dış gezegenleri çevreler)
+  const signOutR  = size * 0.365;   // zodyak halkası dış kenarı
+  const signInR   = size * 0.305;   // zodyak halkası iç kenarı
+  const houseInR  = size * 0.285;   // ev numarası bandı iç kenarı
+  const innerR    = size * 0.135;   // aspekt çemberi
 
-  const radii = { outerR, signInR, houseInR, transitR, dividerR, natalR, innerR };
+  // Dış harita (progres/transit) gezegen yerleşimi — zodyağın DIŞINDA
+  const outerLayout = {
+    symR:   size * 0.448,           // sembol (en dışta)
+    degR:   size * 0.448 - 46,      // derece
+    signR:  size * 0.448 - 78,      // burç ikonu
+    minR:   size * 0.448 - 108,     // dakika
+    retroR: size * 0.448 + 28,      // Rx (sembolün dışında)
+  };
+  // İç harita (natal) gezegen yerleşimi — zodyağın İÇİNDE
+  const innerBandMid = (houseInR + innerR) / 2;
+  const innerLayout = {
+    symR:   innerBandMid - 40,
+    degR:   innerBandMid + 4,
+    signR:  innerBandMid + 36,
+    minR:   innerBandMid + 68,
+    retroR: innerBandMid - 68,
+  };
+
   const ascLon = natalData.houses?.ascendant ?? 0;
 
-  drawSignRing(ctx, cx, cy, { outerR, signInR }, ascLon);
+  // Zodyak + ev bandı (natal çerçevesi, natal ASC'ye göre yönlendirilir)
+  drawSignRing(ctx, cx, cy, { outerR: signOutR, signInR }, ascLon);
   drawHouseBand(ctx, cx, cy, natalData.houses, { signInR, houseInR, innerR }, ascLon);
 
-  drawBiWheelTransitPlanets(ctx, cx, cy, transitData.planets, radii, ascLon);
+  // Dış harita gezegenleri (en dış halka)
+  drawBiWheelOuterPlanets(ctx, cx, cy, transitData.planets, outerLayout, ascLon);
 
-  // Divider circle
-  ctx.strokeStyle = '#999999';
+  // En dış çember
+  ctx.strokeStyle = '#111111';
   ctx.lineWidth = 1.5;
   ctx.beginPath();
-  ctx.arc(cx, cy, dividerR, 0, Math.PI * 2);
+  ctx.arc(cx, cy, outerR, 0, Math.PI * 2);
   ctx.stroke();
 
   drawInnerCircle(ctx, cx, cy, innerR);
@@ -911,7 +930,8 @@ export function drawBiWheel(canvas, natalData, transitData, options = {}) {
     drawBiWheelAspects(ctx, cx, cy, transitData.planets, natalData.planets, transitData.transitNatalAspects, innerR, ascLon);
   }
 
-  drawBiWheelNatalPlanets(ctx, cx, cy, natalData.planets, radii, ascLon, natalData.partOfFortune);
+  // İç harita (natal) gezegenleri (iç halka)
+  drawBiWheelInnerPlanets(ctx, cx, cy, natalData.planets, innerLayout, ascLon, natalData.partOfFortune);
 
   if (options.title) {
     drawInfoBlock(ctx, options);
@@ -923,17 +943,9 @@ export function drawBiWheel(canvas, natalData, transitData, options = {}) {
 // BI-WHEEL TRANSIT PLANETS
 // ============================================
 
-function drawBiWheelTransitPlanets(ctx, cx, cy, planets, radii, ascLon) {
+function drawBiWheelOuterPlanets(ctx, cx, cy, planets, layout, ascLon) {
   if (!planets) return;
-  const { transitR, houseInR, dividerR } = radii;
-
-  // Center the radial layout within the transit band (houseInR → dividerR)
-  const bandMid = (houseInR + dividerR) / 2;
-  const symR   = bandMid + 45;     // planet symbol (outermost)
-  const degR   = symR - 48;        // degree number
-  const signR  = degR - 36;        // sign SVG icon
-  const minR   = signR - 34;       // minutes
-  const retroR = symR + 28;        // retrograde marker (outside symbol)
+  const { symR, degR, signR, minR, retroR } = layout;
 
   const withAngles = [...planets].map(p => ({
     ...p,
@@ -1008,17 +1020,9 @@ function drawBiWheelTransitPlanets(ctx, cx, cy, planets, radii, ascLon) {
 // BI-WHEEL NATAL PLANETS
 // ============================================
 
-function drawBiWheelNatalPlanets(ctx, cx, cy, planets, radii, ascLon, partOfFortune) {
+function drawBiWheelInnerPlanets(ctx, cx, cy, planets, layout, ascLon, partOfFortune) {
   if (!planets) return;
-  const { natalR, dividerR, innerR } = radii;
-
-  // Center the radial layout within the natal band (dividerR → innerR)
-  const bandMid = (dividerR + innerR) / 2;
-  const symR   = bandMid - 40;     // planet symbol (innermost)
-  const degR   = symR + 44;        // degree number (towards divider)
-  const signR  = degR + 32;        // sign SVG icon
-  const minR   = signR + 32;       // minutes
-  const retroR = symR - 28;        // retrograde (towards center)
+  const { symR, degR, signR, minR, retroR } = layout;
 
   const allPlanets = [...planets];
   if (partOfFortune) {
