@@ -898,7 +898,37 @@ input::placeholder {
 }
 
 .sr-input-row {
+  max-width: 440px; /* yıl input'u + altındaki dönem etiketi */
+}
+
+/* Yıl kutusu dar kalsın; dönem etiketi altında rahat yayılsın */
+.sr-input-row #srYear {
   max-width: 200px;
+}
+
+/* Girilen solar yılın hangi tarih aralığını kapsadığı.
+   Konvansiyon (girilen yıl = dönemin çoğunluğunun düştüğü yıl) tek başına
+   görünmez olduğu için aralığı açıkça yazıyoruz. */
+.sr-period-hint {
+  margin-top: 0.55rem;
+  padding: 0.45rem 0.75rem;
+  background: rgba(245, 158, 11, 0.08);
+  border-left: 3px solid #f59e0b;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  color: var(--text-secondary);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.82rem;
+  white-space: nowrap;
+}
+
+.sr-period-arrow {
+  color: #f59e0b;
+  margin-right: 0.15rem;
+}
+
+.sr-period-dash {
+  color: var(--text-muted);
+  margin: 0 0.2rem;
 }
 
 /* Location selector */

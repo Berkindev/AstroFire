@@ -7,7 +7,7 @@ import { initEphemeris } from './modules/ephemeris.js';
 import { searchCity, formatCityName, formatCoordinates } from './modules/geocoding.js';
 import { getUTCOffsetMinutes, formatUTCOffset } from './modules/datetime.js';
 import { calculateNatalChart } from './modules/natal.js';
-import { calculateSolarReturn, calculateSRHouseTiming } from './modules/solar.js';
+import { calculateSolarReturn, calculateSRHouseTiming, solarPeriod } from './modules/solar.js';
 import { calculateLunarReturn } from './modules/lunar.js';
 import { formatLongitude, formatNatalChartText, formatSolarReturnText, formatLunarReturnText, formatTransitText, formatProgressionText } from './modules/formatting.js';
 import { SIGNS } from './modules/constants.js';
@@ -94,6 +94,7 @@ const elements = {
   // Solar Return elements
   solarReturnPanel: $('solarReturnPanel'),
   srYear: $('srYear'),
+  srPeriodHint: $('srPeriodHint'),
   srLocBirth: $('srLocBirth'),
   srLocCustom: $('srLocCustom'),
   srLocBirthLabel: $('srLocBirthLabel'),
@@ -1112,6 +1113,32 @@ function updateSRButtonState() {
   const hasLocation = isBirth ? !!selectedCity : !!srSelectedCity;
 
   elements.srCalculateBtn.disabled = !(hasYear && hasLocation);
+
+  updateSRPeriodHint(hasYear ? yearVal : null);
+}
+
+/**
+ * Girilen solar yılın hangi dönemi kapsadığını gösterir.
+ *
+ * Konvansiyon (bkz. solar.js → solarEventYear): girilen yıl, solar dönemin
+ * ÇOĞUNLUĞUNUN düştüğü takvim yılıdır. Yani 6 Ekim doğumlu biri "1995" girince
+ * dönem 6 Ekim 1994'te başlar. Bu, ekranda görünmediği sürece kafa karıştırıcı —
+ * o yüzden aralığı doğrudan yazıyoruz.
+ */
+function updateSRPeriodHint(year) {
+  const hint = elements.srPeriodHint;
+  if (!hint) return;
+
+  if (!year || !currentChart) {
+    hint.classList.add('hidden');
+    return;
+  }
+
+  const period = solarPeriod(currentChart.birthData, year);
+  const dayStr = `${period.day} ${MONTH_NAMES[period.month]}`;
+
+  hint.innerHTML = `<span class="sr-period-arrow">→</span> ${dayStr} ${period.startYear} <span class="sr-period-dash">–</span> ${dayStr} ${period.endYear}`;
+  hint.classList.remove('hidden');
 }
 
 // SR Calculate
