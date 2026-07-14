@@ -2269,3 +2269,327 @@ input::placeholder {
   background: linear-gradient(135deg, rgba(139, 92, 246, 0.08), rgba(99, 102, 241, 0.04));
   border: 1px solid rgba(139, 92, 246, 0.2);
 }
+
+/* ============================================
+   SİNASTRİ PANEL (Sinastri + Kompozit + Davison)
+   Gül/pembe aksan
+   ============================================ */
+.sy-panel {
+  border-color: rgba(236, 72, 153, 0.3);
+}
+
+.sy-panel:hover {
+  border-color: rgba(236, 72, 153, 0.5);
+}
+
+.main-tab[data-main-tab="synastry"].active {
+  background: linear-gradient(135deg, #ec4899, #be185d);
+  border-color: #ec4899;
+}
+
+.sy-tabs .tab.active {
+  background: rgba(236, 72, 153, 0.15);
+  border-color: rgba(236, 72, 153, 0.5);
+  color: #f9a8d4;
+}
+
+.sy-btn {
+  background: linear-gradient(135deg, #ec4899, #be185d);
+}
+
+.sy-btn:hover:not(:disabled) {
+  box-shadow: 0 4px 20px rgba(236, 72, 153, 0.4);
+}
+
+/* --- Kişi kimlikleri --- */
+.sy-person-a {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.8rem 1rem;
+  margin-bottom: 1.25rem;
+  background: rgba(99, 102, 241, 0.08);
+  border-left: 3px solid var(--accent-primary);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+.sy-person-label {
+  padding: 0.2rem 0.6rem;
+  background: var(--accent-primary);
+  border-radius: 999px;
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+.sy-label-b {
+  background: #ec4899;
+}
+
+.sy-person-info {
+  color: var(--text-secondary);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+}
+
+/* --- Kişi B formu --- */
+.sy-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.25rem;
+  background: rgba(236, 72, 153, 0.04);
+  border: 1px solid rgba(236, 72, 153, 0.15);
+  border-radius: var(--radius);
+}
+
+.sy-form-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.sy-form-hint {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.sy-quick-city-btn {
+  padding: 0.35rem 0.7rem;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: all 0.15s;
+}
+
+.sy-quick-city-btn:hover {
+  border-color: rgba(236, 72, 153, 0.5);
+  color: var(--text-primary);
+}
+
+.sy-quick-city-btn.active {
+  background: rgba(236, 72, 153, 0.15);
+  border-color: #ec4899;
+  color: #f9a8d4;
+}
+
+.sy-select {
+  width: 100%;
+  max-width: 340px;
+  padding: 0.6rem 0.9rem;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+
+.sy-anchor-hint {
+  margin-top: 0.5rem;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  line-height: 1.55;
+  max-width: 60ch;
+}
+
+/* --- Özet kartı --- */
+.sy-summary-card {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.25rem;
+  background: linear-gradient(135deg, rgba(236, 72, 153, 0.08), rgba(190, 24, 93, 0.04));
+  border: 1px solid rgba(236, 72, 153, 0.2);
+  border-radius: var(--radius);
+}
+
+.sy-summary-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.sy-summary-label {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+
+.sy-summary-value {
+  color: var(--text-primary);
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+}
+
+.sy-summary-note {
+  color: var(--text-muted);
+  font-size: 0.78rem;
+}
+
+/* --- Bi-wheel açıklaması --- */
+.sy-legend {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 0.75rem;
+  font-size: 0.85rem;
+}
+
+.sy-legend-inner::before,
+.sy-legend-outer::before {
+  content: '●';
+  margin-right: 0.4rem;
+}
+
+.sy-legend-inner {
+  color: var(--text-secondary);
+}
+
+.sy-legend-inner::before {
+  color: var(--accent-primary);
+}
+
+.sy-legend-outer {
+  color: var(--text-secondary);
+}
+
+.sy-legend-outer::before {
+  color: #7c3aed;
+}
+
+/* --- Çapraz aspekt tablosu --- */
+.sy-cell-a {
+  color: #a5b4fc;
+}
+
+.sy-cell-b {
+  color: #f9a8d4;
+}
+
+/* --- Aspekt gridi --- */
+.sy-grid-caption {
+  margin-bottom: 0.75rem;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+
+.sy-grid-scroll {
+  overflow-x: auto;
+}
+
+.sy-grid {
+  border-collapse: collapse;
+}
+
+.sy-grid-head {
+  padding: 0.4rem 0.5rem;
+  background: var(--bg-primary);
+  color: var(--text-secondary);
+  font-size: 1.05rem;
+  text-align: center;
+}
+
+.sy-grid-cell {
+  width: 46px;
+  height: 40px;
+  padding: 0.2rem;
+  border: 1px solid var(--border-color);
+  text-align: center;
+  vertical-align: middle;
+}
+
+.sy-grid-symbol {
+  display: block;
+  font-size: 0.95rem;
+  line-height: 1.1;
+}
+
+.sy-grid-orb {
+  display: block;
+  color: var(--text-muted);
+  font-size: 0.62rem;
+}
+
+/* Aspekt tipine göre renk — chartWheelSF'teki çizim renkleriyle aynı dil */
+.sy-aspect-0   { background: rgba(0, 0, 205, 0.14); }
+.sy-aspect-180 { background: rgba(220, 20, 60, 0.14); }
+.sy-aspect-120 { background: rgba(0, 0, 205, 0.10); }
+.sy-aspect-90  { background: rgba(220, 20, 60, 0.10); }
+.sy-aspect-60  { background: rgba(0, 0, 205, 0.07); }
+
+.sy-grid-tight {
+  box-shadow: inset 0 0 0 2px rgba(236, 72, 153, 0.55);
+}
+
+/* --- Ev yerleşimleri --- */
+.sy-houses-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 1.5rem;
+}
+
+.sy-house-title {
+  margin-bottom: 0.75rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.sy-title-a {
+  color: #a5b4fc;
+}
+
+.sy-title-b {
+  color: #f9a8d4;
+}
+
+/* --- Kompozit / Davison alt kartları --- */
+.sy-subchart-card {
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.25rem;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+}
+
+.sy-subchart-title {
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.sy-subchart-tag {
+  margin-left: 0.5rem;
+  padding: 0.15rem 0.5rem;
+  background: rgba(236, 72, 153, 0.15);
+  border-radius: 999px;
+  color: #f9a8d4;
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+
+.sy-subchart-desc {
+  margin-bottom: 0.75rem;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  line-height: 1.6;
+  max-width: 75ch;
+}
+
+.sy-subchart-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  color: var(--text-muted);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.82rem;
+}
+
+.sy-subchart-meta strong {
+  color: var(--text-primary);
+}

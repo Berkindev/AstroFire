@@ -664,11 +664,18 @@ function drawInfoBlock(ctx, options) {
     }
   }
 
+  // Hesaplama ayarları. Kompozit bir midpoint haritasıdır — cuspları bir ev
+  // SİSTEMİNDEN değil, iki haritanın cusplarının orta noktasından gelir; oraya
+  // "Placidus" yazmak yanlış bilgi olur.
+  const houseLabel = options.chartType === 'composite'
+    ? 'Composite Midpoint Houses'
+    : 'Placidus';
+
   ctx.font = 'italic 14px Inter, sans-serif';
   ctx.fillStyle = '#DC143C';
   ctx.fillText('Geocentric', x, y); y += lineH - 3;
   ctx.fillText('Tropical', x, y);   y += lineH - 3;
-  ctx.fillText('Placidus', x, y);   y += lineH - 3;
+  ctx.fillText(houseLabel, x, y);   y += lineH - 3;
   ctx.fillText('Mean Node', x, y);
 
   ctx.restore();

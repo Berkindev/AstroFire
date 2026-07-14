@@ -17,6 +17,7 @@ import { calculateSecondaryProgression, ANGLE_METHODS, DEFAULT_ANGLE_METHOD } fr
 import { calculateHouseDecans } from './modules/decans.js';
 import { calculateSevenYearCycles } from './modules/sevens.js';
 import { loadKnowledge, extractChartFacts, generateAnalysis } from './modules/analysis.js';
+import { calculateSynastry, calculateComposite, calculateDavison } from './modules/synastry.js';
 
 // ============================================
 // SVG Sign Helper — replaces Unicode zodiac emoji with SVG icons everywhere
@@ -66,6 +67,13 @@ let trSelectedCity = null;
 
 // Progression state
 let currentProgression = null;
+
+// Sinastri state (Kişi A = currentChart, Kişi B = burada)
+let syChartB = null;
+let sySelectedCity = null;
+let currentSynastry = null;
+let currentComposite = null;
+let currentDavison = null;
 
 // Analysis state
 let analysisKnowledge = null;
@@ -189,6 +197,35 @@ const elements = {
   formToggle: $('formToggle'),
   formContent: $('formContent'),
   toggleIcon: $('toggleIcon'),
+
+  // Sinastri (Kişi B formu + Sinastri/Kompozit/Davison)
+  syPersonAInfo: $('syPersonAInfo'),
+  syBirthDay: $('syBirthDay'),
+  syBirthMonth: $('syBirthMonth'),
+  syBirthYear: $('syBirthYear'),
+  syBirthHour: $('syBirthHour'),
+  syBirthMinute: $('syBirthMinute'),
+  syCitySearch: $('syCitySearch'),
+  syCityDropdown: $('syCityDropdown'),
+  syLocationInfo: $('syLocationInfo'),
+  syCoordDisplay: $('syCoordDisplay'),
+  syTimezoneDisplay: $('syTimezoneDisplay'),
+  syAnchor: $('syAnchor'),
+  syCalculateBtn: $('syCalculateBtn'),
+  syResults: $('syResults'),
+  sySummaryCard: $('sySummaryCard'),
+  syChartCanvas: $('syChartCanvas'),
+  syAspectsTable: $('syAspectsTable'),
+  syGridTable: $('syGridTable'),
+  syHousesTable: $('syHousesTable'),
+  syCompositeCard: $('syCompositeCard'),
+  syCompositeCanvas: $('syCompositeCanvas'),
+  syCompositePlanetsTable: $('syCompositePlanetsTable'),
+  syCompositeAspectsTable: $('syCompositeAspectsTable'),
+  syDavisonCard: $('syDavisonCard'),
+  syDavisonCanvas: $('syDavisonCanvas'),
+  syDavisonPlanetsTable: $('syDavisonPlanetsTable'),
+  syDavisonAspectsTable: $('syDavisonAspectsTable'),
 };
 
 // ============================================
@@ -291,6 +328,38 @@ function setupEventListeners() {
 
   // SR yıl değişince buton durumunu güncelle
   elements.srYear.addEventListener('input', updateSRButtonState);
+
+  // ============================================
+  // SİNASTRİ EVENT LISTENERS
+  // ============================================
+
+  elements.syCalculateBtn.addEventListener('click', handleSYCalculate);
+
+  ['syBirthDay', 'syBirthMonth', 'syBirthYear', 'syBirthHour', 'syBirthMinute'].forEach(id => {
+    elements[id].addEventListener('input', updateSYButtonState);
+  });
+
+  // Kişi B'nin hızlı şehir butonları — natal formunkinden AYRI sınıf kullanır,
+  // aksi halde buradan seçim Kişi A'nın şehrini ezerdi.
+  document.querySelectorAll('.sy-quick-city-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const city = QUICK_CITIES[btn.dataset.city];
+      if (!city) return;
+
+      syCitySearch.select(city);
+      document.querySelectorAll('.sy-quick-city-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.city === btn.dataset.city);
+      });
+    });
+  });
+
+  // Çapa değişince kompoziti yeniden hesapla (haritalar zaten hesaplanmışsa)
+  elements.syAnchor.addEventListener('change', () => {
+    if (!currentChart || !syChartB) return;
+    currentComposite = calculateComposite(currentChart, syChartB, { anchor: elements.syAnchor.value });
+    renderSYSummary();
+    renderSYComposite();
+  });
 
   // ============================================
   // LUNAR RETURN EVENT LISTENERS
@@ -447,12 +516,28 @@ function handleClearForm() {
   // Sevens temizle
   elements.sevensDisplay.innerHTML = '';
   
+  // Sinastri (Kişi B) formunu ve sonuçlarını da sıfırla
+  ['syBirthDay', 'syBirthMonth', 'syBirthYear', 'syBirthHour', 'syBirthMinute', 'syCitySearch']
+    .forEach(id => { elements[id].value = ''; });
+  sySelectedCity = null;
+  elements.syLocationInfo.classList.add('hidden');
+  elements.syCityDropdown.classList.add('hidden');
+  elements.syCityDropdown.innerHTML = '';
+  elements.syResults.classList.add('hidden');
+  elements.syCalculateBtn.disabled = true;
+  elements.syPersonAInfo.textContent = 'Önce natal harita hesaplayın';
+  document.querySelectorAll('.sy-quick-city-btn').forEach(btn => btn.classList.remove('active'));
+
   // Mevcut verilerini sıfırla
   currentChart = null;
   currentSolarReturn = null;
   currentLunarReturn = null;
   currentTransit = null;
   currentProgression = null;
+  syChartB = null;
+  currentSynastry = null;
+  currentComposite = null;
+  currentDavison = null;
 }
 
 // ============================================
@@ -597,6 +682,19 @@ createCitySearch({
   },
 });
 
+// Sinastri — Kişi B. Factory sayesinde 60 satırlık kopya yerine tek çağrı.
+const syCitySearch = createCitySearch({
+  input: elements.syCitySearch,
+  dropdown: elements.syCityDropdown,
+  info: elements.syLocationInfo,
+  coord: elements.syCoordDisplay,
+  timezone: elements.syTimezoneDisplay,
+  onSelect: (city) => {
+    sySelectedCity = city;
+    updateSYButtonState();
+  },
+});
+
 /** Hızlı şehir butonları natal formun arama kutusunu besler. */
 function selectCity(city) {
   natalCitySearch.select(city);
@@ -661,6 +759,8 @@ async function handleCalculate(e) {
     showTransitPanel();
     // Progresyonu hazırla
     showProgressionPanel();
+    // Sinastri'yi hazırla (Kişi A = bu harita)
+    showSynastryPanel();
 
     // Formu kapat ve sonuçlara scroll
     collapseForm();
@@ -917,6 +1017,7 @@ const SECTION_TABS = [
   { attr: 'lr-tab', dataKey: 'lrTab', contentClass: 'lr-tab-content' },
   { attr: 'tr-tab', dataKey: 'trTab', contentClass: 'tr-tab-content' },
   { attr: 'pr-tab', dataKey: 'prTab', contentClass: 'pr-tab-content' },
+  { attr: 'sy-tab', dataKey: 'syTab', contentClass: 'sy-tab-content' },
 ];
 
 function switchTab(tabName) {
@@ -2755,6 +2856,376 @@ function formatAnalysisContent(text) {
 
 function setupAnalysisEvents() {
   // No additional setup needed for rule-based only mode
+}
+
+// ============================================
+// SİNASTRİ / KOMPOZİT / DAVISON
+// ============================================
+
+/**
+ * Sinastri panelini natal harita hesaplandığında tazeler.
+ * Kişi A = üstteki natal formda hesaplanan harita.
+ */
+function showSynastryPanel() {
+  if (!currentChart) return;
+
+  const bd = currentChart.birthData;
+  const cityName = selectedCity ? formatCityName(selectedCity) : '';
+  elements.syPersonAInfo.textContent =
+    `${bd.day} ${MONTH_NAMES[bd.month]} ${bd.year}, ${String(bd.hour).padStart(2, '0')}:${String(bd.minute).padStart(2, '0')} — ${cityName}`;
+
+  updateSYButtonState();
+}
+
+function updateSYButtonState() {
+  const filled = ['syBirthDay', 'syBirthMonth', 'syBirthYear', 'syBirthHour', 'syBirthMinute']
+    .every(id => elements[id].value !== '' && !isNaN(parseInt(elements[id].value)));
+
+  elements.syCalculateBtn.disabled = !(currentChart && filled && sySelectedCity);
+}
+
+async function handleSYCalculate() {
+  if (!currentChart) {
+    alert('Önce Kişi A için natal harita hesaplayın.');
+    return;
+  }
+  if (!sySelectedCity) {
+    alert('Kişi B için doğum yeri seçin.');
+    return;
+  }
+
+  try {
+    elements.syCalculateBtn.disabled = true;
+
+    // Kişi B'nin natal haritası — Kişi A ile birebir aynı hesap yolu
+    syChartB = await calculateNatalChart({
+      year: parseInt(elements.syBirthYear.value),
+      month: parseInt(elements.syBirthMonth.value),
+      day: parseInt(elements.syBirthDay.value),
+      hour: parseInt(elements.syBirthHour.value),
+      minute: parseInt(elements.syBirthMinute.value),
+      timezone: sySelectedCity.timezone,
+      latitude: sySelectedCity.lat,
+      longitude: sySelectedCity.lng,
+    });
+
+    const anchor = elements.syAnchor.value;
+
+    currentSynastry = calculateSynastry(currentChart, syChartB);
+    currentComposite = calculateComposite(currentChart, syChartB, { anchor });
+    currentDavison = await calculateDavison(currentChart, syChartB);
+
+    renderSYResults();
+    elements.syResults.classList.remove('hidden');
+  } catch (error) {
+    console.error('Sinastri hesaplama hatası:', error);
+    alert(`Hesaplama hatası: ${error.message}`);
+  } finally {
+    updateSYButtonState();
+  }
+}
+
+function renderSYResults() {
+  renderSYSummary();
+  renderSYChart();
+  renderSYAspects();
+  renderSYGrid();
+  renderSYHouses();
+  renderSYComposite();
+  renderSYDavison();
+}
+
+/** Kişi B'nin kısa kimliği. */
+function syPersonBLabel() {
+  const bd = syChartB.birthData;
+  const city = sySelectedCity ? formatCityName(sySelectedCity) : '';
+  return `${bd.day} ${MONTH_NAMES[bd.month]} ${bd.year}, ${String(bd.hour).padStart(2, '0')}:${String(bd.minute).padStart(2, '0')} — ${city}`;
+}
+
+function renderSYSummary() {
+  const syn = currentSynastry;
+  const major = syn.crossAspects.filter(a => a.orb < 3).length;
+
+  elements.sySummaryCard.innerHTML = `
+    <div class="sy-summary-row">
+      <span class="sy-summary-label">Çapraz aspekt</span>
+      <span class="sy-summary-value">${syn.crossAspects.length}</span>
+      <span class="sy-summary-note">(${major} tanesi 3° orb altında)</span>
+    </div>
+    <div class="sy-summary-row">
+      <span class="sy-summary-label">Kompozit çapa</span>
+      <span class="sy-summary-value">${currentComposite.anchorUsed === 'mc' ? '10. Ev (MC)' : '1. Ev (ASC)'}</span>
+      <span class="sy-summary-note">${currentComposite.anchor === 'auto' ? '(otomatik seçildi)' : '(elle seçildi)'}</span>
+    </div>
+  `;
+}
+
+function renderSYChart() {
+  const canvas = elements.syChartCanvas;
+  if (!canvas || !currentSynastry) return;
+
+  const a = currentChart.birthData;
+  const b = syChartB.birthData;
+
+  // drawBiWheel(canvas, iç, dış) — sinastri objesi transit alan adlarına uyumlu
+  drawBiWheel(canvas, currentChart, currentSynastry, {
+    title: 'Sinastri Bi-Wheel',
+    subtitle: `Kişi A: ${a.day} ${MONTH_SHORT[a.month]} ${a.year}\nKişi B: ${b.day} ${MONTH_SHORT[b.month]} ${b.year}\n${currentSynastry.crossAspects.length} çapraz aspekt`,
+  });
+}
+
+function renderSYAspects() {
+  const aspects = [...currentSynastry.crossAspects].sort((x, y) => x.orb - y.orb);
+
+  const rows = aspects.map(aspect => {
+    const orbDeg = Math.floor(aspect.orb);
+    const orbMin = Math.floor((aspect.orb - orbDeg) * 60);
+
+    return `
+      <tr>
+        <td class="sy-cell-b">B ${aspect.transitPlanet.symbol} ${aspect.transitPlanet.name}</td>
+        <td class="aspect-symbol">${aspect.aspectSymbol}</td>
+        <td class="sy-cell-a">A ${aspect.natalPlanet.symbol} ${aspect.natalPlanet.name}</td>
+        <td>${aspect.aspect}</td>
+        <td>${orbDeg}°${String(orbMin).padStart(2, '0')}'</td>
+      </tr>
+    `;
+  });
+
+  elements.syAspectsTable.innerHTML = `
+    <table class="data-table aspects-table">
+      <thead>
+        <tr>
+          <th>Kişi B</th>
+          <th></th>
+          <th>Kişi A</th>
+          <th>Aspekt</th>
+          <th>Orb</th>
+        </tr>
+      </thead>
+      <tbody>${rows.join('')}</tbody>
+    </table>
+  `;
+}
+
+/**
+ * Aspekt gridi: satırlar = Kişi A gezegenleri, sütunlar = Kişi B gezegenleri.
+ * Sinastride ilişkinin şeklini bir bakışta görmenin en hızlı yolu.
+ */
+function renderSYGrid() {
+  const planetsA = currentChart.planets;
+  const planetsB = syChartB.planets;
+
+  // (A.id, B.id) → aspekt
+  const lookup = new Map();
+  for (const asp of currentSynastry.crossAspects) {
+    lookup.set(`${asp.natalPlanet.id}|${asp.transitPlanet.id}`, asp);
+  }
+
+  const header = planetsB.map(p =>
+    `<th class="sy-grid-head" title="${p.name}">${p.symbol}</th>`).join('');
+
+  const rows = planetsA.map(pa => {
+    const cells = planetsB.map(pb => {
+      const asp = lookup.get(`${pa.id}|${pb.id}`);
+      if (!asp) return '<td class="sy-grid-cell"></td>';
+
+      const orbDeg = Math.floor(asp.orb);
+      const orbMin = Math.floor((asp.orb - orbDeg) * 60);
+      const tight = asp.orb < 3 ? ' sy-grid-tight' : '';
+
+      return `<td class="sy-grid-cell sy-aspect-${asp.angle}${tight}" title="${pa.name} ${asp.aspect} ${pb.name} — orb ${orbDeg}°${orbMin}'">
+        <span class="sy-grid-symbol">${asp.aspectSymbol}</span>
+        <span class="sy-grid-orb">${orbDeg}°</span>
+      </td>`;
+    }).join('');
+
+    return `<tr><th class="sy-grid-head" title="${pa.name}">${pa.symbol}</th>${cells}</tr>`;
+  });
+
+  elements.syGridTable.innerHTML = `
+    <p class="sy-grid-caption">Satır: Kişi A &nbsp;·&nbsp; Sütun: Kişi B &nbsp;·&nbsp; Koyu hücre: orb &lt; 3°</p>
+    <div class="sy-grid-scroll">
+      <table class="data-table sy-grid">
+        <thead><tr><th></th>${header}</tr></thead>
+        <tbody>${rows.join('')}</tbody>
+      </table>
+    </div>
+  `;
+}
+
+/** Karşılıklı ev yerleşimleri — sinastrinin asıl anlatısı. */
+function renderSYHouses() {
+  const build = (planets, title, cls) => {
+    const rows = planets.map(p => {
+      const pos = formatLongitude(p.longitude);
+      const sign = SIGNS[pos.signIndex];
+      return `
+        <tr class="element-${sign.element}">
+          <td class="planet-symbol">${p.symbol}</td>
+          <td class="planet-name">${p.name}</td>
+          <td class="planet-pos">${pos.formatted}</td>
+          <td class="planet-house">Ev ${p.house}</td>
+        </tr>
+      `;
+    }).join('');
+
+    return `
+      <div class="sy-house-block">
+        <h3 class="sy-house-title ${cls}">${title}</h3>
+        <table class="data-table">
+          <thead>
+            <tr><th></th><th>Gezegen</th><th>Pozisyon</th><th>Düştüğü Ev</th></tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+    `;
+  };
+
+  elements.syHousesTable.innerHTML = `
+    <div class="sy-houses-grid">
+      ${build(currentSynastry.bPlanetsInAHouses, "Kişi B'nin gezegenleri → Kişi A'nın evlerinde", 'sy-title-b')}
+      ${build(currentSynastry.aPlanetsInBHouses, "Kişi A'nın gezegenleri → Kişi B'nin evlerinde", 'sy-title-a')}
+    </div>
+  `;
+}
+
+/** Kompozit ve Davison için ortak gezegen tablosu. */
+function renderSYPlanetTable(chart, target) {
+  const rows = chart.planets.map(planet => {
+    const pos = formatLongitude(planet.longitude);
+    const sign = SIGNS[pos.signIndex];
+    const retro = planet.isRetrograde ? '<span class="retro-badge">R</span>' : '';
+
+    return `
+      <tr class="element-${sign.element}">
+        <td class="planet-symbol">${planet.symbol}</td>
+        <td class="planet-name">${planet.name}</td>
+        <td class="planet-pos">${pos.formatted}</td>
+        <td class="planet-full">${pos.degree}°${pos.minute}'${pos.second}" ${signImgFromSign(sign)} ${sign.name}</td>
+        <td class="planet-retro">${retro}</td>
+        <td class="planet-house">Ev ${planet.house}</td>
+      </tr>
+    `;
+  });
+
+  if (chart.partOfFortune) {
+    const pof = chart.partOfFortune;
+    const pos = formatLongitude(pof.longitude);
+    const sign = SIGNS[pos.signIndex];
+    rows.push(`
+      <tr class="element-${sign.element} pof-row">
+        <td class="planet-symbol">${pof.symbol}</td>
+        <td class="planet-name">${pof.name}</td>
+        <td class="planet-pos">${pos.formatted}</td>
+        <td class="planet-full">${pos.degree}°${pos.minute}'${pos.second}" ${signImgFromSign(sign)} ${sign.name}</td>
+        <td class="planet-retro"></td>
+        <td class="planet-house">Ev ${pof.house}</td>
+      </tr>
+    `);
+  }
+
+  target.innerHTML = `
+    <table class="data-table">
+      <thead>
+        <tr><th></th><th>Gezegen</th><th>Pozisyon</th><th>Tam Derece</th><th>R</th><th>Ev</th></tr>
+      </thead>
+      <tbody>${rows.join('')}</tbody>
+    </table>
+  `;
+}
+
+/** Kompozit ve Davison için ortak aspekt tablosu (harita içi aspektler). */
+function renderSYAspectTable(chart, target) {
+  const sorted = [...chart.aspects].sort((a, b) => a.orb - b.orb);
+
+  const rows = sorted.map(aspect => {
+    const orbDeg = Math.floor(aspect.orb);
+    const orbMin = Math.floor((aspect.orb - orbDeg) * 60);
+    const applying = aspect.isApplying
+      ? '<span class="applying">A</span>'
+      : '<span class="separating">S</span>';
+
+    return `
+      <tr>
+        <td>${aspect.planet1.symbol} ${aspect.planet1.name}</td>
+        <td class="aspect-symbol">${aspect.aspectSymbol}</td>
+        <td>${aspect.planet2.symbol} ${aspect.planet2.name}</td>
+        <td>${aspect.aspect}</td>
+        <td>${orbDeg}°${String(orbMin).padStart(2, '0')}'</td>
+        <td>${applying}</td>
+      </tr>
+    `;
+  });
+
+  target.innerHTML = `
+    <table class="data-table aspects-table">
+      <thead>
+        <tr><th>Gezegen</th><th></th><th>Gezegen</th><th>Aspekt</th><th>Orb</th><th>A/S</th></tr>
+      </thead>
+      <tbody>${rows.join('')}</tbody>
+    </table>
+  `;
+}
+
+function renderSYComposite() {
+  const comp = currentComposite;
+  const anchorName = comp.anchorUsed === 'mc' ? '10. Ev (MC) sabit' : '1. Ev (ASC) sabit';
+
+  elements.syCompositeCard.innerHTML = `
+    <div class="sy-subchart-title">⊕ Kompozit Harita <span class="sy-subchart-tag">Midpoint</span></div>
+    <p class="sy-subchart-desc">
+      Gezegenler iki haritanın karşılık gelen gezegenlerinin orta noktasıdır; ev cuspları da
+      karşılık gelen cuspların orta noktasıdır (zodyak sırası korunacak şekilde düzeltilir).
+      <strong>Bu sanal bir haritadır</strong> — gerçek bir gökyüzü anına karşılık gelmez.
+    </p>
+    <div class="sy-subchart-meta">
+      <span>Çapa: <strong>${anchorName}</strong></span>
+      <span>ASC: <strong>${formatLongitude(comp.houses.ascendant).formatted}</strong></span>
+      <span>MC: <strong>${formatLongitude(comp.houses.mc).formatted}</strong></span>
+    </div>
+  `;
+
+  drawChartWheel(elements.syCompositeCanvas, comp, {
+    title: 'Composite Chart',
+    subtitle: `Composite (Midpoint)\nKişi A × Kişi B\nÇapa: ${anchorName}`,
+    showAspects: true,
+    chartType: 'composite',
+  });
+
+  renderSYPlanetTable(comp, elements.syCompositePlanetsTable);
+  renderSYAspectTable(comp, elements.syCompositeAspectsTable);
+}
+
+function renderSYDavison() {
+  const dav = currentDavison;
+  const u = dav.utc;
+  const dateStr = `${u.day} ${MONTH_NAMES[u.month]} ${u.year}, ${String(u.hour).padStart(2, '0')}:${String(u.minute).padStart(2, '0')} UTC`;
+  const loc = `${dav.location.latitude.toFixed(4)}°, ${dav.location.longitude.toFixed(4)}°`;
+
+  elements.syDavisonCard.innerHTML = `
+    <div class="sy-subchart-title">🕐 Davison Haritası <span class="sy-subchart-tag">Zaman/Uzay Orta Noktası</span></div>
+    <p class="sy-subchart-desc">
+      İki doğumun zaman ve uzay orta noktası için hesaplanmış <strong>gerçek</strong> bir haritadır —
+      gökyüzü o anda, o yerde fiilen böyleydi.
+    </p>
+    <div class="sy-subchart-meta">
+      <span>An: <strong>${dateStr}</strong></span>
+      <span>Yer: <strong>${loc}</strong></span>
+      <span>ASC: <strong>${formatLongitude(dav.houses.ascendant).formatted}</strong></span>
+    </div>
+  `;
+
+  drawChartWheel(elements.syDavisonCanvas, dav, {
+    title: 'Davison Chart',
+    subtitle: `Davison (Time/Space Midpoint)\n${dateStr}\n${loc}`,
+    showAspects: true,
+    chartType: 'davison',
+  });
+
+  renderSYPlanetTable(dav, elements.syDavisonPlanetsTable);
+  renderSYAspectTable(dav, elements.syDavisonAspectsTable);
 }
 
 // ============================================
