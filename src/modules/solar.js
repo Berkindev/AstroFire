@@ -9,13 +9,13 @@ import { getDecanSign } from './decans.js';
 import {
   initEphemeris,
   calculateJulianDay,
-  calculatePlanetPosition,
   calculatePlanetPositions,
   calculateHouses,
   findHouseOfPlanet,
   findInterceptedSigns,
   normalizeDegree,
 } from './ephemeris.js';
+import { findBodyAtLongitude } from './returns.js';
 import { calcAspects } from './aspects.js';
 import {
   jdToUTC,
@@ -68,73 +68,34 @@ export function solarPeriod(birthData, year) {
 
 /**
  * Güneş'in natal pozisyonuna döndüğü tam Julian Day'i bulur.
- * Newton-Raphson iterasyonu ile ±1 saniye hassasiyet.
  *
- * ⚠️ Tohum ("yılın 79. günü + natal Güneş derecesi") kabadır ve 1-6 Ocak
- * doğumlularda bir sonraki yılın dönüşüne yakınsar — bir sonraki commit'te
- * düzeltilecek. Burada bilerek olduğu gibi bırakılıyor ki bu commit'in
- * davranışı hiç değiştirmediği kanıtlanabilsin.
+ * Arama, hedef yılın DOĞUM GÜNÜNDEN başlar. Solar Return tanımı gereği doğum
+ * günü yıldönümünün ±1 gün civarındadır, ardışık dönüşler ise 365.24 gün
+ * arayla gelir — dolayısıyla bu tohumdan Newton daima DOĞRU köke yakınsar.
+ * Yıl kontrolüne, ±365.25 retry'larına veya gün-sayısı heuristiğine gerek yok.
+ *
+ * Eski kod tohum olarak "yılın 79. günü + natal Güneş derecesi" gibi kaba bir
+ * lineer tahmin kullanıyordu. Bu tahmin, natal Güneş ~280-286° (yani 1-6 Ocak
+ * doğumlular) için yıl sınırını aşıyor ve BİR SONRAKİ yılın dönüşüne
+ * yakınsıyordu; kod da bunu `srUTC.year === year + 1` diye açıkça kabul ediyordu.
+ *
+ * Not: 1-2 Ocak doğumlular için dönüş, hedef yılın hemen ÖNCESİNE (31 Aralık)
+ * düşebilir — bu astronomik olarak doğrudur, hata değildir.
  *
  * @param {number} natalSunLon - Natal Güneş ekliptik boylamı (0-360)
- * @param {number} year - SR olayının düştüğü takvim yılı
+ * @param {number} eventYear - SR olayının düştüğü takvim yılı
+ * @param {Object} birthData - Doğum ay/günü (tohum için)
  * @returns {number} Solar Return anı (Julian Day)
  */
-function findSolarReturnMoment(natalSunLon, year) {
-  const jan1JD = calculateJulianDay(year, 1, 1, 0);
-  let estimatedDayOfYear = 79 + natalSunLon; // 0°♈ ≈ 20 Mart = yılın 79. günü
-  if (estimatedDayOfYear > 365) estimatedDayOfYear -= 365.25;
+function findSolarReturnMoment(natalSunLon, eventYear, birthData) {
+  const seedJD = calculateJulianDay(
+    eventYear,
+    birthData?.month || 1,
+    birthData?.day || 1,
+    12, // öğlen — doğum saatini bilmeye gerek yok, kök ±1 gün içinde
+  );
 
-  let jd = jan1JD + estimatedDayOfYear;
-
-  const MAX_ITER = 50;
-
-  for (let i = 0; i < MAX_ITER; i++) {
-    const sunPos = calculatePlanetPosition(jd, PLANETS.SUN.id);
-
-    let diff = natalSunLon - sunPos.longitude;
-    if (diff > 180) diff -= 360;
-    if (diff < -180) diff += 360;
-
-    if (Math.abs(diff) < 0.00001) {
-      const srUTC = jdToUTC(jd);
-      if (srUTC.year === year || srUTC.year === year + 1) return jd;
-      if (srUTC.year > year + 1) { jd -= 365.25; continue; }
-      if (srUTC.year < year) { jd += 365.25; continue; }
-      return jd;
-    }
-
-    jd += diff / sunPos.speed;
-  }
-
-  const sunCheck = calculatePlanetPosition(jd, PLANETS.SUN.id);
-  const finalDiff = Math.abs(normalizeDegree(sunCheck.longitude - natalSunLon));
-  if (finalDiff > 0.01 && finalDiff < 359.99) {
-    throw new Error(`Solar Return yakınsamadı. Fark: ${finalDiff.toFixed(4)}°`);
-  }
-
-  return jd;
-}
-
-/**
- * Güneş'in belirli bir ekliptik boylamına ulaştığı Julian Day.
- * ⚠️ Yakınsama kontrolü yok — bir sonraki commit'te ortak çözücüye taşınacak.
- */
-function findSunAtLongitude(targetLon, startJD) {
-  let jd = startJD;
-
-  for (let i = 0; i < 50; i++) {
-    const sunPos = calculatePlanetPosition(jd, PLANETS.SUN.id);
-
-    let diff = targetLon - sunPos.longitude;
-    if (diff > 180) diff -= 360;
-    if (diff < -180) diff += 360;
-
-    if (Math.abs(diff) < 0.00001) return jd;
-
-    jd += diff / sunPos.speed;
-  }
-
-  return jd;
+  return findBodyAtLongitude(PLANETS.SUN.id, natalSunLon, seedJD, 'Solar Return');
 }
 
 /**
@@ -154,7 +115,11 @@ export async function calculateSolarReturn(natalChart, year, location) {
   }
   const natalSunLon = natalSun.longitude;
 
-  const srJD = findSolarReturnMoment(natalSunLon, solarEventYear(natalChart.birthData, year));
+  const srJD = findSolarReturnMoment(
+    natalSunLon,
+    solarEventYear(natalChart.birthData, year),
+    natalChart.birthData,
+  );
 
   const planets = addSouthNode(calculatePlanetPositions(srJD, NATAL_PLANETS));
 
@@ -240,8 +205,8 @@ export function calculateSRHouseTiming(sr) {
     // Güneş önce girer, sonra çıkar
     if (leaveOffset <= enterOffset) leaveOffset += 360;
 
-    const enterJD = findSunAtLongitude(cuspLon, srJD + enterOffset);
-    const leaveJD = findSunAtLongitude(nextCuspLon, srJD + leaveOffset);
+    const enterJD = findBodyAtLongitude(PLANETS.SUN.id, cuspLon, srJD + enterOffset, 'Ev girişi');
+    const leaveJD = findBodyAtLongitude(PLANETS.SUN.id, nextCuspLon, srJD + leaveOffset, 'Ev çıkışı');
 
     const decanInfo = getDecanSign(cuspLon);
 

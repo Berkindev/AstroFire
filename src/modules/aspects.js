@@ -13,23 +13,32 @@ import { angularSeparation } from './chartUtils.js';
 /**
  * Aspekt yaklaşıyor mu (applying) uzaklaşıyor mu (separating)?
  *
- * ⚠️ Bu, 7 kopyadan devralınan MEVCUT mantıktır ve HATALIDIR — bir sonraki
- * commit'te düzeltilecek. Burada bilerek olduğu gibi taşınıyor ki bu commit'in
- * davranışı hiç değiştirmediği golden snapshot ile kanıtlanabilsin.
+ * `sep` = p1'in p2'den zodyak yönündeki ilerisi (0-360). Kısa yayı almak için
+ * 180'in üstünü katlarız — ama katlama, ayrımın değişim hızının da işaretini
+ * ters çevirir. Eski kod (7 ayrı kopyada) `sep`'i katlayıp `rate`'i katlamıyordu;
+ * bu yüzden sonuç gezegenlerin dizideki SIRASINA bağlı hale geliyor, yani
+ * aspektlerin yaklaşık yarısında applying/separating ters çıkıyordu.
  *
  * @param {Object} p1 - hareketli gezegen
  * @param {Object} p2 - ikinci gezegen
  * @param {number} aspectAngle - 0/60/90/120/180
  * @param {boolean} [staticP2=false] - p2 sabit kabul edilsin mi?
- *   Çapraz haritalarda (transit×natal, progres×natal) natal taraf sabittir.
+ *   Çapraz haritalarda (transit×natal, progres×natal) natal taraf sabittir:
+ *   sadece transit/progres gezegeni hareket eder.
  * @returns {boolean}
  */
 export function isApplying(p1, p2, aspectAngle, staticP2 = false) {
-  const rate = (p1.speed || 0) - (staticP2 ? 0 : (p2.speed || 0));
   let sep = normalizeDegree(p1.longitude - p2.longitude);
-  if (sep > 180) sep = 360 - sep;
+  let rate = (p1.speed || 0) - (staticP2 ? 0 : (p2.speed || 0));
 
-  return sep > aspectAngle ? rate > 0 : rate < 0;
+  if (sep > 180) {
+    sep = 360 - sep;
+    rate = -rate; // katlama d(ayrım)/dt'nin işaretini de çevirir
+  }
+
+  // Ayrım aspekt açısının ÜSTÜNDEyse kapanarak (rate < 0), ALTINDAysa
+  // açılarak (rate > 0) aspekte yaklaşır.
+  return sep > aspectAngle ? rate < 0 : rate > 0;
 }
 
 /**
