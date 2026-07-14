@@ -9,7 +9,7 @@ import { getUTCOffsetMinutes, formatUTCOffset } from './modules/datetime.js';
 import { calculateNatalChart } from './modules/natal.js';
 import { calculateSolarReturn, calculateSRHouseTiming } from './modules/solar.js';
 import { calculateLunarReturn } from './modules/lunar.js';
-import { formatLongitude, formatNatalChartText, formatSolarReturnText, formatLunarReturnText, formatTransitText, formatProgressionText, formatAspect } from './modules/formatting.js';
+import { formatLongitude, formatNatalChartText, formatSolarReturnText, formatLunarReturnText, formatTransitText, formatProgressionText } from './modules/formatting.js';
 import { SIGNS } from './modules/constants.js';
 import { drawChartWheel, drawSevenYearOverlay, drawDecanOverlay, drawBiWheel } from './modules/chartWheelSF.js';
 import { calculateTransits } from './modules/transit.js';

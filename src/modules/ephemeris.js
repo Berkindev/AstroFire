@@ -35,7 +35,7 @@ export async function initEphemeris() {
 /**
  * Swiss Ephemeris instance'ını döndürür (zaten başlatılmış olmalı)
  */
-export function getSwe() {
+function getSwe() {
   if (!sweInstance || !sweInitialized) {
     throw new Error('Swiss Ephemeris henüz başlatılmadı. Önce initEphemeris() çağırın.');
   }
@@ -288,15 +288,4 @@ export function getObliquity(jd) {
   // Mean obliquity (IAU 2006)
   const eps0 = 23.439291111 - 0.0130042 * T - 1.64e-7 * T * T + 5.04e-7 * T * T * T;
   return eps0;
-}
-
-/**
- * Swiss Ephemeris'i kapatır (bellek temizliği)
- */
-export function closeEphemeris() {
-  if (sweInstance) {
-    sweInstance.close();
-    sweInstance = null;
-    sweInitialized = false;
-  }
 }

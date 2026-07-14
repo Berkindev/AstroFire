@@ -37,8 +37,6 @@ export const PLANETS = {
   NEPTUNE: { id: 8, name: 'Neptün', nameEn: 'Neptune', symbol: '♆' },
   PLUTO: { id: 9, name: 'Plüton', nameEn: 'Pluto', symbol: '♇' },
   MEAN_NODE: { id: 10, name: 'KAD', nameEn: 'North Node', symbol: '☊' },
-  // Mean Lilith = Mean Apogee in Swiss Ephemeris
-  MEAN_LILITH: { id: 12, name: 'Lilith', nameEn: 'Lilith', symbol: '⚸' },
   CHIRON: { id: 15, name: 'Chiron', nameEn: 'Chiron', symbol: '⚷' },
 };
 
@@ -61,7 +59,7 @@ export const NATAL_PLANETS = [
 // ============================================
 // EV SİSTEMLERİ (House Systems)
 // ============================================
-export const HOUSE_SYSTEMS = {
+const HOUSE_SYSTEMS = {
   PLACIDUS: { code: 'P', name: 'Placidus' },
   KOCH: { code: 'K', name: 'Koch' },
   EQUAL: { code: 'E', name: 'Equal' },
@@ -89,34 +87,8 @@ export const MAJOR_ASPECTS = [
   { name: 'Altıgen', nameEn: 'Sextile', angle: 60, symbol: '⚹', orb: 6 },
 ];
 
-export const ASPECTS = [
-  ...MAJOR_ASPECTS,
-  { name: 'Yarı-Kare', nameEn: 'Semi-Square', angle: 45, symbol: '∠', orb: 2 },
-  { name: 'Sesqui-Kare', nameEn: 'Sesquiquadrate', angle: 135, symbol: '⚼', orb: 2 },
-  { name: 'Yarı-Altıgen', nameEn: 'Semi-Sextile', angle: 30, symbol: '⚺', orb: 2 },
-  { name: 'Quincunx', nameEn: 'Quincunx', angle: 150, symbol: '⚻', orb: 2 },
-  { name: 'Quintile', nameEn: 'Quintile', angle: 72, symbol: 'Q', orb: 1 },
-  { name: 'Bi-Quintile', nameEn: 'Bi-Quintile', angle: 144, symbol: 'bQ', orb: 1 },
-];
-
-// ============================================
-// ELEMENT RENKLERI
-// ============================================
-export const ELEMENT_COLORS = {
-  fire: '#e74c3c',
-  earth: '#27ae60',
-  air: '#f39c12',
-  water: '#3498db',
-};
-
 // ============================================
 // Swiss Ephemeris Flags
 // ============================================
-export const SE_FLAGS = {
-  SEFLG_SWIEPH: 2,       // Swiss Ephemeris (default)
-  SEFLG_SPEED: 256,       // Include speed
-  SEFLG_MOSEPH: 4,        // Moshier
-};
-
-// Hesaplama flag'i: Swiss Ephemeris + speed
-export const CALC_FLAGS = 2 | 256; // SEFLG_SWIEPH | SEFLG_SPEED
+// SEFLG_SWIEPH (2) | SEFLG_SPEED (256) → tropikal, geosentrik, hızlı
+export const CALC_FLAGS = 2 | 256;

@@ -29,7 +29,7 @@ export const SIGN_RULERS = {
 // ============================================
 // Element Döngüleri (burç indeksleri)
 // ============================================
-export const ELEMENT_CYCLES = {
+const ELEMENT_CYCLES = {
   fire:  [0, 4, 8],   // Koç, Aslan, Yay
   earth: [1, 5, 9],   // Boğa, Başak, Oğlak
   air:   [2, 6, 10],  // İkizler, Terazi, Kova
