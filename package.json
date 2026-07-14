@@ -6,7 +6,12 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+
+    "test": "node scripts/test-applying.mjs && node scripts/test-datetime.mjs && node scripts/test-relationship.mjs",
+    "snapshot": "node scripts/snapshot.mjs",
+    "diff": "node scripts/diff.mjs",
+    "smoke": "node scripts/smoke.mjs"
   },
   "dependencies": {
     "swisseph-wasm": "^0.0.4",
