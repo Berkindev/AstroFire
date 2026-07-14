@@ -816,9 +816,11 @@ function renderNatalChart(chart) {
   const timeStr = `${String(bd.hour).padStart(2, '0')}:${String(bd.minute).padStart(2, '0')}`;
   const cityName = selectedCity ? formatCityName(selectedCity) : '';
   
+  // SolarFire bilgi bloğu düzeni: başlık / harita tipi / tarih / saat+dilim /
+  // yer / koordinat — sonra kırmızı italik hesaplama ayarları (çizim katmanında).
   drawChartWheel(canvas, chart, {
     title: 'Natal Chart',
-    subtitle: `Natal Chart\n${dateStr}\n${timeStr}  ${getUtcOffsetStr(bd)}\n${bd.timezone}\n${cityName}`,
+    subtitle: `${dateStr}\n${timeStr}  ${getUtcOffsetStr(bd)}\n${cityName}\n${formatCoordinates(bd.latitude, bd.longitude)}`,
     showAspects: true,
     chartType: 'natal',
   });
