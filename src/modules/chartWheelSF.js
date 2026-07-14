@@ -17,11 +17,35 @@
  *     Aspekt : uyumlu #0000FF · sert #FF0000
  *     Derece/dakika yazıları SİYAH; Rx daima KIRMIZI
  *
- *   Glif şekilleri: sfGlyphs.js (referans görsellerden vektörleştirildi)
+ * SEMBOLLER SolarFire'ın kendi fontundan DEĞİL, temiz standart vektörlerden gelir:
+ *   Burçlar   → public/Symbols/*.svg (dolgu tabanlı; tablolarda da bunlar kullanılıyor)
+ *   Gezegenler → symbols.js (çizgi tabanlı, Wikimedia "fixed width" ailesi)
+ * SolarFire'ın kendi glifleri referanstan çıkarılıp denendi ama o font elle
+ * çizilmiş/kıvrık bir estetiğe sahip; birebir kopyası haritayı çirkinleştiriyordu.
+ * Yani düzen SolarFire'ın, semboller temiz standart.
  */
 
 import { SIGNS } from './constants.js';
-import { SF_SIGN_PATHS, SF_PLANET_PATHS, SF_RX_PATH } from './sfGlyphs.js';
+import { PLANET_SYMBOLS, SYMBOL_BOX, SYMBOL_STROKE } from './symbols.js';
+
+// Burç sembolleri — repoda zaten duran temiz SVG'ler (tablolarda da bunlar kullanılıyor)
+import ariesSvg from '../../public/Symbols/aries-symbol-icon.svg?raw';
+import taurusSvg from '../../public/Symbols/taurus-symbol-icon.svg?raw';
+import geminiSvg from '../../public/Symbols/gemini-symbol-icon.svg?raw';
+import cancerSvg from '../../public/Symbols/cancer-symbol-icon.svg?raw';
+import leoSvg from '../../public/Symbols/leo-symbol-icon.svg?raw';
+import virgoSvg from '../../public/Symbols/virgo-symbol-icon.svg?raw';
+import libraSvg from '../../public/Symbols/libra-symbol-icon.svg?raw';
+import scorpioSvg from '../../public/Symbols/scorpio-symbol-icon.svg?raw';
+import sagittariusSvg from '../../public/Symbols/sagittarius-symbol-icon.svg?raw';
+import capricornSvg from '../../public/Symbols/capricorn-symbol-icon.svg?raw';
+import aquariusSvg from '../../public/Symbols/aquarius-symbol-icon.svg?raw';
+import piscesSvg from '../../public/Symbols/pisces-symbol-icon.svg?raw';
+
+const SIGN_SVGS = [
+  ariesSvg, taurusSvg, geminiSvg, cancerSvg, leoSvg, virgoSvg,
+  libraSvg, scorpioSvg, sagittariusSvg, capricornSvg, aquariusSvg, piscesSvg,
+];
 
 // ============================================
 // PALET (SolarFire 16 renk)
@@ -52,22 +76,25 @@ const PLANET_COLOR = {
   'Şans Noktası': '#000000',
 };
 
-/** Gezegen adı → sfGlyphs anahtarı. */
-const PLANET_GLYPH = {
-  'Güneş':        'sun',
-  'Ay':           'moon',
-  'Merkür':       'mercury',
-  'Venüs':        'venus',
-  'Mars':         'mars',
-  'Jüpiter':      'jupiter',
-  'Satürn':       'saturn',
-  'Uranüs':       'uranus',
-  'Neptün':       'neptune',
-  'Plüton':       'pluto',
-  'KAD':          'northnode',
-  'GAD':          'southnode',
-  'Chiron':       'chiron',
-  'Şans Noktası': 'fortune',
+/**
+ * Gezegen adı → [sembol anahtarı, dönüş açısı].
+ * GAD (☋) ayrı bir şekil değil: KAD'ın (☊) 180° döndürülmüş hâli.
+ */
+const PLANET_SYMBOL = {
+  'Güneş':        ['sun', 0],
+  'Ay':           ['moon', 0],
+  'Merkür':       ['mercury', 0],
+  'Venüs':        ['venus', 0],
+  'Mars':         ['mars', 0],
+  'Jüpiter':      ['jupiter', 0],
+  'Satürn':       ['saturn', 0],
+  'Uranüs':       ['uranus', 0],
+  'Neptün':       ['neptune', 0],
+  'Plüton':       ['pluto', 0],
+  'KAD':          ['northnode', 0],
+  'GAD':          ['northnode', Math.PI],
+  'Chiron':       ['chiron', 0],
+  'Şans Noktası': ['fortune', 0],
 };
 
 /**
@@ -90,32 +117,103 @@ const ANGLE_COLOR = '#FF0000';   // ASC/MC/DSC/IC eksenleri
 const LINE_COLOR = '#000000';
 const OUTER_RING_COLOR = '#7C3AED'; // bi-wheel'de dış haritanın çerçevesi
 
-// Path2D önbelleği — her çizimde yeniden ayrıştırmamak için
-const pathCache = new Map();
+// ============================================
+// SEMBOL ÇİZİMİ
+// ============================================
+// Path2D nesneleri önbelleklenir — her karede yeniden ayrıştırmak pahalı.
 
-function getPath(d) {
-  let p = pathCache.get(d);
-  if (!p) {
-    p = new Path2D(d);
-    pathCache.set(d, p);
-  }
-  return p;
+const signCache = new Map();
+const planetCache = new Map();
+
+/** Burç SVG'sini bir kez ayrıştır: viewBox + dolgu path'leri. */
+function getSignShape(idx) {
+  let shape = signCache.get(idx);
+  if (shape) return shape;
+
+  const svg = SIGN_SVGS[idx];
+  const vb = svg.match(/viewBox="([^"]+)"/);
+  const nums = vb ? vb[1].trim().split(/[\s,]+/).map(Number) : [0, 0, 100, 100];
+
+  shape = {
+    w: nums[2],
+    h: nums[3],
+    paths: [...svg.matchAll(/<path[^>]*\sd="([^"]+)"/g)].map(m => new Path2D(m[1])),
+  };
+  signCache.set(idx, shape);
+  return shape;
 }
 
-/**
- * 0-100 kutusuna normalize edilmiş bir glifi, verilen noktada verilen boyutta
- * ve renkte çizer. `rotation` verilirse glif o kadar döndürülür.
- */
-function drawGlyph(ctx, d, x, y, size, color, rotation = 0) {
-  if (!d) return;
+/** Burç sembolü — DOLGU tabanlı SVG. */
+function drawSign(ctx, idx, x, y, size, color, rotation = 0) {
+  const s = getSignShape(idx);
+  if (!s.paths.length) return;
+
+  const scale = size / Math.max(s.w, s.h);
 
   ctx.save();
   ctx.translate(x, y);
   if (rotation) ctx.rotate(rotation);
-  ctx.scale(size / 100, size / 100);
-  ctx.translate(-50, -50);
+  ctx.scale(scale, scale);
+  ctx.translate(-s.w / 2, -s.h / 2);
   ctx.fillStyle = color;
-  ctx.fill(getPath(d), 'evenodd');
+  for (const p of s.paths) ctx.fill(p);
+  ctx.restore();
+}
+
+function getPlanetShape(key) {
+  let shape = planetCache.get(key);
+  if (shape !== undefined) return shape;
+
+  const def = PLANET_SYMBOLS[key];
+  shape = def
+    ? {
+      stroke: def.stroke.map(d => new Path2D(d)),
+      fill: (def.fill || []).map(d => new Path2D(d)),
+    }
+    : null;
+  planetCache.set(key, shape);
+  return shape;
+}
+
+/**
+ * Gezegen sembolü — ÇİZGİ tabanlı (Wikimedia "fixed width" ailesi).
+ * Kalınlık sembol birimindedir ve ölçeklemeyle birlikte büyür, yani sembol
+ * her boyutta aynı orantıda ve net görünür.
+ */
+function drawPlanet(ctx, name, x, y, size, color) {
+  const entry = PLANET_SYMBOL[name];
+  if (!entry) return;
+
+  const [key, rotation] = entry;
+  const s = getPlanetShape(key);
+  if (!s) return;
+
+  ctx.save();
+  ctx.translate(x, y);
+  if (rotation) ctx.rotate(rotation);
+  ctx.scale(size / SYMBOL_BOX, size / SYMBOL_BOX);
+  ctx.translate(-SYMBOL_BOX / 2, -SYMBOL_BOX / 2);
+
+  ctx.strokeStyle = color;
+  ctx.fillStyle = color;
+  ctx.lineWidth = SYMBOL_STROKE;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+
+  for (const p of s.stroke) ctx.stroke(p);
+  for (const p of s.fill) ctx.fill(p);
+
+  ctx.restore();
+}
+
+/** Retrograd işareti — kırmızı "Rx". */
+function drawRx(ctx, x, y, fontSize) {
+  ctx.save();
+  ctx.font = `bold ${fontSize}px Arial, sans-serif`;
+  ctx.fillStyle = '#FF0000';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('Rx', x, y);
   ctx.restore();
 }
 
@@ -252,7 +350,7 @@ function drawSignRing(ctx, cx, cy, R, ascLon) {
   for (let s = 0; s < 12; s++) {
     const a = lonToAngle(s * 30 + 15, ascLon);
     const p = polarToXY(cx, cy, R.signGlyphR, a);
-    drawGlyph(ctx, SF_SIGN_PATHS[s], p.x, p.y, glyphSize,
+    drawSign(ctx, s, p.x, p.y, glyphSize,
       ELEMENT_COLOR[SIGNS[s].element], ringRotation(a));
   }
 
@@ -432,7 +530,7 @@ function drawPlanets(ctx, cx, cy, planets, R, ascLon, partOfFortune) {
     let r = glyphR;
 
     const gp = polarToXY(cx, cy, r, a);
-    drawGlyph(ctx, SF_PLANET_PATHS[PLANET_GLYPH[p.name]], gp.x, gp.y, glyphSize, color);
+    drawPlanet(ctx, p.name, gp.x, gp.y, glyphSize, color);
 
     ctx.save();
     ctx.font = `${font}px Arial, sans-serif`;
@@ -446,7 +544,7 @@ function drawPlanets(ctx, cx, cy, planets, R, ascLon, partOfFortune) {
 
     r -= rowGap;
     const sp = polarToXY(cx, cy, r, a);
-    drawGlyph(ctx, SF_SIGN_PATHS[signIdx], sp.x, sp.y, signSize, ELEMENT_COLOR[sign.element]);
+    drawSign(ctx, signIdx, sp.x, sp.y, signSize, ELEMENT_COLOR[sign.element]);
 
     r -= rowGap;
     const mp = polarToXY(cx, cy, r, a);
@@ -458,7 +556,7 @@ function drawPlanets(ctx, cx, cy, planets, R, ascLon, partOfFortune) {
     if (p.isRetrograde) {
       r -= rowGap;
       const rp = polarToXY(cx, cy, r, a);
-      drawGlyph(ctx, SF_RX_PATH, rp.x, rp.y, font * 0.95, '#FF0000');
+      drawRx(ctx, rp.x, rp.y, font * 0.78);
     }
   }
 }
@@ -677,7 +775,7 @@ function drawBiSignRing(ctx, cx, cy, R, ascLon) {
   for (let s = 0; s < 12; s++) {
     const a = lonToAngle(s * 30 + 15, ascLon);
     const p = polarToXY(cx, cy, R.signGlyphR, a);
-    drawGlyph(ctx, SF_SIGN_PATHS[s], p.x, p.y, glyphSize,
+    drawSign(ctx, s, p.x, p.y, glyphSize,
       ELEMENT_COLOR[SIGNS[s].element], ringRotation(a));
   }
 
@@ -735,7 +833,7 @@ function drawOuterPlanets(ctx, cx, cy, planets, R, ascLon) {
 
     let r = glyphR;
     const gp = polarToXY(cx, cy, r, a);
-    drawGlyph(ctx, SF_PLANET_PATHS[PLANET_GLYPH[p.name]], gp.x, gp.y, glyphSize, color);
+    drawPlanet(ctx, p.name, gp.x, gp.y, glyphSize, color);
 
     ctx.save();
     ctx.font = `${font}px Arial, sans-serif`;
@@ -749,7 +847,7 @@ function drawOuterPlanets(ctx, cx, cy, planets, R, ascLon) {
 
     r -= rowGap;
     const sp = polarToXY(cx, cy, r, a);
-    drawGlyph(ctx, SF_SIGN_PATHS[signIdx], sp.x, sp.y, signSize, ELEMENT_COLOR[SIGNS[signIdx].element]);
+    drawSign(ctx, signIdx, sp.x, sp.y, signSize, ELEMENT_COLOR[SIGNS[signIdx].element]);
 
     r -= rowGap;
     const mp = polarToXY(cx, cy, r, a);
@@ -759,7 +857,7 @@ function drawOuterPlanets(ctx, cx, cy, planets, R, ascLon) {
     if (p.isRetrograde) {
       r -= rowGap;
       const rp = polarToXY(cx, cy, r, a);
-      drawGlyph(ctx, SF_RX_PATH, rp.x, rp.y, font * 0.95, '#FF0000');
+      drawRx(ctx, rp.x, rp.y, font * 0.78);
     }
   }
 }
@@ -803,7 +901,7 @@ function drawInnerPlanets(ctx, cx, cy, planets, R, ascLon, partOfFortune) {
 
     let r = glyphR;
     const gp = polarToXY(cx, cy, r, a);
-    drawGlyph(ctx, SF_PLANET_PATHS[PLANET_GLYPH[p.name]], gp.x, gp.y, glyphSize, color);
+    drawPlanet(ctx, p.name, gp.x, gp.y, glyphSize, color);
 
     ctx.save();
     ctx.font = `${font}px Arial, sans-serif`;
@@ -817,7 +915,7 @@ function drawInnerPlanets(ctx, cx, cy, planets, R, ascLon, partOfFortune) {
 
     r -= rowGap;
     const sp = polarToXY(cx, cy, r, a);
-    drawGlyph(ctx, SF_SIGN_PATHS[signIdx], sp.x, sp.y, signSize, ELEMENT_COLOR[SIGNS[signIdx].element]);
+    drawSign(ctx, signIdx, sp.x, sp.y, signSize, ELEMENT_COLOR[SIGNS[signIdx].element]);
 
     r -= rowGap;
     const mp = polarToXY(cx, cy, r, a);
@@ -827,7 +925,7 @@ function drawInnerPlanets(ctx, cx, cy, planets, R, ascLon, partOfFortune) {
     if (p.isRetrograde) {
       r -= rowGap;
       const rp = polarToXY(cx, cy, r, a);
-      drawGlyph(ctx, SF_RX_PATH, rp.x, rp.y, font * 0.9, '#FF0000');
+      drawRx(ctx, rp.x, rp.y, font * 0.78);
     }
   }
 }
@@ -1013,7 +1111,7 @@ export function drawDecanOverlay(canvas, chartData, decanData) {
       const signIdx = SIGNS.indexOf(decan.decanSign);
       if (signIdx >= 0) {
         const p = polarToXY(cx, cy, R.houseInR - R.R * 0.035, midAngle);
-        drawGlyph(ctx, SF_SIGN_PATHS[signIdx], p.x, p.y, R.R * 0.035,
+        drawSign(ctx, signIdx, p.x, p.y, R.R * 0.035,
           ELEMENT_COLOR[decan.decanSign.element]);
       }
     }
