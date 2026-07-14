@@ -36,26 +36,33 @@ function signImgFromSign(sign, size = 14) {
 }
 
 // ============================================
+// SABİTLER
+// ============================================
+/** Türkçe ay adları — 1-indeksli (MONTH_NAMES[1] === 'Ocak'). */
+const MONTH_NAMES = ['', 'Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran',
+  'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'];
+
+/** Kısa ay adları — 1-indeksli. Tablolarda/etiketlerde yer kazanmak için. */
+const MONTH_SHORT = ['', 'Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz',
+  'Tem', 'Ağu', 'Eyl', 'Eki', 'Kas', 'Ara'];
+
+// ============================================
 // STATE
 // ============================================
 let selectedCity = null;
 let currentChart = null;
-let searchTimeout = null;
 
 // Solar Return state
 let currentSolarReturn = null;
 let srSelectedCity = null;
-let srSearchTimeout = null;
 
 // Lunar Return state
 let currentLunarReturn = null;
 let lrSelectedCity = null;
-let lrSearchTimeout = null;
 
 // Transit state
 let currentTransit = null;
 let trSelectedCity = null;
-let trSearchTimeout = null;
 
 // Progression state
 let currentProgression = null;
@@ -219,21 +226,12 @@ function setupEventListeners() {
     });
   }
 
-  // Şehir arama
-  elements.citySearch.addEventListener('input', handleCitySearch);
-  elements.citySearch.addEventListener('focus', () => {
-    if (elements.cityDropdown.children.length > 0) {
-      elements.cityDropdown.classList.remove('hidden');
-    }
-  });
-
-  // Click dışarı tıklayınca dropdown kapat
+  // Şehir arama kutuları createCitySearch() ile kurulur; input/focus
+  // listener'larını kendileri bağlar. Dışarı tıklamada hepsi kapanır —
+  // yeni bir arama kutusu eklemek burada bir şey değiştirmeyi gerektirmez.
   document.addEventListener('click', (e) => {
     if (!e.target.closest('.city-search-wrapper')) {
-      elements.cityDropdown.classList.add('hidden');
-      elements.srCityDropdown.classList.add('hidden');
-      elements.lrCityDropdown.classList.add('hidden');
-      elements.trCityDropdown.classList.add('hidden');
+      citySearches.forEach(cs => cs.close());
     }
   });
 
@@ -253,14 +251,18 @@ function setupEventListeners() {
     tab.addEventListener('click', () => switchMainTab(tab.dataset.mainTab));
   });
 
-  // Tab switching (natal)
-  document.querySelectorAll('.tab[data-tab]').forEach(tab => {
-    tab.addEventListener('click', () => {
-      if (tab.dataset.tab === 'chartinfo') {
-        toggleChartInfoPanel();
-      } else {
-        switchTab(tab.dataset.tab);
-      }
+  // Bölüm içi sekmeler — tek kayıt, tüm bölümler.
+  // Natal'daki 'chartinfo' bir sekme değil, yan paneli açan bir buton.
+  SECTION_TABS.forEach(({ attr, dataKey, contentClass }) => {
+    document.querySelectorAll(`.tab[data-${attr}]`).forEach(tab => {
+      tab.addEventListener('click', () => {
+        const target = tab.dataset[dataKey];
+        if (target === 'chartinfo') {
+          toggleChartInfoPanel();
+        } else {
+          switchSectionTab(attr, contentClass, target);
+        }
+      });
     });
   });
 
@@ -283,21 +285,8 @@ function setupEventListeners() {
   elements.srLocBirth.addEventListener('change', handleSRLocationChange);
   elements.srLocCustom.addEventListener('change', handleSRLocationChange);
 
-  // SR şehir arama
-  elements.srCitySearch.addEventListener('input', handleSRCitySearch);
-  elements.srCitySearch.addEventListener('focus', () => {
-    if (elements.srCityDropdown.children.length > 0) {
-      elements.srCityDropdown.classList.remove('hidden');
-    }
-  });
-
   // SR hesapla
   elements.srCalculateBtn.addEventListener('click', handleSRCalculate);
-
-  // SR tab switching
-  document.querySelectorAll('.tab[data-sr-tab]').forEach(tab => {
-    tab.addEventListener('click', () => switchSRTab(tab.dataset.srTab));
-  });
 
   // SR yıl değişince buton durumunu güncelle
   elements.srYear.addEventListener('input', updateSRButtonState);
@@ -310,21 +299,8 @@ function setupEventListeners() {
   elements.lrLocBirth.addEventListener('change', handleLRLocationChange);
   elements.lrLocCustom.addEventListener('change', handleLRLocationChange);
 
-  // LR şehir arama
-  elements.lrCitySearch.addEventListener('input', handleLRCitySearch);
-  elements.lrCitySearch.addEventListener('focus', () => {
-    if (elements.lrCityDropdown.children.length > 0) {
-      elements.lrCityDropdown.classList.remove('hidden');
-    }
-  });
-
   // LR hesapla
   elements.lrCalculateBtn.addEventListener('click', handleLRCalculate);
-
-  // LR tab switching
-  document.querySelectorAll('.tab[data-lr-tab]').forEach(tab => {
-    tab.addEventListener('click', () => switchLRTab(tab.dataset.lrTab));
-  });
 
   // LR gün/yıl/ay değişince buton durumunu güncelle
   elements.lrDay.addEventListener('input', updateLRButtonState);
@@ -339,14 +315,6 @@ function setupEventListeners() {
   elements.trLocBirth.addEventListener('change', handleTRLocationChange);
   elements.trLocCustom.addEventListener('change', handleTRLocationChange);
 
-  // TR şehir arama
-  elements.trCitySearch.addEventListener('input', handleTRCitySearch);
-  elements.trCitySearch.addEventListener('focus', () => {
-    if (elements.trCityDropdown.children.length > 0) {
-      elements.trCityDropdown.classList.remove('hidden');
-    }
-  });
-
   // TR hesapla
   elements.trCalculateBtn.addEventListener('click', handleTRCalculate);
 
@@ -359,11 +327,6 @@ function setupEventListeners() {
       const minutes = parseInt(btn.dataset.step);
       handleTRStep(minutes);
     });
-  });
-
-  // TR tab switching
-  document.querySelectorAll('.tab[data-tr-tab]').forEach(tab => {
-    tab.addEventListener('click', () => switchTRTab(tab.dataset.trTab));
   });
 
   // TR tarih değişince buton durumunu güncelle
@@ -390,11 +353,6 @@ function setupEventListeners() {
 
   // PR "Bugün" butonu
   elements.prTodayBtn.addEventListener('click', handlePRTodayClick);
-
-  // PR tab switching
-  document.querySelectorAll('.tab[data-pr-tab]').forEach(tab => {
-    tab.addEventListener('click', () => switchPRTab(tab.dataset.prTab));
-  });
 
   // PR tarih değişince buton durumunu güncelle
   ['prDay', 'prMonth', 'prYear'].forEach(id => {
@@ -499,69 +457,148 @@ function handleClearForm() {
 // ============================================
 // CITY SEARCH
 // ============================================
-function handleCitySearch(e) {
-  const query = e.target.value.trim();
-  
-  if (searchTimeout) clearTimeout(searchTimeout);
-  
-  if (query.length < 2) {
-    elements.cityDropdown.classList.add('hidden');
-    elements.cityDropdown.innerHTML = '';
-    return;
-  }
-  
-  // 300ms debounce
-  searchTimeout = setTimeout(async () => {
-    try {
-      const results = await searchCity(query);
-      renderCityResults(results);
-    } catch (error) {
-      console.error('Şehir arama hatası:', error);
+// Tek fabrika; her arama kutusu (natal / SR / LR / TR / sinastri Kişi B) bunun
+// bir örneği. Daha önce bu mantığın 4 birebir kopyası vardı.
+
+/** Açık dropdown'ları dışarı tıklamada kapatabilmek için kayıt. */
+const citySearches = [];
+
+/**
+ * Bir şehir arama kutusu kurar: debounce'lu arama, dropdown, seçim.
+ *
+ * @param {Object} config
+ * @param {HTMLElement} config.input
+ * @param {HTMLElement} config.dropdown
+ * @param {HTMLElement} [config.info] - Seçimden sonra görünür olacak kutu
+ * @param {HTMLElement} [config.coord] - Koordinat metni
+ * @param {HTMLElement} [config.timezone] - Timezone metni
+ * @param {Function} config.onSelect - Seçilen şehirle çağrılır
+ * @returns {{select: Function, close: Function}}
+ */
+function createCitySearch({ input, dropdown, info, coord, timezone, onSelect }) {
+  let timer = null;
+
+  function renderResults(results) {
+    if (results.length === 0) {
+      dropdown.innerHTML = '<div class="city-option no-results">Sonuç bulunamadı</div>';
+      dropdown.classList.remove('hidden');
+      return;
     }
-  }, 300);
-}
 
-function renderCityResults(results) {
-  if (results.length === 0) {
-    elements.cityDropdown.innerHTML = '<div class="city-option no-results">Sonuç bulunamadı</div>';
-    elements.cityDropdown.classList.remove('hidden');
-    return;
-  }
-  
-  elements.cityDropdown.innerHTML = results.map((city, index) => `
-    <div class="city-option" data-index="${index}">
-      <span class="city-name">${city.name}</span>
-      <span class="city-detail">${city.admin ? city.admin + ', ' : ''}${city.country}</span>
-      <span class="city-coords">${city.lat.toFixed(2)}°, ${city.lng.toFixed(2)}°</span>
-    </div>
-  `).join('');
-  
-  // Click handlers
-  elements.cityDropdown.querySelectorAll('.city-option').forEach(opt => {
-    opt.addEventListener('click', () => {
-      const index = parseInt(opt.dataset.index);
-      selectCity(results[index]);
+    dropdown.innerHTML = results.map((city, index) => `
+      <div class="city-option" data-index="${index}">
+        <span class="city-name">${city.name}</span>
+        <span class="city-detail">${city.admin ? city.admin + ', ' : ''}${city.country}</span>
+        <span class="city-coords">${city.lat.toFixed(2)}°, ${city.lng.toFixed(2)}°</span>
+      </div>
+    `).join('');
+
+    dropdown.querySelectorAll('.city-option').forEach(opt => {
+      opt.addEventListener('click', () => select(results[parseInt(opt.dataset.index)]));
     });
+
+    dropdown.classList.remove('hidden');
+  }
+
+  function select(city) {
+    if (!city) return;
+
+    input.value = formatCityName(city);
+    dropdown.classList.add('hidden');
+
+    if (info) info.classList.remove('hidden');
+    if (coord) coord.textContent = formatCoordinates(city.lat, city.lng);
+    if (timezone) timezone.textContent = city.timezone;
+
+    onSelect(city);
+  }
+
+  input.addEventListener('input', (e) => {
+    const query = e.target.value.trim();
+
+    if (timer) clearTimeout(timer);
+
+    if (query.length < 2) {
+      dropdown.classList.add('hidden');
+      dropdown.innerHTML = '';
+      return;
+    }
+
+    timer = setTimeout(async () => {
+      try {
+        renderResults(await searchCity(query));
+      } catch (error) {
+        console.error('Şehir arama hatası:', error);
+      }
+    }, 300);
   });
-  
-  elements.cityDropdown.classList.remove('hidden');
+
+  input.addEventListener('focus', () => {
+    if (dropdown.children.length > 0) dropdown.classList.remove('hidden');
+  });
+
+  const api = {
+    select,
+    close: () => dropdown.classList.add('hidden'),
+  };
+  citySearches.push(api);
+  return api;
 }
 
+// --- Arama kutusu örnekleri ---
+
+const natalCitySearch = createCitySearch({
+  input: elements.citySearch,
+  dropdown: elements.cityDropdown,
+  info: elements.locationInfo,
+  coord: elements.coordDisplay,
+  timezone: elements.timezoneDisplay,
+  onSelect: (city) => {
+    selectedCity = city;
+    updateTimezoneDisplay();
+    elements.calculateBtn.disabled = false;
+  },
+});
+
+createCitySearch({
+  input: elements.srCitySearch,
+  dropdown: elements.srCityDropdown,
+  info: elements.srLocationInfo,
+  coord: elements.srCoordDisplay,
+  timezone: elements.srTimezoneDisplay,
+  onSelect: (city) => {
+    srSelectedCity = city;
+    updateSRButtonState();
+  },
+});
+
+createCitySearch({
+  input: elements.lrCitySearch,
+  dropdown: elements.lrCityDropdown,
+  info: elements.lrLocationInfo,
+  coord: elements.lrCoordDisplay,
+  timezone: elements.lrTimezoneDisplay,
+  onSelect: (city) => {
+    lrSelectedCity = city;
+    updateLRButtonState();
+  },
+});
+
+createCitySearch({
+  input: elements.trCitySearch,
+  dropdown: elements.trCityDropdown,
+  info: elements.trLocationInfo,
+  coord: elements.trCoordDisplay,
+  timezone: elements.trTimezoneDisplay,
+  onSelect: (city) => {
+    trSelectedCity = city;
+    updateTRButtonState();
+  },
+});
+
+/** Hızlı şehir butonları natal formun arama kutusunu besler. */
 function selectCity(city) {
-  selectedCity = city;
-  elements.citySearch.value = formatCityName(city);
-  elements.cityDropdown.classList.add('hidden');
-  
-  // Yer bilgilerini göster
-  elements.locationInfo.classList.remove('hidden');
-  elements.coordDisplay.textContent = formatCoordinates(city.lat, city.lng);
-  elements.timezoneDisplay.textContent = city.timezone;
-  
-  // UTC offset'i güncelle
-  updateTimezoneDisplay();
-  
-  // Hesapla butonunu aktif et
-  elements.calculateBtn.disabled = false;
+  natalCitySearch.select(city);
 }
 
 function updateTimezoneDisplay() {
@@ -665,8 +702,7 @@ function renderNatalChart(chart) {
   if (!canvas) return;
   
   const bd = chart.birthData;
-  const months = ['', 'Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz', 'Tem', 'Ağu', 'Eyl', 'Eki', 'Kas', 'Ara'];
-  const dateStr = `${bd.day} ${months[bd.month]} ${bd.year}`;
+  const dateStr = `${bd.day} ${MONTH_SHORT[bd.month]} ${bd.year}`;
   const timeStr = `${String(bd.hour).padStart(2, '0')}:${String(bd.minute).padStart(2, '0')}`;
   const cityName = selectedCity ? formatCityName(selectedCity) : '';
   
@@ -850,12 +886,40 @@ function switchMainTab(tabName) {
 // ============================================
 // TAB SWITCHING (NATAL)
 // ============================================
-function switchTab(tabName) {
-  document.querySelectorAll('.tab[data-tab]').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.tab-content:not(.sr-tab-content):not(.lr-tab-content):not(.tr-tab-content):not(.pr-tab-content)').forEach(c => c.classList.remove('active'));
+/**
+ * Bölüm içi sekme değiştirici — tüm bölümler (natal/SR/LR/TR/PR/sinastri) için tek.
+ *
+ * Sözleşme: `data-<attr>="x"` butonu ⇄ `#tab-x` içeriği; içerik ayrıca bölümün
+ * `<prefix>-tab-content` sınıfını taşır.
+ *
+ * Eskiden her bölümün kendi kopyası vardı ve natal olanı diğerlerini
+ * `:not(.sr-tab-content):not(.lr-tab-content)...` diye dışlıyordu — yeni bir
+ * bölüm eklerken oraya `:not()` eklemeyi unutmak sessizce o bölümün sekmelerini
+ * boşaltıyordu. Bölüme özel sınıf sorgusu bu tuzağı tamamen kaldırır.
+ *
+ * @param {string} attr - data attribute adı (ör. 'sr-tab')
+ * @param {string} contentClass - içerik sınıfı (ör. 'sr-tab-content')
+ * @param {string} tabName - hedef sekme (ör. 'sr-planets')
+ */
+function switchSectionTab(attr, contentClass, tabName) {
+  document.querySelectorAll(`.tab[data-${attr}]`).forEach(t => t.classList.remove('active'));
+  document.querySelectorAll(`.${contentClass}`).forEach(c => c.classList.remove('active'));
 
-  document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
-  document.getElementById(`tab-${tabName}`).classList.add('active');
+  document.querySelector(`[data-${attr}="${tabName}"]`)?.classList.add('active');
+  document.getElementById(`tab-${tabName}`)?.classList.add('active');
+}
+
+/** Bölüm sekme kayıtları — yeni bölüm eklemek buraya bir satır. */
+const SECTION_TABS = [
+  { attr: 'tab', dataKey: 'tab', contentClass: 'na-tab-content' },
+  { attr: 'sr-tab', dataKey: 'srTab', contentClass: 'sr-tab-content' },
+  { attr: 'lr-tab', dataKey: 'lrTab', contentClass: 'lr-tab-content' },
+  { attr: 'tr-tab', dataKey: 'trTab', contentClass: 'tr-tab-content' },
+  { attr: 'pr-tab', dataKey: 'prTab', contentClass: 'pr-tab-content' },
+];
+
+function switchTab(tabName) {
+  switchSectionTab('tab', 'na-tab-content', tabName);
 }
 
 // ============================================
@@ -1043,70 +1107,11 @@ function handleSRLocationChange() {
 function updateSRButtonState() {
   const yearVal = parseInt(elements.srYear.value);
   const hasYear = !isNaN(yearVal) && yearVal >= 1900 && yearVal <= 2100;
-  
+
   const isBirth = elements.srLocBirth.checked;
   const hasLocation = isBirth ? !!selectedCity : !!srSelectedCity;
-  
+
   elements.srCalculateBtn.disabled = !(hasYear && hasLocation);
-}
-
-// SR City Search
-function handleSRCitySearch(e) {
-  const query = e.target.value.trim();
-  
-  if (srSearchTimeout) clearTimeout(srSearchTimeout);
-  
-  if (query.length < 2) {
-    elements.srCityDropdown.classList.add('hidden');
-    elements.srCityDropdown.innerHTML = '';
-    return;
-  }
-  
-  srSearchTimeout = setTimeout(async () => {
-    try {
-      const results = await searchCity(query);
-      renderSRCityResults(results);
-    } catch (error) {
-      console.error('SR şehir arama hatası:', error);
-    }
-  }, 300);
-}
-
-function renderSRCityResults(results) {
-  if (results.length === 0) {
-    elements.srCityDropdown.innerHTML = '<div class="city-option no-results">Sonuç bulunamadı</div>';
-    elements.srCityDropdown.classList.remove('hidden');
-    return;
-  }
-  
-  elements.srCityDropdown.innerHTML = results.map((city, index) => `
-    <div class="city-option" data-index="${index}">
-      <span class="city-name">${city.name}</span>
-      <span class="city-detail">${city.admin ? city.admin + ', ' : ''}${city.country}</span>
-      <span class="city-coords">${city.lat.toFixed(2)}°, ${city.lng.toFixed(2)}°</span>
-    </div>
-  `).join('');
-  
-  elements.srCityDropdown.querySelectorAll('.city-option').forEach(opt => {
-    opt.addEventListener('click', () => {
-      const index = parseInt(opt.dataset.index);
-      selectSRCity(results[index]);
-    });
-  });
-  
-  elements.srCityDropdown.classList.remove('hidden');
-}
-
-function selectSRCity(city) {
-  srSelectedCity = city;
-  elements.srCitySearch.value = formatCityName(city);
-  elements.srCityDropdown.classList.add('hidden');
-  
-  elements.srLocationInfo.classList.remove('hidden');
-  elements.srCoordDisplay.textContent = formatCoordinates(city.lat, city.lng);
-  elements.srTimezoneDisplay.textContent = city.timezone;
-  
-  updateSRButtonState();
 }
 
 // SR Calculate
@@ -1228,12 +1233,10 @@ function formatSpanDMS(spanDeg) {
 function timingDateStr(enterDate, durationDays, fraction) {
   const d = new Date(enterDate.year, enterDate.month - 1, enterDate.day, enterDate.hour || 0, enterDate.minute || 0);
   d.setTime(d.getTime() + fraction * durationDays * 86400000);
-  const months = ['', 'Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz', 'Tem', 'Ağu', 'Eyl', 'Eki', 'Kas', 'Ara'];
-  return `${d.getDate()} ${months[d.getMonth() + 1]} ${d.getFullYear()}`;
+  return `${d.getDate()} ${MONTH_SHORT[d.getMonth() + 1]} ${d.getFullYear()}`;
 }
 
 function renderDecanHTML(decanData, aspects, houseTiming) {
-  const months = ['', 'Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz', 'Tem', 'Ağu', 'Eyl', 'Eki', 'Kas', 'Ara'];
 
   return `<div class="decans-list">${decanData.map(h => {
     const element = h.houseSign.element;
@@ -1243,8 +1246,8 @@ function renderDecanHTML(decanData, aspects, houseTiming) {
     const timingHeader = timing ? (() => {
       const ed = timing.enterDate;
       const ld = timing.leaveDate;
-      const enterStr = `${ed.day} ${months[ed.month]} ${ed.year}`;
-      const leaveStr = `${ld.day} ${months[ld.month]} ${ld.year}`;
+      const enterStr = `${ed.day} ${MONTH_SHORT[ed.month]} ${ed.year}`;
+      const leaveStr = `${ld.day} ${MONTH_SHORT[ld.month]} ${ld.year}`;
       return `<span class="decan-house-timing">${enterStr} → ${leaveStr} • ${timing.durationDays.toFixed(1)} gün</span>`;
     })() : '';
 
@@ -1367,8 +1370,7 @@ function renderSevens(chart) {
   if (canvas) {
     const drawSevensChart = () => {
       const bd = chart.birthData;
-      const months = ['', 'Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz', 'Tem', 'Ağu', 'Eyl', 'Eki', 'Kas', 'Ara'];
-      const dateStr = `${bd.day} ${months[bd.month]} ${bd.year}`;
+      const dateStr = `${bd.day} ${MONTH_SHORT[bd.month]} ${bd.year}`;
       const timeStr = `${String(bd.hour).padStart(2, '0')}:${String(bd.minute).padStart(2, '0')}`;
       const cityName = selectedCity ? formatCityName(selectedCity) : '';
 
@@ -1460,8 +1462,7 @@ function renderSRChart(sr) {
   if (!canvas) return;
   
   const l = sr.local;
-  const months = ['', 'Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz', 'Tem', 'Ağu', 'Eyl', 'Eki', 'Kas', 'Ara'];
-  const dateStr = `${l.day} ${months[l.month]} ${l.year}`;
+  const dateStr = `${l.day} ${MONTH_SHORT[l.month]} ${l.year}`;
   const timeStr = `${String(l.hour).padStart(2, '0')}:${String(l.minute).padStart(2, '0')}:${String(l.second).padStart(2, '0')}`;
   const locName = sr.location?.name || '';
   
@@ -1476,7 +1477,6 @@ function renderSRChart(sr) {
 function renderSRTimingCard(sr) {
   const l = sr.local;
   const dayNames = ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'];
-  const monthNames = ['', 'Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'];
   
   // Haftanın günü hesapla
   const dateObj = new Date(l.year, l.month - 1, l.day);
@@ -1491,7 +1491,7 @@ function renderSRTimingCard(sr) {
       <div class="sr-timing-main">
         <div class="sr-timing-date">
           <span class="sr-timing-icon">☀️</span>
-          <span class="sr-timing-value">${l.day} ${monthNames[l.month]} ${l.year}, ${dayName}</span>
+          <span class="sr-timing-value">${l.day} ${MONTH_NAMES[l.month]} ${l.year}, ${dayName}</span>
         </div>
         <div class="sr-timing-time">
           <span class="sr-timing-label">Yerel Saat:</span>
@@ -1663,13 +1663,6 @@ function renderSRDebug(sr) {
 }
 
 // SR Tab Switching
-function switchSRTab(tabName) {
-  document.querySelectorAll('.tab[data-sr-tab]').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.sr-tab-content').forEach(c => c.classList.remove('active'));
-  
-  document.querySelector(`[data-sr-tab="${tabName}"]`).classList.add('active');
-  document.getElementById(`tab-${tabName}`).classList.add('active');
-}
 
 // ============================================
 // LUNAR RETURN
@@ -1719,65 +1712,6 @@ function updateLRButtonState() {
   const hasLocation = isBirth ? !!selectedCity : !!lrSelectedCity;
 
   elements.lrCalculateBtn.disabled = !(hasDay && hasYear && hasLocation);
-}
-
-// LR City Search
-function handleLRCitySearch(e) {
-  const query = e.target.value.trim();
-
-  if (lrSearchTimeout) clearTimeout(lrSearchTimeout);
-
-  if (query.length < 2) {
-    elements.lrCityDropdown.classList.add('hidden');
-    elements.lrCityDropdown.innerHTML = '';
-    return;
-  }
-
-  lrSearchTimeout = setTimeout(async () => {
-    try {
-      const results = await searchCity(query);
-      renderLRCityResults(results);
-    } catch (error) {
-      console.error('LR şehir arama hatası:', error);
-    }
-  }, 300);
-}
-
-function renderLRCityResults(results) {
-  if (results.length === 0) {
-    elements.lrCityDropdown.innerHTML = '<div class="city-option no-results">Sonuç bulunamadı</div>';
-    elements.lrCityDropdown.classList.remove('hidden');
-    return;
-  }
-
-  elements.lrCityDropdown.innerHTML = results.map((city, index) => `
-    <div class="city-option" data-index="${index}">
-      <span class="city-name">${city.name}</span>
-      <span class="city-detail">${city.admin ? city.admin + ', ' : ''}${city.country}</span>
-      <span class="city-coords">${city.lat.toFixed(2)}°, ${city.lng.toFixed(2)}°</span>
-    </div>
-  `).join('');
-
-  elements.lrCityDropdown.querySelectorAll('.city-option').forEach(opt => {
-    opt.addEventListener('click', () => {
-      const index = parseInt(opt.dataset.index);
-      selectLRCity(results[index]);
-    });
-  });
-
-  elements.lrCityDropdown.classList.remove('hidden');
-}
-
-function selectLRCity(city) {
-  lrSelectedCity = city;
-  elements.lrCitySearch.value = formatCityName(city);
-  elements.lrCityDropdown.classList.add('hidden');
-
-  elements.lrLocationInfo.classList.remove('hidden');
-  elements.lrCoordDisplay.textContent = formatCoordinates(city.lat, city.lng);
-  elements.lrTimezoneDisplay.textContent = city.timezone;
-
-  updateLRButtonState();
 }
 
 // LR Calculate
@@ -1845,8 +1779,7 @@ function renderLRChart(lr) {
   if (!canvas) return;
 
   const l = lr.local;
-  const months = ['', 'Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz', 'Tem', 'Ağu', 'Eyl', 'Eki', 'Kas', 'Ara'];
-  const dateStr = `${l.day} ${months[l.month]} ${l.year}`;
+  const dateStr = `${l.day} ${MONTH_SHORT[l.month]} ${l.year}`;
   const timeStr = `${String(l.hour).padStart(2, '0')}:${String(l.minute).padStart(2, '0')}:${String(l.second).padStart(2, '0')}`;
   const locName = lr.location?.name || '';
 
@@ -1861,7 +1794,6 @@ function renderLRChart(lr) {
 function renderLRTimingCard(lr) {
   const l = lr.local;
   const dayNames = ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'];
-  const monthNames = ['', 'Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'];
 
   const dateObj = new Date(l.year, l.month - 1, l.day);
   const dayName = dayNames[dateObj.getDay()];
@@ -1875,7 +1807,7 @@ function renderLRTimingCard(lr) {
       <div class="lr-timing-main">
         <div class="lr-timing-date">
           <span class="lr-timing-icon">🌙</span>
-          <span class="lr-timing-value">${l.day} ${monthNames[l.month]} ${l.year}, ${dayName}</span>
+          <span class="lr-timing-value">${l.day} ${MONTH_NAMES[l.month]} ${l.year}, ${dayName}</span>
         </div>
         <div class="lr-timing-time">
           <span class="lr-timing-label">Yerel Saat:</span>
@@ -2054,13 +1986,6 @@ function renderLRDecans(lr) {
 }
 
 // LR Tab Switching
-function switchLRTab(tabName) {
-  document.querySelectorAll('.tab[data-lr-tab]').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.lr-tab-content').forEach(c => c.classList.remove('active'));
-
-  document.querySelector(`[data-lr-tab="${tabName}"]`).classList.add('active');
-  document.getElementById(`tab-${tabName}`).classList.add('active');
-}
 
 // ============================================
 // TRANSIT FUNCTIONS
@@ -2102,64 +2027,6 @@ function handleTRLocationChange() {
   } else {
     elements.trCustomLocationSection.classList.remove('hidden');
   }
-  updateTRButtonState();
-}
-
-function handleTRCitySearch(e) {
-  const query = e.target.value.trim();
-
-  if (trSearchTimeout) clearTimeout(trSearchTimeout);
-
-  if (query.length < 2) {
-    elements.trCityDropdown.classList.add('hidden');
-    elements.trCityDropdown.innerHTML = '';
-    return;
-  }
-
-  trSearchTimeout = setTimeout(async () => {
-    try {
-      const results = await searchCity(query);
-      renderTRCityResults(results);
-    } catch (error) {
-      console.error('TR şehir arama hatası:', error);
-    }
-  }, 300);
-}
-
-function renderTRCityResults(results) {
-  if (results.length === 0) {
-    elements.trCityDropdown.innerHTML = '<div class="city-option no-results">Sonuç bulunamadı</div>';
-    elements.trCityDropdown.classList.remove('hidden');
-    return;
-  }
-
-  elements.trCityDropdown.innerHTML = results.map((city, index) => `
-    <div class="city-option" data-index="${index}">
-      <span class="city-name">${city.name}</span>
-      <span class="city-detail">${city.admin ? city.admin + ', ' : ''}${city.country}</span>
-      <span class="city-coords">${city.lat.toFixed(2)}°, ${city.lng.toFixed(2)}°</span>
-    </div>
-  `).join('');
-
-  elements.trCityDropdown.querySelectorAll('.city-option').forEach(opt => {
-    opt.addEventListener('click', () => {
-      const index = parseInt(opt.dataset.index);
-      selectTRCity(results[index]);
-    });
-  });
-
-  elements.trCityDropdown.classList.remove('hidden');
-}
-
-function selectTRCity(city) {
-  trSelectedCity = city;
-  elements.trCitySearch.value = formatCityName(city);
-  elements.trCityDropdown.classList.add('hidden');
-
-  elements.trLocationInfo.classList.remove('hidden');
-  elements.trCoordDisplay.textContent = formatCoordinates(city.lat, city.lng);
-  elements.trTimezoneDisplay.textContent = city.timezone;
-
   updateTRButtonState();
 }
 
@@ -2265,7 +2132,6 @@ function renderTRResults(tr) {
 
 function renderTRTimingCard(tr) {
   const l = tr.local;
-  const months = ['', 'Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'];
 
   const natalBd = tr.natalReference.birthData;
   const natalMonths = ['', 'Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz', 'Tem', 'Ağu', 'Eyl', 'Eki', 'Kas', 'Ara'];
@@ -2275,7 +2141,7 @@ function renderTRTimingCard(tr) {
       <div class="tr-timing-main">
         <div class="tr-timing-date">
           <span class="tr-timing-icon">🔄</span>
-          ${l.day} ${months[l.month]} ${l.year}
+          ${l.day} ${MONTH_NAMES[l.month]} ${l.year}
         </div>
         <div class="tr-timing-time">
           <span class="tr-timing-label">Saat:</span>
@@ -2306,12 +2172,11 @@ function renderTRChart(tr) {
   if (!canvas || !currentChart) return;
 
   const l = tr.local;
-  const months = ['', 'Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz', 'Tem', 'Ağu', 'Eyl', 'Eki', 'Kas', 'Ara'];
-  const dateStr = `${l.day} ${months[l.month]} ${l.year}`;
+  const dateStr = `${l.day} ${MONTH_SHORT[l.month]} ${l.year}`;
   const timeStr = `${String(l.hour).padStart(2, '0')}:${String(l.minute).padStart(2, '0')}`;
 
   const natalBd = currentChart.birthData;
-  const natalDate = `${natalBd.day} ${months[natalBd.month]} ${natalBd.year}`;
+  const natalDate = `${natalBd.day} ${MONTH_SHORT[natalBd.month]} ${natalBd.year}`;
 
   drawBiWheel(canvas, currentChart, tr, {
     title: 'Transit Bi-Wheel',
@@ -2459,13 +2324,6 @@ function renderTRDecans(tr) {
 }
 
 // TR Tab Switching
-function switchTRTab(tabName) {
-  document.querySelectorAll('.tab[data-tr-tab]').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.tr-tab-content').forEach(c => c.classList.remove('active'));
-
-  document.querySelector(`[data-tr-tab="${tabName}"]`).classList.add('active');
-  document.getElementById(`tab-${tabName}`).classList.add('active');
-}
 
 // ============================================
 // PROGRESYON (Secondary Progressions)
@@ -2540,7 +2398,6 @@ function renderPRResults(pr) {
 
 function renderPRTimingCard(pr) {
   const t = pr.targetDate;
-  const months = ['', 'Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'];
   const methodName = ANGLE_METHODS.find(m => m.key === pr.angleMethod)?.name || pr.angleMethod;
   const ageYears = Math.floor(pr.elapsedYears);
   const ageMonths = Math.round((pr.elapsedYears - ageYears) * 12);
@@ -2552,7 +2409,7 @@ function renderPRTimingCard(pr) {
       <div class="tr-timing-main">
         <div class="tr-timing-date">
           <span class="tr-timing-icon">📈</span>
-          ${t.day} ${months[t.month]} ${t.year}
+          ${t.day} ${MONTH_NAMES[t.month]} ${t.year}
         </div>
         <div class="tr-timing-time">
           <span class="tr-timing-label">Yaş:</span>
@@ -2581,11 +2438,10 @@ function renderPRChart(pr) {
   const canvas = $('prChartCanvas');
   if (!canvas || !currentChart) return;
 
-  const months = ['', 'Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz', 'Tem', 'Ağu', 'Eyl', 'Eki', 'Kas', 'Ara'];
   const t = pr.targetDate;
-  const targetStr = `${t.day} ${months[t.month]} ${t.year}`;
+  const targetStr = `${t.day} ${MONTH_SHORT[t.month]} ${t.year}`;
   const natalBd = currentChart.birthData;
-  const natalDate = `${natalBd.day} ${months[natalBd.month]} ${natalBd.year}`;
+  const natalDate = `${natalBd.day} ${MONTH_SHORT[natalBd.month]} ${natalBd.year}`;
   const methodName = ANGLE_METHODS.find(m => m.key === pr.angleMethod)?.name || pr.angleMethod;
 
   // drawBiWheel transit alan adlarını bekler — progres objesi uyumlu (planets + transitNatalAspects)
@@ -2748,13 +2604,6 @@ function renderPRDecans(pr) {
   elements.prDecansDisplay.innerHTML = renderDecanHTML(decanData, pr.progAspects);
 }
 
-function switchPRTab(tabName) {
-  document.querySelectorAll('.tab[data-pr-tab]').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.pr-tab-content').forEach(c => c.classList.remove('active'));
-
-  document.querySelector(`[data-pr-tab="${tabName}"]`).classList.add('active');
-  document.getElementById(`tab-${tabName}`).classList.add('active');
-}
 
 // ============================================
 // ANALYSIS

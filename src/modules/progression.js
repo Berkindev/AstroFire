@@ -11,12 +11,11 @@
  * Görüntüleme transit gibi bi-wheel'dir: içte natal, dışta progres.
  */
 
-import { NATAL_PLANETS, PLANETS, MAJOR_ASPECTS } from './constants.js';
+import { NATAL_PLANETS, PLANETS } from './constants.js';
 import {
   initEphemeris,
   calculateJulianDay,
   calculatePlanetPositions,
-  calculatePlanetPosition,
   calculateHouses,
   calculateHousesARMC,
   rightAscensionFromEcliptic,
@@ -26,6 +25,14 @@ import {
   normalizeDegree,
 } from './ephemeris.js';
 import { localToUTC, toDecimalHour } from './datetime.js';
+import { calcAspects, calcCrossAspects } from './aspects.js';
+import {
+  jdToUTC,
+  addSouthNode,
+  buildHouseCusps,
+  placePlanetsInHouses,
+  calcPartOfFortune,
+} from './chartUtils.js';
 
 // Ortalama tropikal yıl (gün). Gün=yıl dönüşümünde kullanılır.
 const TROPICAL_YEAR = 365.24219;
@@ -85,23 +92,7 @@ export async function calculateSecondaryProgression(natalChart, targetDate, opti
   const progJD = natalJD + elapsedYears;
 
   // --- Progres gezegen pozisyonları (yöntemden bağımsız) ---
-  const planets = calculatePlanetPositions(progJD, NATAL_PLANETS);
-
-  // Güney Ay Düğümü
-  const northNode = planets.find(p => p.id === PLANETS.MEAN_NODE.id);
-  if (northNode) {
-    planets.push({
-      id: -1,
-      name: 'GAD',
-      nameEn: 'South Node',
-      symbol: '☋',
-      longitude: normalizeDegree(northNode.longitude + 180),
-      latitude: -northNode.latitude,
-      distance: northNode.distance,
-      speed: northNode.speed,
-      isRetrograde: northNode.isRetrograde,
-    });
-  }
+  const planets = addSouthNode(calculatePlanetPositions(progJD, NATAL_PLANETS));
 
   // --- Açılar (ASC/MC/evler) seçilen yönteme göre ---
   const eps = getObliquity(progJD);
@@ -146,55 +137,25 @@ export async function calculateSecondaryProgression(natalChart, targetDate, opti
   }
 
   // Gezegen-ev eşleştirmesi (progres evlere göre)
-  const planetsWithHouses = planets.map(planet => ({
-    ...planet,
-    house: findHouseOfPlanet(planet.longitude, houses.cusps),
-    signIndex: Math.floor(normalizeDegree(planet.longitude) / 30),
-    degreeInSign: normalizeDegree(planet.longitude) % 30,
-  }));
-
-  // Ev cusp bilgileri
-  const houseCusps = [];
-  for (let i = 1; i <= 12; i++) {
-    const cusp = normalizeDegree(houses.cusps[i]);
-    houseCusps.push({
-      house: i,
-      longitude: cusp,
-      signIndex: Math.floor(cusp / 30),
-      degreeInSign: cusp % 30,
-    });
-  }
-
-  const interceptedSigns = findInterceptedSigns(houses.cusps);
+  const planetsWithHouses = placePlanetsInHouses(planets, houses.cusps);
 
   // Şans Noktası (progres ASC + progres Güneş/Ay)
-  const progSunWH = planetsWithHouses.find(p => p.id === PLANETS.SUN.id);
-  const progMoonWH = planetsWithHouses.find(p => p.id === PLANETS.MOON.id);
-  let partOfFortune = null;
-  if (progSunWH && progMoonWH) {
-    const sunDist = normalizeDegree(progSunWH.longitude - houses.ascendant);
-    const isDaytime = sunDist > 180;
-    let fortuneLon = isDaytime
-      ? houses.ascendant + progMoonWH.longitude - progSunWH.longitude
-      : houses.ascendant + progSunWH.longitude - progMoonWH.longitude;
-    fortuneLon = normalizeDegree(fortuneLon);
-    partOfFortune = {
-      name: 'Şans Noktası',
-      nameEn: 'Part of Fortune',
-      symbol: '⊕',
-      longitude: fortuneLon,
-      signIndex: Math.floor(fortuneLon / 30),
-      degreeInSign: fortuneLon % 30,
-      house: findHouseOfPlanet(fortuneLon, houses.cusps),
-      isDaytime,
-      formula: isDaytime ? 'ASC + Ay - Güneş' : 'ASC + Güneş - Ay',
-    };
-  }
+  const pofBase = calcPartOfFortune(
+    houses.ascendant,
+    planetsWithHouses.find(p => p.id === PLANETS.SUN.id),
+    planetsWithHouses.find(p => p.id === PLANETS.MOON.id),
+  );
+  const partOfFortune = pofBase
+    ? { ...pofBase, house: findHouseOfPlanet(pofBase.longitude, houses.cusps) }
+    : null;
 
-  // Çapraz aspektler: progres gezegen × natal gezegen
-  const progNatalAspects = calculateProgNatalAspects(planetsWithHouses, natalChart.planets);
+  // Çapraz aspektler: progres gezegen × natal gezegen (natal taraf sabit)
+  const progNatalAspects = calcCrossAspects(planetsWithHouses, natalChart.planets);
   // Progres gezegenlerin kendi arası aspektleri
-  const progAspects = calculateProgProgAspects(planetsWithHouses);
+  const progAspects = calcAspects(planetsWithHouses);
+
+  // Progres anının takvim karşılığı — geriye dönük uyumluluk için saniyesiz
+  const progUTC = jdToUTC(progJD);
 
   return {
     type: 'progression',
@@ -207,7 +168,13 @@ export async function calculateSecondaryProgression(natalChart, targetDate, opti
     age: Math.floor(elapsedYears),
 
     // Progres anının takvim karşılığı (gezegenlerin gerçekte bulunduğu ephemeris tarihi)
-    progMoment: jdToCalendar(progJD),
+    progMoment: {
+      year: progUTC.year,
+      month: progUTC.month,
+      day: progUTC.day,
+      hour: progUTC.hour,
+      minute: progUTC.minute,
+    },
 
     location: {
       latitude: natalLat,
@@ -223,7 +190,7 @@ export async function calculateSecondaryProgression(natalChart, targetDate, opti
 
     houses: {
       system: 'P',
-      cusps: houseCusps,
+      cusps: buildHouseCusps(houses.cusps),
       ascendant: houses.ascendant,
       mc: houses.mc,
       descendant: normalizeDegree(houses.ascendant + 180),
@@ -231,7 +198,7 @@ export async function calculateSecondaryProgression(natalChart, targetDate, opti
       vertex: houses.vertex,
     },
 
-    interceptedSigns,
+    interceptedSigns: findInterceptedSigns(houses.cusps),
 
     // drawBiWheel uyumluluğu için transit alan adlarıyla da expose et
     progNatalAspects,
@@ -246,103 +213,4 @@ export async function calculateSecondaryProgression(natalChart, targetDate, opti
       birthData: natalChart.birthData,
     },
   };
-}
-
-/**
- * Progres gezegen × natal gezegen çapraz aspektleri
- */
-export function calculateProgNatalAspects(progPlanets, natalPlanets) {
-  const aspects = [];
-  for (const pp of progPlanets) {
-    for (const np of natalPlanets) {
-      let angle = Math.abs(pp.longitude - np.longitude);
-      if (angle > 180) angle = 360 - angle;
-      for (const aspectDef of MAJOR_ASPECTS) {
-        const diff = Math.abs(angle - aspectDef.angle);
-        if (diff <= aspectDef.orb) {
-          const speed = pp.speed || 0;
-          let currentAngle = normalizeDegree(pp.longitude - np.longitude);
-          if (currentAngle > 180) currentAngle = 360 - currentAngle;
-          const isApplying = Math.abs(currentAngle) > aspectDef.angle ? speed > 0 : speed < 0;
-          aspects.push({
-            // transit alan adları (drawBiWheel + tablo uyumluluğu)
-            transitPlanet: { name: pp.name, symbol: pp.symbol, id: pp.id },
-            natalPlanet: { name: np.name, symbol: np.symbol, id: np.id },
-            aspect: aspectDef.name,
-            aspectEn: aspectDef.nameEn,
-            aspectSymbol: aspectDef.symbol,
-            angle: aspectDef.angle,
-            orb: diff,
-            isApplying,
-          });
-          break;
-        }
-      }
-    }
-  }
-  return aspects;
-}
-
-/**
- * Progres gezegenlerin kendi arası aspektleri
- */
-function calculateProgProgAspects(planets) {
-  const aspects = [];
-  for (let i = 0; i < planets.length; i++) {
-    for (let j = i + 1; j < planets.length; j++) {
-      const p1 = planets[i];
-      const p2 = planets[j];
-      let angle = Math.abs(p1.longitude - p2.longitude);
-      if (angle > 180) angle = 360 - angle;
-      for (const aspectDef of MAJOR_ASPECTS) {
-        const diff = Math.abs(angle - aspectDef.angle);
-        if (diff <= aspectDef.orb) {
-          const relativeSpeed = (p1.speed || 0) - (p2.speed || 0);
-          let currentAngle = normalizeDegree(p1.longitude - p2.longitude);
-          if (currentAngle > 180) currentAngle = 360 - currentAngle;
-          const isApplying = Math.abs(currentAngle) > aspectDef.angle ? relativeSpeed > 0 : relativeSpeed < 0;
-          aspects.push({
-            planet1: { name: p1.name, symbol: p1.symbol, id: p1.id },
-            planet2: { name: p2.name, symbol: p2.symbol, id: p2.id },
-            aspect: aspectDef.name,
-            aspectEn: aspectDef.nameEn,
-            aspectSymbol: aspectDef.symbol,
-            angle: aspectDef.angle,
-            orb: diff,
-            isApplying,
-          });
-          break;
-        }
-      }
-    }
-  }
-  return aspects;
-}
-
-/**
- * Julian Day → Gregoryen takvim tarihi (UTC). Progres anının gerçek
- * ephemeris tarihini göstermek için kullanılır.
- */
-function jdToCalendar(jd) {
-  const z = Math.floor(jd + 0.5);
-  const f = (jd + 0.5) - z;
-  let a;
-  if (z < 2299161) {
-    a = z;
-  } else {
-    const alpha = Math.floor((z - 1867216.25) / 36524.25);
-    a = z + 1 + alpha - Math.floor(alpha / 4);
-  }
-  const b = a + 1524;
-  const c = Math.floor((b - 122.1) / 365.25);
-  const d = Math.floor(365.25 * c);
-  const e = Math.floor((b - d) / 30.6001);
-  const day = b - d - Math.floor(30.6001 * e);
-  const month = e < 14 ? e - 1 : e - 13;
-  const year = month > 2 ? c - 4716 : c - 4715;
-  const totalHours = f * 24;
-  const hour = Math.floor(totalHours);
-  const totalMinutes = (totalHours - hour) * 60;
-  const minute = Math.floor(totalMinutes);
-  return { year, month, day, hour, minute };
 }

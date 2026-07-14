@@ -1,0 +1,137 @@
+/**
+ * AstroFire - Aspekt Motoru
+ *
+ * Tek aspekt hesabı; tüm harita tipleri bunu kullanır.
+ * Önceden aynı döngü 5 kez (aynı-harita) + 2 kez (çapraz-harita) kopyalanmıştı
+ * ve applying/separating mantığının 7 kopyası da aynı hatayı taşıyordu.
+ */
+
+import { MAJOR_ASPECTS } from './constants.js';
+import { normalizeDegree } from './ephemeris.js';
+import { angularSeparation } from './chartUtils.js';
+
+/**
+ * Aspekt yaklaşıyor mu (applying) uzaklaşıyor mu (separating)?
+ *
+ * ⚠️ Bu, 7 kopyadan devralınan MEVCUT mantıktır ve HATALIDIR — bir sonraki
+ * commit'te düzeltilecek. Burada bilerek olduğu gibi taşınıyor ki bu commit'in
+ * davranışı hiç değiştirmediği golden snapshot ile kanıtlanabilsin.
+ *
+ * @param {Object} p1 - hareketli gezegen
+ * @param {Object} p2 - ikinci gezegen
+ * @param {number} aspectAngle - 0/60/90/120/180
+ * @param {boolean} [staticP2=false] - p2 sabit kabul edilsin mi?
+ *   Çapraz haritalarda (transit×natal, progres×natal) natal taraf sabittir.
+ * @returns {boolean}
+ */
+export function isApplying(p1, p2, aspectAngle, staticP2 = false) {
+  const rate = (p1.speed || 0) - (staticP2 ? 0 : (p2.speed || 0));
+  let sep = normalizeDegree(p1.longitude - p2.longitude);
+  if (sep > 180) sep = 360 - sep;
+
+  return sep > aspectAngle ? rate > 0 : rate < 0;
+}
+
+/**
+ * İki gezegenin arasındaki aspekti bulur (varsa).
+ * MAJOR_ASPECTS sırasına göre ilk eşleşen orb penceresini alır.
+ *
+ * @returns {{aspectDef, orb}|null}
+ */
+function matchAspect(lon1, lon2) {
+  const angle = angularSeparation(lon1, lon2);
+
+  for (const aspectDef of MAJOR_ASPECTS) {
+    const orb = Math.abs(angle - aspectDef.angle);
+    if (orb <= aspectDef.orb) return { aspectDef, orb };
+  }
+  return null;
+}
+
+/** Aspekt kaydının ortak alanları. */
+function aspectFields(aspectDef, orb, applying) {
+  return {
+    aspect: aspectDef.name,
+    aspectEn: aspectDef.nameEn,
+    aspectSymbol: aspectDef.symbol,
+    angle: aspectDef.angle,
+    orb,
+    isApplying: applying,
+  };
+}
+
+/** Gezegen referansı — tablolarda ve çizimde kullanılan minimal şekil. */
+function planetRef(p) {
+  return { name: p.name, symbol: p.symbol, id: p.id };
+}
+
+/**
+ * AYNI harita içindeki gezegenler arası aspektler.
+ * Natal, Solar Return, Lunar Return, transit×transit, progres×progres.
+ *
+ * @param {Array} planets - Şans Noktası ve GAD dahil edilebilir
+ * @returns {Array<{planet1, planet2, aspect, aspectEn, aspectSymbol, angle, orb, isApplying}>}
+ */
+export function calcAspects(planets) {
+  const aspects = [];
+
+  for (let i = 0; i < planets.length; i++) {
+    for (let j = i + 1; j < planets.length; j++) {
+      const p1 = planets[i];
+      const p2 = planets[j];
+
+      const match = matchAspect(p1.longitude, p2.longitude);
+      if (!match) continue;
+
+      aspects.push({
+        planet1: planetRef(p1),
+        planet2: planetRef(p2),
+        ...aspectFields(match.aspectDef, match.orb, isApplying(p1, p2, match.aspectDef.angle)),
+      });
+    }
+  }
+
+  return aspects;
+}
+
+/**
+ * İKİ FARKLI harita arasındaki çapraz aspektler.
+ * Transit×natal, progres×natal, sinastri (kişi A × kişi B).
+ *
+ * Alan adları `transitPlanet` / `natalPlanet`: bu isimler çizim katmanının
+ * dayattığı sözleşme (chartWheelSF.js:1209-1210 bi-wheel aspekt çizerken bu
+ * alanlara bakıyor). Sinastride de aynı adlar kullanılır — `transitPlanet` =
+ * DIŞ halka (kişi B), `natalPlanet` = İÇ halka (kişi A).
+ *
+ * @param {Array} setA - dış/hareketli taraf (transit / progres / kişi B)
+ * @param {Array} setB - iç/referans taraf (natal / kişi A)
+ * @param {Object} [options]
+ * @param {boolean} [options.staticB=true] - setB sabit kabul edilsin mi?
+ *   Transit/progres için true (natal donuk). Sinastride her iki kişi de
+ *   "donuk" olduğundan applying kavramı zayıftır; yine de her iki hızı
+ *   kullanmak için false verilebilir.
+ * @returns {Array}
+ */
+export function calcCrossAspects(setA, setB, options = {}) {
+  const staticB = options.staticB !== false;
+  const aspects = [];
+
+  for (const a of setA) {
+    for (const b of setB) {
+      const match = matchAspect(a.longitude, b.longitude);
+      if (!match) continue;
+
+      aspects.push({
+        transitPlanet: planetRef(a),
+        natalPlanet: planetRef(b),
+        ...aspectFields(
+          match.aspectDef,
+          match.orb,
+          isApplying(a, b, match.aspectDef.angle, staticB),
+        ),
+      });
+    }
+  }
+
+  return aspects;
+}
