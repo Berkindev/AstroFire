@@ -741,12 +741,24 @@
             </div>
 
             <div id="tab-sy-chart" class="tab-content sy-tab-content active">
+              <!-- Çerçeve İÇ haritanın ASC'sine göre kurulur; takas iki ayrı okuma verir -->
+              <div class="sy-chart-toolbar">
+                <button type="button" id="sySwapBtn" class="sy-swap-btn">
+                  <span class="sy-swap-icon">⇄</span>
+                  <span id="sySwapLabel">Kişi B'yi içe al</span>
+                </button>
+                <span class="sy-swap-hint">
+                  Harita çerçevesini iç haritanın evleri kurar — takas edince
+                  gezegenlerin hangi kişinin evlerine düştüğünü görürsün.
+                </span>
+              </div>
+
               <div class="chart-canvas-container">
                 <canvas id="syChartCanvas" width="1800" height="1800"></canvas>
               </div>
               <p class="sy-legend">
-                <span class="sy-legend-inner">İç halka: Kişi A</span>
-                <span class="sy-legend-outer">Dış halka: Kişi B</span>
+                <span class="sy-legend-inner" id="syLegendInner">İç halka: Kişi A</span>
+                <span class="sy-legend-outer" id="syLegendOuter">Dış halka: Kişi B</span>
               </p>
             </div>
 

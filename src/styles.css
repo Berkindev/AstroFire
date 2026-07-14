@@ -2593,3 +2593,52 @@ input::placeholder {
 .sy-subchart-meta strong {
   color: var(--text-primary);
 }
+
+/* --- Sinastri: iç/dış halka takas butonu --- */
+.sy-chart-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.sy-swap-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1rem;
+  background: var(--bg-primary);
+  border: 1px solid rgba(236, 72, 153, 0.35);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  cursor: pointer;
+  font-size: 0.88rem;
+  font-weight: 500;
+  transition: var(--transition);
+  white-space: nowrap;
+}
+
+.sy-swap-btn:hover {
+  background: rgba(236, 72, 153, 0.1);
+  border-color: #ec4899;
+}
+
+.sy-swap-btn.active {
+  background: rgba(236, 72, 153, 0.15);
+  border-color: #ec4899;
+  color: #f9a8d4;
+}
+
+.sy-swap-icon {
+  color: #ec4899;
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.sy-swap-hint {
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  line-height: 1.5;
+  max-width: 52ch;
+}

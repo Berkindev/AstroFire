@@ -296,7 +296,49 @@ for (const [id, label] of [
   else fail(`${label} çizilmedi: ${drawn.why}`);
 }
 
+// --- İç/dış halka takası ---
+// Çerçeveyi İÇ harita kurar, dolayısıyla takas çizimi gerçekten değiştirmeli.
+await page.click('.tab[data-sy-tab="sy-chart"]');
+await page.waitForTimeout(400);
+
+const wheelBefore = await page.evaluate(() =>
+  document.getElementById('syChartCanvas').toDataURL().length);
+const legendBefore = await page.textContent('#syLegendInner');
+
+await page.click('#sySwapBtn');
+await page.waitForTimeout(800);
+
+const wheelAfter = await page.evaluate(() =>
+  document.getElementById('syChartCanvas').toDataURL().length);
+const legendAfter = await page.textContent('#syLegendInner');
+
+if (legendBefore.includes('Kişi A') && legendAfter.includes('Kişi B')) {
+  pass(`takas: "${legendBefore.trim()}" → "${legendAfter.trim()}"`);
+} else {
+  fail(`takas etiketi güncellenmedi: "${legendBefore}" → "${legendAfter}"`);
+}
+
+if (wheelBefore !== wheelAfter) pass('takas çarkı gerçekten yeniden çizdi');
+else fail('takas sonrası canvas AYNI — çizim değişmedi');
+
+// Geri al — kompozit/Davison takastan etkilenmemeli (orta noktalar simetrik)
+const compBefore = await page.evaluate(() =>
+  document.getElementById('syCompositeCanvas').toDataURL().length);
+await page.click('#sySwapBtn');
+await page.waitForTimeout(800);
+const compAfter = await page.evaluate(() =>
+  document.getElementById('syCompositeCanvas').toDataURL().length);
+
+if (compBefore === compAfter) pass('kompozit takastan etkilenmedi (simetrik)');
+else fail('kompozit takasta değişti — simetrik olmalıydı');
+
+const legendBack = await page.textContent('#syLegendInner');
+if (legendBack.includes('Kişi A')) pass('takas geri alınabiliyor');
+else fail(`takas geri alınamadı: "${legendBack}"`);
+
 // Kompozit çapa değişimi haritayı yeniden hesaplamalı
+await page.click('.tab[data-sy-tab="sy-composite"]');
+await page.waitForTimeout(300);
 await page.selectOption('#syAnchor', 'mc');
 await page.waitForTimeout(600);
 const summaryAfter = (await page.textContent('#sySummaryCard')) || '';

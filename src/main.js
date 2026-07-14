@@ -71,6 +71,9 @@ let currentProgression = null;
 // Sinastri state (Kişi A = currentChart, Kişi B = burada)
 let syChartB = null;
 let sySelectedCity = null;
+// Bi-wheel'de kim içte? false = Kişi A içte (varsayılan). Çerçeveyi iç harita
+// kurduğu için bu, kozmetik değil gerçek bir okuma tercihidir.
+let syFlipped = false;
 let currentSynastry = null;
 let currentComposite = null;
 let currentDavison = null;
@@ -215,6 +218,10 @@ const elements = {
   syResults: $('syResults'),
   sySummaryCard: $('sySummaryCard'),
   syChartCanvas: $('syChartCanvas'),
+  sySwapBtn: $('sySwapBtn'),
+  sySwapLabel: $('sySwapLabel'),
+  syLegendInner: $('syLegendInner'),
+  syLegendOuter: $('syLegendOuter'),
   syAspectsTable: $('syAspectsTable'),
   syGridTable: $('syGridTable'),
   syHousesTable: $('syHousesTable'),
@@ -334,6 +341,7 @@ function setupEventListeners() {
   // ============================================
 
   elements.syCalculateBtn.addEventListener('click', handleSYCalculate);
+  elements.sySwapBtn.addEventListener('click', handleSYSwap);
 
   ['syBirthDay', 'syBirthMonth', 'syBirthYear', 'syBirthHour', 'syBirthMinute'].forEach(id => {
     elements[id].addEventListener('input', updateSYButtonState);
@@ -535,6 +543,7 @@ function handleClearForm() {
   currentTransit = null;
   currentProgression = null;
   syChartB = null;
+  syFlipped = false;
   currentSynastry = null;
   currentComposite = null;
   currentDavison = null;
@@ -2960,18 +2969,52 @@ function renderSYSummary() {
   `;
 }
 
+/** Doğum verisinden kısa tarih (çizim altyazısı için). */
+function syShortDate(bd) {
+  return `${bd.day} ${MONTH_SHORT[bd.month]} ${bd.year}`;
+}
+
+/**
+ * Sinastri bi-wheel'i çizer.
+ *
+ * Bi-wheel'in çerçevesi İÇ haritanın ASC'sine göre kurulur ve ev bandını da iç
+ * harita çizer (chartWheelSF.js: drawBiWheel). Yani "kim içte" kozmetik değil —
+ * gezegenlerin KİMİN evlerine düştüğünü belirler. Sinastride her iki okuma da
+ * anlamlı olduğu için takas tek tuşla yapılabiliyor.
+ *
+ * Kompozit ve Davison takastan ETKİLENMEZ (orta nokta hesapları simetriktir),
+ * o yüzden sadece bu çark yeniden çizilir.
+ */
 function renderSYChart() {
   const canvas = elements.syChartCanvas;
-  if (!canvas || !currentSynastry) return;
+  if (!canvas || !currentChart || !syChartB) return;
 
-  const a = currentChart.birthData;
-  const b = syChartB.birthData;
+  const inner = syFlipped ? syChartB : currentChart;
+  const outer = syFlipped ? currentChart : syChartB;
+  const innerName = syFlipped ? 'Kişi B' : 'Kişi A';
+  const outerName = syFlipped ? 'Kişi A' : 'Kişi B';
 
-  // drawBiWheel(canvas, iç, dış) — sinastri objesi transit alan adlarına uyumlu
-  drawBiWheel(canvas, currentChart, currentSynastry, {
+  // İç/dış rolüne göre yeniden kur — çapraz aspektlerin yönü de buna bağlı
+  const wheel = calculateSynastry(inner, outer);
+
+  drawBiWheel(canvas, wheel.personA, wheel, {
     title: 'Sinastri Bi-Wheel',
-    subtitle: `Kişi A: ${a.day} ${MONTH_SHORT[a.month]} ${a.year}\nKişi B: ${b.day} ${MONTH_SHORT[b.month]} ${b.year}\n${currentSynastry.crossAspects.length} çapraz aspekt`,
+    subtitle: `İç — ${innerName}: ${syShortDate(inner.birthData)}\n`
+      + `Dış — ${outerName}: ${syShortDate(outer.birthData)}\n`
+      + `${wheel.crossAspects.length} çapraz aspekt`,
   });
+
+  elements.syLegendInner.textContent = `İç halka: ${innerName}`;
+  elements.syLegendOuter.textContent = `Dış halka: ${outerName}`;
+  elements.sySwapLabel.textContent = `${innerName === 'Kişi A' ? 'Kişi B' : 'Kişi A'}'yi içe al`;
+  elements.sySwapBtn.classList.toggle('active', syFlipped);
+}
+
+/** İç/dış halkayı takas eder ve sadece çarkı yeniden çizer. */
+function handleSYSwap() {
+  if (!currentChart || !syChartB) return;
+  syFlipped = !syFlipped;
+  renderSYChart();
 }
 
 function renderSYAspects() {
