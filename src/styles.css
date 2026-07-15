@@ -886,9 +886,21 @@ input::placeholder {
   .tabs {
     flex-wrap: wrap;
   }
-  
+
+  /* Tablolar dar ekrana sığmıyordu; son sütun (A/S, R) kesiliyor ve sayfa
+     yatayda kayıyordu. Tabloyu kendi kutusunda yatay kaydırılabilir yap —
+     hiçbir sütun kesilmez, sayfa gövdesi kaymaz. */
   .data-table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
     font-size: 0.8rem;
+  }
+  .data-table th,
+  .data-table td {
+    padding: 0.5rem 0.55rem;
   }
 }
 

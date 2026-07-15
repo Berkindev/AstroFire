@@ -423,28 +423,23 @@ function drawHouseBand(ctx, cx, cy, houses, R, ascLon, opts = {}) {
     ctx.stroke();
     ctx.restore();
 
-    // Cusp derecesi: SolarFire cusp çizgisinin HEMEN BİR YANINA, derece ile
-    // dakikayı radyal olarak alt alta koyar (derece dışta, dakika içte) — tek
-    // kompakt blok. (Önceden derece ve dakika çizginin iki ayrı yanına
-    // dağılıyordu, dağınık duruyordu.)
+    // Cusp derecesi: SolarFire gibi TEK satır "DD°MM'", halkaya TEĞET, cusp
+    // çizgisinin üzerinde ortalanmış, tik halkasının hemen içinde. (Önceden
+    // derece ve dakika radyal alt alta konuyordu; üst ve alt yarıda sıraları
+    // ters düşüp "28' / 03°" gibi kafa karıştırıyordu — SolarFire hep tek satır
+    // teğet yazıyor.)
     const { deg, min } = formatDegMin(cusp.longitude);
-    const off = 0.022 * Math.PI;   // çizginin bir yanına küçük kayma
-    const pa = a - off;
+    const labelRadius = R.signInR - R.R * 0.032;
+    const lp = polarToXY(cx, cy, labelRadius, a);
 
     ctx.save();
     ctx.fillStyle = LINE_COLOR;
     ctx.font = `${degFont}px Arial, sans-serif`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-
-    for (const [txt, rr] of [[`${deg}°`, R.labelR + R.R * 0.024], [`${min}'`, R.labelR - R.R * 0.024]]) {
-      const p = polarToXY(cx, cy, rr, pa);
-      ctx.save();
-      ctx.translate(p.x, p.y);
-      ctx.rotate(textRotation(pa));
-      ctx.fillText(txt, 0, 0);
-      ctx.restore();
-    }
+    ctx.translate(lp.x, lp.y);
+    ctx.rotate(textRotation(a));
+    ctx.fillText(`${deg}°${min}'`, 0, 0);
     ctx.restore();
   }
 
@@ -513,11 +508,11 @@ function drawPlanets(ctx, cx, cy, planets, R, ascLon, partOfFortune) {
   const font = Math.max(8, R.R * 0.038);
   const rowGap = R.R * 0.050;
 
-  // Çakışma önlemenin açısal aralığı, etiketin bir satırının açısal genişliği
-  // kadar — daha fazlası gezegeni gerçek derecesinden gereksiz uzaklaştırır.
-  // Böylece yakın gezegenler (ör. Jüpiter ile KAD 16°'de) YAN YANA kalır,
-  // sadece etiketleri okunacak kadar ayrılır.
-  const placed = avoidCollisions(items, glyphR, glyphSize * 1.22);
+  // Çakışma önlemenin açısal aralığı. Etiket bloğu (glif + derece/burç/dakika)
+  // teğetsel değil radyal ama komşu gezegenlerin blokları yine de yatayda üst
+  // üste biniyordu (kompozitteki Oğlak yığını gibi 6 gezegen dar bir alanda).
+  // Daha geniş aralık onları birbirinden ayırır; hâlâ gerçek dereceye yakın.
+  const placed = avoidCollisions(items, glyphR, glyphSize * 1.55);
 
   for (const item of placed) {
     const p = item.planet;
@@ -850,7 +845,7 @@ function drawBiSignRing(ctx, cx, cy, R, ascLon) {
   }
   ctx.restore();
 
-  const glyphSize = R.R * 0.072;
+  const glyphSize = R.R * 0.058;
   for (let s = 0; s < 12; s++) {
     const a = lonToAngle(s * 30 + 15, ascLon);
     const p = polarToXY(cx, cy, R.signGlyphR, a);
@@ -886,12 +881,12 @@ function drawOuterPlanets(ctx, cx, cy, planets, R, ascLon) {
   const items = planets.map(p => ({ planet: p, angle: lonToAngle(p.longitude, ascLon) }));
 
   const glyphR = R.signOutR + R.R * 0.045;   // burç halkasının hemen dışı
-  const glyphSize = R.R * 0.040;
-  const signSize = R.R * 0.026;
-  const font = Math.max(7, R.R * 0.024);
-  const rowGap = R.R * 0.030;
+  const glyphSize = R.R * 0.033;
+  const signSize = R.R * 0.022;
+  const font = Math.max(7, R.R * 0.021);
+  const rowGap = R.R * 0.027;
 
-  const placed = avoidCollisions(items, glyphR, glyphSize * 1.6);
+  const placed = avoidCollisions(items, glyphR, glyphSize * 1.7);
 
   for (const item of placed) {
     const p = item.planet;
@@ -955,12 +950,12 @@ function drawInnerPlanets(ctx, cx, cy, planets, R, ascLon, partOfFortune) {
   const items = list.map(p => ({ planet: p, angle: lonToAngle(p.longitude, ascLon) }));
 
   const glyphR = R.innerGlyphR;
-  const glyphSize = R.R * 0.040;
-  const signSize = R.R * 0.026;
-  const font = Math.max(7, R.R * 0.024);
-  const rowGap = R.R * 0.028;
+  const glyphSize = R.R * 0.033;
+  const signSize = R.R * 0.022;
+  const font = Math.max(7, R.R * 0.021);
+  const rowGap = R.R * 0.026;
 
-  const placed = avoidCollisions(items, glyphR, glyphSize * 1.7);
+  const placed = avoidCollisions(items, glyphR, glyphSize * 1.8);
 
   for (const item of placed) {
     const p = item.planet;
@@ -1042,29 +1037,48 @@ function drawBiWheelAspects(ctx, cx, cy, outerPlanets, innerPlanets, aspects, R,
   const innerLon = {};
   for (const p of innerPlanets) innerLon[p.name] = p.longitude;
 
-  for (const aspect of aspects) {
-    // Ders filtresi: aspektin en az bir ucu seçili gezegen olmalı.
-    if (activeSet && !activeSet.has(aspect.transitPlanet?.name)
-      && !activeSet.has(aspect.natalPlanet?.name)) continue;
+  const visible = (aspect) => !activeSet
+    || activeSet.has(aspect.transitPlanet?.name)
+    || activeSet.has(aspect.natalPlanet?.name);
 
+  const endpoints = (aspect) => {
     const style = ASPECT_STYLE[aspect.angle];
-    if (!style) continue;
-
+    if (!style) return null;
     const l1 = outerLon[aspect.transitPlanet?.name];
     const l2 = innerLon[aspect.natalPlanet?.name];
-    if (l1 === undefined || l2 === undefined) continue;
+    if (l1 === undefined || l2 === undefined) return null;
+    return {
+      style,
+      p1: polarToXY(cx, cy, R.innerR, lonToAngle(l1, ascLon)),
+      p2: polarToXY(cx, cy, R.innerR, lonToAngle(l2, ascLon)),
+    };
+  };
 
-    const p1 = polarToXY(cx, cy, R.innerR, lonToAngle(l1, ascLon));
-    const p2 = polarToXY(cx, cy, R.innerR, lonToAngle(l2, ascLon));
+  // Çizgiler
+  for (const aspect of aspects) {
+    if (!visible(aspect)) continue;
+    const e = endpoints(aspect);
+    if (!e) continue;
 
     ctx.save();
-    ctx.strokeStyle = style.color;
-    ctx.lineWidth = Math.max(1, style.width * R.R * 0.85);
+    ctx.strokeStyle = e.style.color;
+    ctx.lineWidth = Math.max(1, e.style.width * R.R * 0.85);
     ctx.beginPath();
-    ctx.moveTo(p1.x, p1.y);
-    ctx.lineTo(p2.x, p2.y);
+    ctx.moveTo(e.p1.x, e.p1.y);
+    ctx.lineTo(e.p2.x, e.p2.y);
     ctx.stroke();
     ctx.restore();
+  }
+
+  // Aspekt sembolleri (kare/üçgen/…) çizgilerin ÜSTÜNE — natal çarkındaki gibi,
+  // hangi açının ne olduğu belli olsun.
+  const glyphSize = R.R * 0.024;
+  for (const aspect of aspects) {
+    if (!visible(aspect)) continue;
+    const e = endpoints(aspect);
+    if (!e) continue;
+    drawAspectGlyph(ctx, (e.p1.x + e.p2.x) / 2, (e.p1.y + e.p2.y) / 2,
+      e.style.glyph, e.style.color, glyphSize);
   }
 }
 
@@ -1151,7 +1165,8 @@ export function drawSevenYearOverlay(canvas, chartData, sevensData, options = {}
       // teğetsel yazı sığmıyordu ("68-69..." çember boyunca üst üste biniyordu).
       // Tek yaş sayısı yazılır; radyal olduğu için segmente rahat sığar.
       const pos = polarToXY(cx, cy, R.houseInR - R.R * 0.035, midAngle);
-      const label = `${year.age}`;
+      // Yaşam yılı 1'den başlar (age 0 = 1. yıl). SolarFire de 1-84 sayar.
+      const label = `${year.age + 1}`;
       ctx.save();
       ctx.translate(pos.x, pos.y);
       ctx.rotate(radialRotation(midAngle));

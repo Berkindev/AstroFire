@@ -347,6 +347,25 @@ function setupEventListeners() {
     $(id).addEventListener('change', updateTimezoneDisplay);
   });
 
+  // Tarih/saat alanlarında otomatik ilerleme: gün "11" → ay, ay "03" → yıl…
+  // Alan dolduğunda (max hane) ya da bir sonraki hane sınırı aşacaksa
+  // (gün "4" → 40 olamaz) odak sonraki kutuya atlar.
+  setupAutoAdvance([
+    ['birthDay', 31, 2], ['birthMonth', 12, 2], ['birthYear', 2100, 4],
+    ['birthHour', 23, 2], ['birthMinute', 59, 2],
+  ]);
+  setupAutoAdvance([
+    ['syBirthDay', 31, 2], ['syBirthMonth', 12, 2], ['syBirthYear', 2100, 4],
+    ['syBirthHour', 23, 2], ['syBirthMinute', 59, 2],
+  ]);
+  setupAutoAdvance([
+    ['trDay', 31, 2], ['trMonth', 12, 2], ['trYear', 2100, 4],
+    ['trHour', 23, 2], ['trMinute', 59, 2],
+  ]);
+  setupAutoAdvance([
+    ['prDay', 31, 2], ['prMonth', 12, 2], ['prYear', 2100, 4],
+  ]);
+
   // ============================================
   // SOLAR RETURN EVENT LISTENERS
   // ============================================
@@ -478,6 +497,40 @@ function setupEventListeners() {
     } else {
       toggle.textContent = `▲ ${count} açı`;
     }
+  });
+}
+
+// ============================================
+// TARİH/SAAT OTOMATİK İLERLEME
+// ============================================
+/**
+ * Bir alan zinciri için otomatik odak ilerlemesi kurar.
+ * @param {Array<[string, number, number]>} chain - [elementId, maxValue, maxDigits]
+ * Alan dolduğunda (maxDigits hane) veya bir sonraki hane maxValue'yu aşacaksa
+ * (ör. ay için "3" → 30 olamaz) odak zincirdeki bir sonraki alana atlar.
+ */
+function setupAutoAdvance(chain) {
+  chain.forEach(([id, max, digits], i) => {
+    const el = $(id);
+    if (!el) return;
+    const next = chain[i + 1] && $(chain[i + 1][0]);
+    if (!next) return;
+
+    el.addEventListener('input', (e) => {
+      // Silme sırasında ilerleme yapma
+      if (e.inputType && e.inputType.startsWith('delete')) return;
+
+      const str = el.value.replace(/\D/g, '');
+      if (!str) return;
+
+      const full = str.length >= digits;
+      const cantGrow = parseInt(str, 10) * 10 > max;   // bir hane daha sığmaz
+
+      if (full || cantGrow) {
+        next.focus();
+        if (typeof next.select === 'function') next.select();
+      }
+    });
   });
 }
 
