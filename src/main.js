@@ -248,6 +248,20 @@ async function init() {
 
   // Event listeners
   setupEventListeners();
+
+  // Gezegen açı filtreleri — her harita için bir tane
+  natalPlanetFilter = createPlanetFilter($('natalPlanetFilter'),
+    () => { if (currentChart) renderNatalChart(currentChart); });
+  srPlanetFilter = createPlanetFilter($('srPlanetFilter'),
+    () => { if (currentSolarReturn) renderSRChart(currentSolarReturn); });
+  lrPlanetFilter = createPlanetFilter($('lrPlanetFilter'),
+    () => { if (currentLunarReturn) renderLRChart(currentLunarReturn); });
+  transitPlanetFilter = createPlanetFilter($('transitPlanetFilter'),
+    () => { if (currentTransit) renderTRChart(currentTransit); });
+  progressionPlanetFilter = createPlanetFilter($('progressionPlanetFilter'),
+    () => { if (currentProgression) renderPRChart(currentProgression); });
+  synastryPlanetFilter = createPlanetFilter($('synastryPlanetFilter'),
+    () => { if (currentSynastry) renderSYChart(); });
 }
 
 // ============================================
@@ -709,6 +723,95 @@ function selectCity(city) {
   natalCitySearch.select(city);
 }
 
+// ============================================
+// GEZEGEN AÇI FİLTRESİ (ders modu)
+// ============================================
+// Haritanın altında açılır bir panel. Tüm gezegenler tikli başlar; kullanıcı
+// tikini kaldırdıkça o gezegenin dahil olduğu açılar gizlenir. Tek gezegen
+// bırakılırsa yalnızca onun tüm açıları görünür — "Satürn'ü seç, sadece onun
+// açılarını gör" senaryosu.
+
+const PLANET_FILTER_NAMES = [
+  'Güneş', 'Ay', 'Merkür', 'Venüs', 'Mars', 'Jüpiter', 'Satürn',
+  'Uranüs', 'Neptün', 'Plüton', 'KAD', 'GAD', 'Chiron', 'Şans Noktası',
+];
+
+const PLANET_FILTER_SYMBOL = {
+  'Güneş': '☉', 'Ay': '☽', 'Merkür': '☿', 'Venüs': '♀', 'Mars': '♂',
+  'Jüpiter': '♃', 'Satürn': '♄', 'Uranüs': '♅', 'Neptün': '♆', 'Plüton': '♇',
+  'KAD': '☊', 'GAD': '☋', 'Chiron': '⚷', 'Şans Noktası': '⊕',
+};
+
+/**
+ * Bir harita için gezegen filtresi kurar.
+ * @param {HTMLElement} container
+ * @param {Function} redraw - Filtre değişince haritayı yeniden çizer.
+ * @returns {{ getActiveSet: () => Set<string> }|null}
+ */
+function createPlanetFilter(container, redraw) {
+  if (!container) return null;
+
+  const active = new Set(PLANET_FILTER_NAMES);
+
+  const boxes = PLANET_FILTER_NAMES.map(name => `
+    <label class="pf-item">
+      <input type="checkbox" data-planet="${name}" checked>
+      <span class="pf-sym">${PLANET_FILTER_SYMBOL[name]}</span>
+      <span class="pf-name">${name}</span>
+    </label>
+  `).join('');
+
+  container.innerHTML = `
+    <div class="pf-header" role="button">
+      <span class="pf-title">🪐 Gezegen Açı Filtresi</span>
+      <span class="pf-hint">yalnızca seçili gezegenlerin açıları çizilir</span>
+      <span class="pf-caret">▾</span>
+    </div>
+    <div class="pf-body">
+      <div class="pf-actions">
+        <button type="button" class="pf-all">Tümünü seç</button>
+        <button type="button" class="pf-none">Tümünü kaldır</button>
+      </div>
+      <div class="pf-grid">${boxes}</div>
+    </div>
+  `;
+
+  const body = container.querySelector('.pf-body');
+  const header = container.querySelector('.pf-header');
+  const checks = [...container.querySelectorAll('input[data-planet]')];
+
+  header.addEventListener('click', () => {
+    container.classList.toggle('pf-open');
+  });
+
+  const sync = () => {
+    active.clear();
+    for (const c of checks) if (c.checked) active.add(c.dataset.planet);
+    redraw();
+  };
+
+  checks.forEach(c => c.addEventListener('change', sync));
+
+  container.querySelector('.pf-all').addEventListener('click', () => {
+    checks.forEach(c => { c.checked = true; });
+    sync();
+  });
+  container.querySelector('.pf-none').addEventListener('click', () => {
+    checks.forEach(c => { c.checked = false; });
+    sync();
+  });
+
+  return { getActiveSet: () => active };
+}
+
+// Her harita kendi filtresine sahip (ders senaryosunda haritalar bağımsız).
+let natalPlanetFilter = null;
+let srPlanetFilter = null;
+let lrPlanetFilter = null;
+let transitPlanetFilter = null;
+let progressionPlanetFilter = null;
+let synastryPlanetFilter = null;
+
 function updateTimezoneDisplay() {
   if (!selectedCity) return;
   
@@ -823,6 +926,7 @@ function renderNatalChart(chart) {
     subtitle: `${dateStr}\n${timeStr}  ${getUtcOffsetStr(bd)}\n${cityName}\n${formatCoordinates(bd.latitude, bd.longitude)}`,
     showAspects: true,
     chartType: 'natal',
+    activePlanets: natalPlanetFilter?.getActiveSet(),
   });
 
   // Decan overlay (default on)
@@ -1610,6 +1714,7 @@ function renderSRChart(sr) {
     subtitle: `Solar Return\n${dateStr}\n${timeStr}  ${sr.location?.timezone || ''}\n${locName}`,
     showAspects: true,
     chartType: 'solar',
+    activePlanets: srPlanetFilter?.getActiveSet(),
   });
 }
 
@@ -1927,6 +2032,7 @@ function renderLRChart(lr) {
     subtitle: `Lunar Return\n${dateStr}\n${timeStr}  ${lr.location?.timezone || ''}\n${locName}`,
     showAspects: true,
     chartType: 'lunar',
+    activePlanets: lrPlanetFilter?.getActiveSet(),
   });
 }
 
@@ -2320,6 +2426,7 @@ function renderTRChart(tr) {
   drawBiWheel(canvas, currentChart, tr, {
     title: 'Transit Bi-Wheel',
     subtitle: `Natal: ${natalDate}\nTransit: ${dateStr} ${timeStr}\n${tr.location.name || tr.location.timezone}`,
+    activePlanets: transitPlanetFilter?.getActiveSet(),
   });
 }
 
@@ -2587,6 +2694,7 @@ function renderPRChart(pr) {
   drawBiWheel(canvas, currentChart, pr, {
     title: 'Progres Bi-Wheel',
     subtitle: `Natal: ${natalDate}\nProgres: ${targetStr} (${Math.floor(pr.elapsedYears)} yaş)\n${methodName}`,
+    activePlanets: progressionPlanetFilter?.getActiveSet(),
   });
 }
 
@@ -3004,6 +3112,7 @@ function renderSYChart() {
     subtitle: `İç — ${innerName}: ${syShortDate(inner.birthData)}\n`
       + `Dış — ${outerName}: ${syShortDate(outer.birthData)}\n`
       + `${wheel.crossAspects.length} çapraz aspekt`,
+    activePlanets: synastryPlanetFilter?.getActiveSet(),
   });
 
   elements.syLegendInner.textContent = `İç halka: ${innerName}`;

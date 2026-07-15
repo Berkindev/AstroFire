@@ -153,6 +153,8 @@
               <input type="checkbox" id="decanOverlayCheck">
               <span>Dekanları Göster</span>
             </label>
+            <!-- Gezegen açı filtresi (ders modu) -->
+            <div class="planet-filter" id="natalPlanetFilter"></div>
           </div>
 
           <div id="tab-planets" class="tab-content na-tab-content">
@@ -290,6 +292,7 @@
               <div class="chart-canvas-container">
                 <canvas id="lrChartCanvas" width="1200" height="1200"></canvas>
               </div>
+              <div class="planet-filter" id="lrPlanetFilter"></div>
             </div>
             <div id="tab-lr-planets" class="tab-content lr-tab-content">
               <div id="lrPlanetsTable"></div>
@@ -426,6 +429,7 @@
               <div class="chart-canvas-container">
                 <canvas id="trChartCanvas" width="1800" height="1800"></canvas>
               </div>
+              <div class="planet-filter" id="transitPlanetFilter"></div>
             </div>
             <div id="tab-tr-planets" class="tab-content tr-tab-content">
               <div id="trPlanetsTable"></div>
@@ -509,6 +513,7 @@
               <div class="chart-canvas-container">
                 <canvas id="prChartCanvas" width="1800" height="1800"></canvas>
               </div>
+              <div class="planet-filter" id="progressionPlanetFilter"></div>
             </div>
             <div id="tab-pr-planets" class="tab-content pr-tab-content">
               <div id="prPlanetsTable"></div>
@@ -613,6 +618,7 @@
               <div class="chart-canvas-container">
                 <canvas id="srChartCanvas" width="1200" height="1200"></canvas>
               </div>
+              <div class="planet-filter" id="srPlanetFilter"></div>
             </div>
             <div id="tab-sr-planets" class="tab-content sr-tab-content">
               <div id="srPlanetsTable"></div>
@@ -756,6 +762,7 @@
               <div class="chart-canvas-container">
                 <canvas id="syChartCanvas" width="1800" height="1800"></canvas>
               </div>
+              <div class="planet-filter" id="synastryPlanetFilter"></div>
               <p class="sy-legend">
                 <span class="sy-legend-inner" id="syLegendInner">İç halka: Kişi A</span>
                 <span class="sy-legend-outer" id="syLegendOuter">Dış halka: Kişi B</span>

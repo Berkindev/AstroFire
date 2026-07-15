@@ -625,16 +625,25 @@ function drawAspectGlyph(ctx, x, y, kind, color, size) {
   ctx.restore();
 }
 
-function drawAspects(ctx, cx, cy, planets, aspects, R, ascLon, partOfFortune) {
+/**
+ * @param {Set<string>|null} activeSet - Görünür gezegen adları. null → hepsi.
+ *   Bir aspekt çizilir eğer EN AZ BİR ucu bu sette (ders modu: tek gezegen
+ *   seçip onun bütün açılarını görmek için).
+ */
+function drawAspects(ctx, cx, cy, planets, aspects, R, ascLon, partOfFortune, activeSet = null) {
   if (!aspects?.length) return;
 
   const lonOf = {};
   for (const p of planets) lonOf[p.name] = p.longitude;
   if (partOfFortune) lonOf[partOfFortune.name] = partOfFortune.longitude;
 
+  const visible = (asp) => !activeSet
+    || activeSet.has(asp.planet1?.name) || activeSet.has(asp.planet2?.name);
+
   const glyphSize = R.R * 0.026;
 
   for (const aspect of aspects) {
+    if (!visible(aspect)) continue;
     const style = ASPECT_STYLE[aspect.angle];
     if (!style) continue;
 
@@ -657,6 +666,7 @@ function drawAspects(ctx, cx, cy, planets, aspects, R, ascLon, partOfFortune) {
 
   // Semboller çizgilerin ÜSTÜNE — arka planları temizlenerek
   for (const aspect of aspects) {
+    if (!visible(aspect)) continue;
     const style = ASPECT_STYLE[aspect.angle];
     if (!style) continue;
 
@@ -778,7 +788,7 @@ export function drawChartWheel(canvas, chartData, options = {}) {
   circle(ctx, cx, cy, R.innerR, 1.4);
 
   if (options.showAspects !== false && chartData.aspects) {
-    drawAspects(ctx, cx, cy, chartData.planets, chartData.aspects, R, ascLon, chartData.partOfFortune);
+    drawAspects(ctx, cx, cy, chartData.planets, chartData.aspects, R, ascLon, chartData.partOfFortune, options.activePlanets || null);
   }
 
   drawPlanets(ctx, cx, cy, chartData.planets, R, ascLon, chartData.partOfFortune);
@@ -1010,7 +1020,7 @@ function drawOuterFrame(ctx, cx, cy, houses, R, ascLon) {
   ctx.restore();
 }
 
-function drawBiWheelAspects(ctx, cx, cy, outerPlanets, innerPlanets, aspects, R, ascLon) {
+function drawBiWheelAspects(ctx, cx, cy, outerPlanets, innerPlanets, aspects, R, ascLon, activeSet = null) {
   if (!aspects?.length) return;
 
   const outerLon = {};
@@ -1019,6 +1029,10 @@ function drawBiWheelAspects(ctx, cx, cy, outerPlanets, innerPlanets, aspects, R,
   for (const p of innerPlanets) innerLon[p.name] = p.longitude;
 
   for (const aspect of aspects) {
+    // Ders filtresi: aspektin en az bir ucu seçili gezegen olmalı.
+    if (activeSet && !activeSet.has(aspect.transitPlanet?.name)
+      && !activeSet.has(aspect.natalPlanet?.name)) continue;
+
     const style = ASPECT_STYLE[aspect.angle];
     if (!style) continue;
 
@@ -1066,7 +1080,7 @@ export function drawBiWheel(canvas, natalData, transitData, options = {}) {
 
   if (transitData.transitNatalAspects) {
     drawBiWheelAspects(ctx, cx, cy, transitData.planets, natalData.planets,
-      transitData.transitNatalAspects, R, ascLon);
+      transitData.transitNatalAspects, R, ascLon, options.activePlanets || null);
   }
 
   drawInnerPlanets(ctx, cx, cy, natalData.planets, R, ascLon, natalData.partOfFortune);

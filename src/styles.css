@@ -2679,3 +2679,120 @@ input::placeholder {
   line-height: 1.5;
   max-width: 52ch;
 }
+
+/* ============================================
+   GEZEGEN AÇI FİLTRESİ (ders modu)
+   ============================================ */
+.planet-filter {
+  margin-top: 1rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.pf-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.7rem 1rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.pf-header:hover {
+  background: var(--bg-hover);
+}
+
+.pf-title {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+
+.pf-hint {
+  color: var(--text-muted);
+  font-size: 0.78rem;
+}
+
+.pf-caret {
+  margin-left: auto;
+  color: var(--text-muted);
+  transition: transform 0.2s;
+}
+
+.planet-filter.pf-open .pf-caret {
+  transform: rotate(180deg);
+}
+
+.pf-body {
+  display: none;
+  padding: 0 1rem 1rem;
+}
+
+.planet-filter.pf-open .pf-body {
+  display: block;
+}
+
+.pf-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.pf-actions button {
+  padding: 0.35rem 0.8rem;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: all 0.15s;
+}
+
+.pf-actions button:hover {
+  border-color: var(--accent-primary);
+  color: var(--text-primary);
+}
+
+.pf-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 0.4rem;
+}
+
+.pf-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.6rem;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.pf-item:hover {
+  border-color: var(--border-accent);
+}
+
+.pf-item input {
+  cursor: pointer;
+  accent-color: var(--accent-primary);
+}
+
+.pf-sym {
+  font-size: 1.05rem;
+  color: var(--text-primary);
+}
+
+.pf-name {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}
+
+.pf-item:has(input:not(:checked)) {
+  opacity: 0.5;
+}
