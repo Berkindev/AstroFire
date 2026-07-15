@@ -345,7 +345,7 @@ function drawSignRing(ctx, cx, cy, R, ascLon) {
   // Boyut, bandın YÜKSEKLİĞİNE (outerR − signInR = 0.10R) göre ayarlı: glif
   // döndürülünce uzun kenarı teğetsel uzanır, kısa kenarı radyal — 0.095R'de
   // banda sığar, taşmaz. (0.135R banttan taşıyordu.)
-  const glyphSize = R.R * 0.095;
+  const glyphSize = R.R * 0.082;
   for (let s = 0; s < 12; s++) {
     const a = lonToAngle(s * 30 + 15, ascLon);
     const p = polarToXY(cx, cy, R.signGlyphR, a);
@@ -530,22 +530,20 @@ function drawPlanets(ctx, cx, cy, planets, R, ascLon, partOfFortune) {
     const signIdx = Math.floor(((p.longitude % 360) + 360) % 360 / 30);
     const sign = SIGNS[signIdx];
 
-    // Yığındaki her öğeyi çizmeden önce arkasını beyaza boya (halo). Böylece
-    // gezegenler ev/aspekt çizgilerinin ÜSTÜNDE net görünür — Satürn bir ev
-    // cuspunun tam üstünde olsa bile çizgi glifin içinden geçmez.
-    const halo = (x, y, rad) => {
-      ctx.save();
-      ctx.fillStyle = '#FFFFFF';
-      ctx.beginPath();
-      ctx.arc(x, y, rad, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
-    };
-
+    // Yalnızca gezegen GLİFİNİN arkasına dar bir beyaz maske: glif bir ev/aspekt
+    // çizgisinin üstündeyse (ör. Satürn 6. ev girişinde) çizgi glifin içinden
+    // geçmez, gezegen net görünür. Yazılara halo YOK — geniş beyaz daireler
+    // alttaki aspekt çizgilerini siliyordu ("16°" derecesinin altındaki çizgiler
+    // yok olmuştu); yazılar zaten küçük, çizgi arkalarından geçse de okunur.
     let r = glyphR;
 
     const gp = polarToXY(cx, cy, r, a);
-    halo(gp.x, gp.y, glyphSize * 0.62);
+    ctx.save();
+    ctx.fillStyle = '#FFFFFF';
+    ctx.beginPath();
+    ctx.arc(gp.x, gp.y, glyphSize * 0.5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
     drawPlanet(ctx, p.name, gp.x, gp.y, glyphSize, color);
 
     ctx.save();
@@ -555,27 +553,27 @@ function drawPlanets(ctx, cx, cy, planets, R, ascLon, partOfFortune) {
 
     r -= rowGap;
     const dp = polarToXY(cx, cy, r, a);
-    halo(dp.x, dp.y, font * 0.62);
     ctx.fillStyle = LINE_COLOR;
     ctx.fillText(`${pos.deg}°`, dp.x, dp.y);
 
     r -= rowGap;
     const sp = polarToXY(cx, cy, r, a);
-    halo(sp.x, sp.y, signSize * 0.60);
+    ctx.restore();
     drawSign(ctx, signIdx, sp.x, sp.y, signSize, ELEMENT_COLOR[sign.element]);
 
+    ctx.save();
+    ctx.font = `${font}px Arial, sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
     r -= rowGap;
     const mp = polarToXY(cx, cy, r, a);
-    halo(mp.x, mp.y, font * 0.62);
     ctx.fillStyle = LINE_COLOR;
     ctx.fillText(`${pos.min}'`, mp.x, mp.y);
-
     ctx.restore();
 
     if (p.isRetrograde) {
       r -= rowGap;
       const rp = polarToXY(cx, cy, r, a);
-      halo(rp.x, rp.y, font * 0.55);
       drawRx(ctx, rp.x, rp.y, font * 0.78);
     }
   }
@@ -719,6 +717,42 @@ function drawInfoBlock(ctx, options, R) {
   ctx.restore();
 }
 
+/**
+ * ASC / DESC / MC / IC etiketlerini çarkın DIŞ tarafına yazar (dış çemberin
+ * hemen ötesine). Yalnızca dört ana açı; kırmızı, küçük, radyal.
+ */
+function drawAngleLabels(ctx, cx, cy, houses, R, ascLon) {
+  if (!houses) return;
+
+  const angles = [
+    ['ASC', houses.ascendant],
+    ['DESC', houses.descendant ?? (houses.ascendant + 180)],
+    ['MC', houses.mc],
+    ['IC', houses.ic ?? (houses.mc + 180)],
+  ];
+
+  const labelR = R.outerR + R.R * 0.045;
+  const fontSize = Math.max(9, R.R * 0.034);
+
+  ctx.save();
+  ctx.font = `bold ${fontSize}px Arial, sans-serif`;
+  ctx.fillStyle = ANGLE_COLOR;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+
+  for (const [name, lon] of angles) {
+    if (lon == null) continue;
+    const a = lonToAngle(lon, ascLon);
+    const p = polarToXY(cx, cy, labelR, a);
+    ctx.save();
+    ctx.translate(p.x, p.y);
+    ctx.rotate(textRotation(a));
+    ctx.fillText(name, 0, 0);
+    ctx.restore();
+  }
+  ctx.restore();
+}
+
 // ============================================
 // TEKİL ÇARK
 // ============================================
@@ -740,6 +774,7 @@ export function drawChartWheel(canvas, chartData, options = {}) {
 
   drawSignRing(ctx, cx, cy, R, ascLon);
   drawHouseBand(ctx, cx, cy, chartData.houses, R, ascLon);
+  drawAngleLabels(ctx, cx, cy, chartData.houses, R, ascLon);
   circle(ctx, cx, cy, R.innerR, 1.4);
 
   if (options.showAspects !== false && chartData.aspects) {
@@ -816,17 +851,21 @@ function drawBiSignRing(ctx, cx, cy, R, ascLon) {
   ctx.restore();
 }
 
-/** Dış haritanın gezegenleri — en dış halkada, yine SolarFire yığını. */
+/**
+ * Dış haritanın gezegenleri. Yığın DIŞA doğru açılır: glif burç halkasının
+ * hemen dışında (gerçek pozisyon işaretine yakın), derece/burç/dakika ondan
+ * DIŞARI doğru. Böylece glif ile çizgisi arasında boşluk kalmaz.
+ */
 function drawOuterPlanets(ctx, cx, cy, planets, R, ascLon) {
   if (!planets?.length) return;
 
   const items = planets.map(p => ({ planet: p, angle: lonToAngle(p.longitude, ascLon) }));
 
-  const glyphR = R.outerGlyphR;
+  const glyphR = R.signOutR + R.R * 0.045;   // burç halkasının hemen dışı
   const glyphSize = R.R * 0.040;
   const signSize = R.R * 0.026;
   const font = Math.max(7, R.R * 0.024);
-  const rowGap = R.R * 0.028;
+  const rowGap = R.R * 0.030;
 
   const placed = avoidCollisions(items, glyphR, glyphSize * 1.6);
 
@@ -835,10 +874,10 @@ function drawOuterPlanets(ctx, cx, cy, planets, R, ascLon) {
     const a = item.displayAngle;
     const color = PLANET_COLOR[p.name] || '#000000';
 
-    // Gerçek boylam işareti — burç halkasının dışına
+    // Gerçek boylam işareti — glifin hemen içinde, burç halkasına değecek
     const trueA = lonToAngle(p.longitude, ascLon);
     const t1 = polarToXY(cx, cy, R.signOutR, trueA);
-    const t2 = polarToXY(cx, cy, R.signOutR + R.R * 0.022, trueA);
+    const t2 = polarToXY(cx, cy, R.signOutR + R.R * 0.030, trueA);
     ctx.save();
     ctx.strokeStyle = color;
     ctx.lineWidth = 2;
@@ -861,21 +900,21 @@ function drawOuterPlanets(ctx, cx, cy, planets, R, ascLon) {
     ctx.textBaseline = 'middle';
     ctx.fillStyle = LINE_COLOR;
 
-    r -= rowGap;
+    r += rowGap;
     const dp = polarToXY(cx, cy, r, a);
     ctx.fillText(`${pos.deg}°`, dp.x, dp.y);
 
-    r -= rowGap;
+    r += rowGap;
     const sp = polarToXY(cx, cy, r, a);
     drawSign(ctx, signIdx, sp.x, sp.y, signSize, ELEMENT_COLOR[SIGNS[signIdx].element]);
 
-    r -= rowGap;
+    r += rowGap;
     const mp = polarToXY(cx, cy, r, a);
     ctx.fillText(`${pos.min}'`, mp.x, mp.y);
     ctx.restore();
 
     if (p.isRetrograde) {
-      r -= rowGap;
+      r += rowGap;
       const rp = polarToXY(cx, cy, r, a);
       drawRx(ctx, rp.x, rp.y, font * 0.78);
     }
@@ -993,7 +1032,6 @@ function drawBiWheelAspects(ctx, cx, cy, outerPlanets, innerPlanets, aspects, R,
     ctx.save();
     ctx.strokeStyle = style.color;
     ctx.lineWidth = Math.max(1, style.width * R.R * 0.85);
-    ctx.setLineDash([5, 3]);
     ctx.beginPath();
     ctx.moveTo(p1.x, p1.y);
     ctx.lineTo(p2.x, p2.y);
@@ -1022,9 +1060,9 @@ export function drawBiWheel(canvas, natalData, transitData, options = {}) {
   drawHouseBand(ctx, cx, cy, natalData.houses, R, ascLon);
   circle(ctx, cx, cy, R.innerR, 1.4);
 
-  if (transitData.houses?.cusps) {
-    drawOuterFrame(ctx, cx, cy, transitData.houses, R, ascLon);
-  }
+  // Not: dış haritanın (progres) kendi ev çerçevesini ÇİZMİYORUZ. Progres'te
+  // vardı ama transit'te yok; tutarlılık için her bi-wheel transit gibi görünür.
+  // (drawOuterFrame korunuyor ama artık çağrılmıyor.)
 
   if (transitData.transitNatalAspects) {
     drawBiWheelAspects(ctx, cx, cy, transitData.planets, natalData.planets,
@@ -1081,13 +1119,24 @@ export function drawSevenYearOverlay(canvas, chartData, sevensData, options = {}
       while (diff < -Math.PI) diff += 2 * Math.PI;
       const midAngle = startAngle + diff / 2;
 
+      // Yaş etiketi halkaya HİZALI (radyal), yatay değil — diğer tüm etiketler
+      // gibi. Arkasına beyaz halo konur ki alttaki aspekt/cusp çizgilerinin
+      // üstünde net görünsün.
       const pos = polarToXY(cx, cy, R.houseInR - R.R * 0.03, midAngle);
+      const label = `${year.age}-${year.age + 1}`;
       ctx.save();
+      ctx.translate(pos.x, pos.y);
+      ctx.rotate(textRotation(midAngle));
       ctx.font = `bold ${Math.max(8, R.R * 0.026)}px Arial, sans-serif`;
-      ctx.fillStyle = AGE_COLOR[element] || '#666';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText(`${year.age}-${year.age + 1}`, pos.x, pos.y);
+
+      const w = ctx.measureText(label).width;
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillRect(-w / 2 - 1, -R.R * 0.017, w + 2, R.R * 0.034);
+
+      ctx.fillStyle = AGE_COLOR[element] || '#666';
+      ctx.fillText(label, 0, 0);
       ctx.restore();
     }
   }
