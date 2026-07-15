@@ -36,6 +36,20 @@
         <button class="main-tab" data-main-tab="analysis" style="display:none;">📊 Analiz</button>
       </div>
 
+      <!-- Kayıtlı Haritalar (localStorage) -->
+      <section class="panel memory-panel" id="memoryPanel" style="display:none;">
+        <div class="memory-header" id="memoryHeader">
+          <span class="memory-title"><span class="panel-icon">📁</span> Kayıtlı Haritalar</span>
+          <div class="memory-header-actions">
+            <button type="button" id="saveChartBtn" class="btn-save" disabled>
+              <span class="btn-icon">💾</span> Bu haritayı kaydet
+            </button>
+            <span class="toggle-icon" id="memoryToggleIcon">▼</span>
+          </div>
+        </div>
+        <div class="memory-body" id="memoryBody"></div>
+      </section>
+
       <!-- Input Panel (toggle edilebilir) -->
       <section class="panel input-panel">
         <div class="form-toggle" id="formToggle">

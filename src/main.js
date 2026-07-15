@@ -233,6 +233,7 @@ const elements = {
   syDavisonCanvas: $('syDavisonCanvas'),
   syDavisonPlanetsTable: $('syDavisonPlanetsTable'),
   syDavisonAspectsTable: $('syDavisonAspectsTable'),
+  saveChartBtn: $('saveChartBtn'),
 };
 
 // ============================================
@@ -299,6 +300,16 @@ function setupEventListeners() {
 
   // Temizle butonu
   elements.clearFormBtn.addEventListener('click', handleClearForm);
+
+  // Harita hafızası: Kaydet butonu + panel aç/kapa
+  $('saveChartBtn')?.addEventListener('click', (e) => {
+    e.stopPropagation();   // header toggle'ını tetikleme
+    handleSaveChart();
+  });
+  $('memoryHeader')?.addEventListener('click', () => {
+    $('memoryPanel')?.classList.toggle('mem-open');
+  });
+  renderMemoryPanel();
 
   // Hızlı şehir seçim butonları
   document.querySelectorAll('.quick-city-btn').forEach(btn => {
@@ -514,7 +525,8 @@ function handleClearForm() {
   // Form alanlarını temizle
   elements.birthForm.reset();
   elements.citySearch.value = '';
-  
+  elements.saveChartBtn.disabled = true;
+
   // Seçili şehri sıfırla
   selectedCity = null;
   elements.locationInfo.classList.add('hidden');
@@ -812,6 +824,168 @@ let transitPlanetFilter = null;
 let progressionPlanetFilter = null;
 let synastryPlanetFilter = null;
 
+// ============================================
+// HARİTA HAFIZASI (localStorage)
+// ============================================
+// İki liste: manuel "Kaydet" ile isimlenen kalıcı haritalar ve her hesaplamada
+// otomatik büyüyen "son bakılanlar" (en yeni 10). İkisi de forma tek tıkla
+// yüklenir. Tarayıcıda saklanır; sunucu yok.
+
+const MEM_SAVED = 'astrofire_saved';
+const MEM_RECENT = 'astrofire_recent';
+const MEM_RECENT_MAX = 10;
+
+function memRead(key) {
+  try {
+    return JSON.parse(localStorage.getItem(key) || '[]');
+  } catch {
+    return [];
+  }
+}
+
+function memWrite(key, list) {
+  try {
+    localStorage.setItem(key, JSON.stringify(list));
+  } catch (e) {
+    console.warn('localStorage yazılamadı:', e);
+  }
+}
+
+/** Form + selectedCity'den bir kayıt objesi kurar (yoksa null). */
+function chartToEntry(name) {
+  if (!selectedCity) return null;
+  const num = (id) => parseInt($(id).value);
+  const day = num('birthDay');
+  const month = num('birthMonth');
+  const year = num('birthYear');
+  if ([day, month, year].some(Number.isNaN)) return null;
+
+  return {
+    name: name || '',
+    day, month, year,
+    hour: num('birthHour') || 0,
+    minute: num('birthMinute') || 0,
+    timezone: selectedCity.timezone,
+    lat: selectedCity.lat,
+    lng: selectedCity.lng,
+    cityName: formatCityName(selectedCity),
+    ts: Date.now(),
+  };
+}
+
+/** Her başarılı hesaplamadan sonra çağrılır: otomatik son-bakılanlar. */
+function addRecentChart() {
+  const entry = chartToEntry('');
+  if (!entry) return;
+
+  const key = (e) => `${e.day}.${e.month}.${e.year} ${e.hour}:${e.minute} ${e.cityName}`;
+  let recent = memRead(MEM_RECENT).filter(e => key(e) !== key(entry));
+  recent.unshift(entry);
+  recent = recent.slice(0, MEM_RECENT_MAX);
+  memWrite(MEM_RECENT, recent);
+  renderMemoryPanel();
+}
+
+/** "Kaydet" butonu — isim sorar, kalıcı listeye ekler. */
+function handleSaveChart() {
+  const entry = chartToEntry('');
+  if (!entry) {
+    alert('Önce bir harita hesaplayın.');
+    return;
+  }
+  const name = (prompt('Harita adı (ör. Serra):', entry.cityName.split(',')[0]) || '').trim();
+  if (!name) return;
+
+  entry.name = name;
+  const saved = memRead(MEM_SAVED).filter(e => e.name !== name);
+  saved.unshift(entry);
+  memWrite(MEM_SAVED, saved);
+  renderMemoryPanel();
+}
+
+/** Kayıtlı bir haritayı forma yükleyip hesaplar. */
+function loadChartEntry(entry) {
+  $('birthDay').value = entry.day;
+  $('birthMonth').value = entry.month;
+  $('birthYear').value = entry.year;
+  $('birthHour').value = entry.hour;
+  $('birthMinute').value = entry.minute;
+
+  // selectedCity'yi kayıttan kur — şehir aramaya gerek yok
+  selectedCity = {
+    name: entry.cityName,
+    lat: entry.lat,
+    lng: entry.lng,
+    timezone: entry.timezone,
+  };
+  elements.citySearch.value = entry.cityName;
+  elements.locationInfo.classList.remove('hidden');
+  elements.coordDisplay.textContent = formatCoordinates(entry.lat, entry.lng);
+  elements.timezoneDisplay.textContent = entry.timezone;
+  updateTimezoneDisplay();
+
+  elements.calculateBtn.disabled = false;
+  handleCalculate();
+}
+
+function deleteSaved(name) {
+  memWrite(MEM_SAVED, memRead(MEM_SAVED).filter(e => e.name !== name));
+  renderMemoryPanel();
+}
+
+function renderMemoryPanel() {
+  const panel = $('memoryPanel');
+  const body = $('memoryBody');
+  if (!panel || !body) return;
+
+  const saved = memRead(MEM_SAVED);
+  const recent = memRead(MEM_RECENT);
+
+  // Panel görünür: kayıt varsa VEYA hesaplanmış bir harita varsa (kaydedilebilir).
+  if (!saved.length && !recent.length && !currentChart) {
+    panel.style.display = 'none';
+    return;
+  }
+  panel.style.display = '';
+
+  const dateOf = (e) => `${e.day} ${MONTH_SHORT[e.month]} ${e.year}, ${String(e.hour).padStart(2, '0')}:${String(e.minute).padStart(2, '0')}`;
+
+  const savedHtml = saved.map((e, i) => `
+    <div class="mem-item mem-saved" data-list="saved" data-idx="${i}">
+      <span class="mem-star">★</span>
+      <span class="mem-name">${e.name}</span>
+      <span class="mem-meta">${dateOf(e)} — ${e.cityName}</span>
+      <button type="button" class="mem-del" data-del="${e.name}" title="Sil">×</button>
+    </div>
+  `).join('');
+
+  const recentHtml = recent.map((e, i) => `
+    <div class="mem-item mem-recent" data-list="recent" data-idx="${i}">
+      <span class="mem-clock">🕐</span>
+      <span class="mem-meta">${dateOf(e)} — ${e.cityName}</span>
+    </div>
+  `).join('');
+
+  body.innerHTML = `
+    ${saved.length ? `<div class="mem-section-title">Kayıtlılar</div><div class="mem-list">${savedHtml}</div>` : ''}
+    ${recent.length ? `<div class="mem-section-title">Son Bakılanlar</div><div class="mem-list">${recentHtml}</div>` : ''}
+  `;
+
+  body.querySelectorAll('.mem-item').forEach(el => {
+    el.addEventListener('click', (ev) => {
+      if (ev.target.classList.contains('mem-del')) return;
+      const list = el.dataset.list === 'saved' ? saved : recent;
+      loadChartEntry(list[parseInt(el.dataset.idx)]);
+    });
+  });
+  body.querySelectorAll('.mem-del').forEach(btn => {
+    btn.addEventListener('click', (ev) => {
+      ev.stopPropagation();
+      deleteSaved(btn.dataset.del);
+    });
+  });
+}
+
 function updateTimezoneDisplay() {
   if (!selectedCity) return;
   
@@ -836,8 +1010,8 @@ function updateTimezoneDisplay() {
 // CHART CALCULATION
 // ============================================
 async function handleCalculate(e) {
-  e.preventDefault();
-  
+  e?.preventDefault();   // kayıttan yüklerken event olmadan da çağrılabilir
+
   if (!selectedCity) {
     alert('Lütfen bir doğum yeri seçin.');
     return;
@@ -873,6 +1047,11 @@ async function handleCalculate(e) {
     showProgressionPanel();
     // Sinastri'yi hazırla (Kişi A = bu harita)
     showSynastryPanel();
+
+    // Hafıza: son bakılanlara ekle + Kaydet butonunu aç (panel de görünür olur)
+    addRecentChart();
+    elements.saveChartBtn.disabled = false;
+    renderMemoryPanel();
 
     // Formu kapat ve sonuçlara scroll
     collapseForm();

@@ -2796,3 +2796,155 @@ input::placeholder {
 .pf-item:has(input:not(:checked)) {
   opacity: 0.5;
 }
+
+/* ============================================
+   HARİTA HAFIZASI (localStorage)
+   ============================================ */
+.memory-panel {
+  padding: 0;
+  overflow: hidden;
+}
+
+.memory-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.memory-header:hover {
+  background: var(--bg-hover);
+}
+
+.memory-title {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.memory-body {
+  display: none;
+  padding: 0 1.5rem 1.25rem;
+}
+
+.memory-panel.mem-open .memory-body {
+  display: block;
+}
+
+.memory-panel.mem-open #memoryToggleIcon {
+  transform: rotate(180deg);
+}
+
+#memoryToggleIcon {
+  transition: transform 0.2s;
+}
+
+.mem-section-title {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin: 0.75rem 0 0.5rem;
+}
+
+.mem-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.mem-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.55rem 0.8rem;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.mem-item:hover {
+  border-color: var(--accent-primary);
+  background: var(--bg-hover);
+}
+
+.mem-star {
+  color: #f59e0b;
+}
+
+.mem-clock {
+  font-size: 0.85rem;
+  opacity: 0.7;
+}
+
+.mem-name {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.mem-meta {
+  color: var(--text-secondary);
+  font-size: 0.83rem;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.mem-del {
+  margin-left: auto;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 1.2rem;
+  line-height: 1;
+  transition: all 0.15s;
+}
+
+.mem-del:hover {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+
+/* Kaydet butonu */
+.btn-save {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.85rem 1.25rem;
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  border-radius: var(--radius);
+  color: #f59e0b;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.btn-save:hover:not(:disabled) {
+  background: rgba(245, 158, 11, 0.2);
+  border-color: #f59e0b;
+}
+
+.btn-save:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.memory-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.memory-header-actions .btn-save {
+  padding: 0.5rem 0.9rem;
+  font-size: 0.85rem;
+}
