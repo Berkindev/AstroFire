@@ -298,13 +298,13 @@ export function wheelRadii(size) {
   return {
     R,
     outerR:   R,
-    signInR:  R * 0.90,
-    houseInR: R * 0.84,
+    signInR:  R * 0.875,       // burç bandı biraz genişledi (glife nefes açıyor)
+    houseInR: R * 0.82,
     innerR:   R * 0.55,
-    signGlyphR: R * 0.95,
-    tickOutR: R * 0.925,
-    tickLongOutR: R * 0.94,
-    labelR:   R * 0.872,   // ev numaraları + cusp dereceleri
+    signGlyphR: R * 0.9375,    // genişleyen bandın ortası
+    tickOutR: R * 0.905,
+    tickLongOutR: R * 0.92,
+    labelR:   R * 0.850,       // ev numaraları + cusp dereceleri
   };
 }
 
@@ -345,7 +345,7 @@ function drawSignRing(ctx, cx, cy, R, ascLon) {
   // Boyut, bandın YÜKSEKLİĞİNE (outerR − signInR = 0.10R) göre ayarlı: glif
   // döndürülünce uzun kenarı teğetsel uzanır, kısa kenarı radyal — 0.095R'de
   // banda sığar, taşmaz. (0.135R banttan taşıyordu.)
-  const glyphSize = R.R * 0.082;
+  const glyphSize = R.R * 0.098;
   for (let s = 0; s < 12; s++) {
     const a = lonToAngle(s * 30 + 15, ascLon);
     const p = polarToXY(cx, cy, R.signGlyphR, a);
@@ -787,6 +787,11 @@ export function drawChartWheel(canvas, chartData, options = {}) {
   drawAngleLabels(ctx, cx, cy, chartData.houses, R, ascLon);
   circle(ctx, cx, cy, R.innerR, 1.4);
 
+  // Dekan halkası (varsa) — gezegenlerden ÖNCE ki gezegenler üstte kalsın.
+  if (options.decans) {
+    drawDecanLayer(ctx, cx, cy, options.decans, R, ascLon);
+  }
+
   if (options.showAspects !== false && chartData.aspects) {
     drawAspects(ctx, cx, cy, chartData.planets, chartData.aspects, R, ascLon, chartData.partOfFortune, options.activePlanets || null);
   }
@@ -1156,28 +1161,24 @@ export function drawSevenYearOverlay(canvas, chartData, sevensData, options = {}
   }
 }
 
-export function drawDecanOverlay(canvas, chartData, decanData) {
-  if (!canvas || !chartData || !decanData) return;
-
-  const ctx = canvas.getContext('2d');
-  const size = Math.min(canvas.width, canvas.height);
-  const cx = canvas.width / 2;
-  const cy = canvas.height / 2;
-
-  const R = wheelRadii(size);
-  const ascLon = chartData.houses?.ascendant ?? 0;
-
+/**
+ * Dekan katmanı — GEZEGENLERDEN ÖNCE çizilir (drawChartWheel içinden), böylece
+ * bir gezegen bir dekan sınırındaysa gezegen üstte kalır, dekan sembolü onu
+ * ezmez. Dekan burç sembolleri ev bandının iç kenarında ince bir halka olur.
+ */
+function drawDecanLayer(ctx, cx, cy, decanData, R, ascLon) {
   for (const house of decanData) {
     for (const decan of house.decans) {
       const startAngle = lonToAngle(decan.startLongitude, ascLon);
       const endAngle = lonToAngle(decan.endLongitude, ascLon);
 
+      // Dekan sınır çizgisi (ilk dekan = ev cuspu, atlanır)
       if (decan.index > 0) {
         const p1 = polarToXY(cx, cy, R.houseInR - 2, startAngle);
         const p2 = polarToXY(cx, cy, R.innerR + 2, startAngle);
         ctx.save();
-        ctx.strokeStyle = 'rgba(140, 120, 200, 0.5)';
-        ctx.lineWidth = 1.2;
+        ctx.strokeStyle = 'rgba(140, 120, 200, 0.45)';
+        ctx.lineWidth = 1;
         ctx.setLineDash([5, 4]);
         ctx.beginPath();
         ctx.moveTo(p1.x, p1.y);
@@ -1193,10 +1194,20 @@ export function drawDecanOverlay(canvas, chartData, decanData) {
 
       const signIdx = SIGNS.indexOf(decan.decanSign);
       if (signIdx >= 0) {
-        const p = polarToXY(cx, cy, R.houseInR - R.R * 0.035, midAngle);
-        drawSign(ctx, signIdx, p.x, p.y, R.R * 0.035,
+        const p = polarToXY(cx, cy, R.houseInR - R.R * 0.028, midAngle);
+        drawSign(ctx, signIdx, p.x, p.y, R.R * 0.030,
           ELEMENT_COLOR[decan.decanSign.element]);
       }
     }
   }
+}
+
+/** Geriye uyumlu dış API — artık drawChartWheel options.decans tercih edilir. */
+export function drawDecanOverlay(canvas, chartData, decanData) {
+  if (!canvas || !chartData || !decanData) return;
+  const ctx = canvas.getContext('2d');
+  const size = Math.min(canvas.width, canvas.height);
+  const R = wheelRadii(size);
+  drawDecanLayer(ctx, canvas.width / 2, canvas.height / 2, decanData, R,
+    chartData.houses?.ascendant ?? 0);
 }

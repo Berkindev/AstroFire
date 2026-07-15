@@ -1106,14 +1106,11 @@ function renderNatalChart(chart) {
     showAspects: true,
     chartType: 'natal',
     activePlanets: natalPlanetFilter?.getActiveSet(),
+    // Dekanlar drawChartWheel'in İÇİNDE, gezegenlerden önce çizilir (çakışma önlenir)
+    decans: (elements.decanOverlayCheck && elements.decanOverlayCheck.checked)
+      ? calculateHouseDecans(chart.houses, getAllPlanets(chart))
+      : null,
   });
-
-  // Decan overlay (default on)
-  if (elements.decanOverlayCheck && elements.decanOverlayCheck.checked) {
-    const allPlanets = getAllPlanets(chart);
-    const decanData = calculateHouseDecans(chart.houses, allPlanets);
-    drawDecanOverlay(canvas, chart, decanData);
-  }
 
   // Render chart info panel content if it's already open
   try {
