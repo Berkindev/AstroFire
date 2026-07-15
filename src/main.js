@@ -3635,36 +3635,4 @@ document.querySelectorAll('.main-tab[data-main-tab="analysis"]').forEach(tab => 
   });
 });
 
-// ============================================
-// EASTER EGG — footer kalbi (Kerem ⇄ Damla)
-// ============================================
-// Kalbe tıklayınca footer'daki isim "Kerem" ↔ "Damla" arasında geçer.
-// "Damla"ya dönerken ekranın her yerinde farklı boyutlarda kırmızı kalpler patlar.
-function burstHearts() {
-  const n = 40;
-  for (let i = 0; i < n; i++) {
-    const el = document.createElement('span');
-    el.className = 'heart-particle';
-    el.textContent = '❤️';
-    el.style.left = `${Math.random() * 100}vw`;
-    el.style.top = `${Math.random() * 100}vh`;
-    el.style.fontSize = `${0.8 + Math.random() * 2.6}rem`;   // farklı boyutlar
-    el.style.setProperty('--dx', `${(Math.random() - 0.5) * 60}vw`);
-    el.style.setProperty('--dy', `${(Math.random() - 0.5) * 60}vh`);
-    el.style.setProperty('--rot', `${(Math.random() - 0.5) * 540}deg`);
-    el.style.animationDelay = `${Math.random() * 0.25}s`;
-    el.style.animationDuration = `${1.4 + Math.random() * 1.3}s`;
-    document.body.appendChild(el);
-    el.addEventListener('animationend', () => el.remove());
-  }
-}
-
-$('heartEgg')?.addEventListener('click', () => {
-  const name = $('footerName');
-  if (!name) return;
-  const toDamla = name.textContent.trim() === 'Kerem';
-  name.textContent = toDamla ? 'Damla' : 'Kerem';
-  if (toDamla) burstHearts();
-});
-
 init();
