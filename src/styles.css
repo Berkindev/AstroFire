@@ -214,6 +214,25 @@ body {
   width: 100%;
 }
 
+/* Masaüstünde doğum formu input'ları kompakt: gün/ay/yıl/saat/dakika kısa
+   sayılar, ekranı boydan boya kaplamalarına gerek yok. Şehir kutusu orta
+   genişlik. (Mobilde bu sınır yok — input'lar tam genişlik kalır.) */
+@media (min-width: 769px) {
+  .birth-form .form-row,
+  .sy-form .form-row {
+    justify-content: flex-start;
+  }
+  .birth-form .form-row .form-group,
+  .sy-form .form-row .form-group {
+    flex: 0 0 160px;
+    max-width: 160px;
+  }
+  .birth-form .form-group.full-width,
+  .sy-form .form-group.full-width {
+    max-width: 420px;
+  }
+}
+
 .form-group label {
   font-size: 0.8rem;
   font-weight: 500;
@@ -487,15 +506,16 @@ input::placeholder {
 
 .main-tab {
   flex: 1;
-  padding: 0.75rem 1.25rem;
+  padding: 0.75rem 1rem;
   background: transparent;
   border: none;
   border-radius: var(--radius-sm);
   color: var(--text-secondary);
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
   transition: var(--transition);
+  white-space: nowrap;
 }
 
 .main-tab:hover {
@@ -841,11 +861,28 @@ input::placeholder {
   .main {
     padding: 0.75rem;
   }
-  
+
+  /* Ana sekmeler mobilde tek satır + yatay kaydırma (kesme/kayma yerine).
+     7 sekme dar ekrana sığmadığı için parmakla kaydırılır. */
+  .main-tabs {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .main-tabs::-webkit-scrollbar {
+    display: none;
+  }
+  .main-tab {
+    flex: 0 0 auto;
+    padding: 0.55rem 0.85rem;
+    font-size: 0.9rem;
+  }
+
   .form-row {
     flex-wrap: wrap;
   }
-  
+
   .tabs {
     flex-wrap: wrap;
   }
