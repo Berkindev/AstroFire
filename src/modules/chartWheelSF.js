@@ -342,10 +342,10 @@ function drawSignRing(ctx, cx, cy, R, ascLon) {
   ctx.restore();
 
   // Burç glifleri — halkaya hizalı, element renginde.
-  // 0.17R: referansta burç glifleri geniş (Başak 156×52px @ R=858). Glifler
-  // 0-100 kutusuna normalize olduğu için bu "en uzun kenar" boyutudur; glif
-  // döndürüldüğünde uzun kenar teğetsel yönde uzanır, bant taşmaz.
-  const glyphSize = R.R * 0.135;
+  // Boyut, bandın YÜKSEKLİĞİNE (outerR − signInR = 0.10R) göre ayarlı: glif
+  // döndürülünce uzun kenarı teğetsel uzanır, kısa kenarı radyal — 0.095R'de
+  // banda sığar, taşmaz. (0.135R banttan taşıyordu.)
+  const glyphSize = R.R * 0.095;
   for (let s = 0; s < 12; s++) {
     const a = lonToAngle(s * 30 + 15, ascLon);
     const p = polarToXY(cx, cy, R.signGlyphR, a);
@@ -494,22 +494,26 @@ function drawPlanets(ctx, cx, cy, planets, R, ascLon, partOfFortune) {
   }));
 
   // SolarFire'dan piksel ölçümü: derece/dakika font 0.037R, gezegen glifi 0.065R,
-  // yığın burç glifi 0.042R, satır aralığı ~0.044R. (Önceki değerler bunun
-  // %30-80 üstündeydi; etiketler iri kalıp yoğun kümede çakışıyordu.)
+  // yığın burç glifi 0.042R, satır aralığı ~0.050R.
   const glyphR = R.R * 0.80;
-  const glyphSize = R.R * 0.068;
-  const signSize = R.R * 0.044;
+  const glyphSize = R.R * 0.066;
+  const signSize = R.R * 0.042;
   const font = Math.max(8, R.R * 0.038);
-  const rowGap = R.R * 0.044;
+  const rowGap = R.R * 0.050;
 
-  const placed = avoidCollisions(items, glyphR, glyphSize * 1.55);
+  // Çakışma önlemenin açısal aralığı, etiketin bir satırının açısal genişliği
+  // kadar — daha fazlası gezegeni gerçek derecesinden gereksiz uzaklaştırır.
+  // Böylece yakın gezegenler (ör. Jüpiter ile KAD 16°'de) YAN YANA kalır,
+  // sadece etiketleri okunacak kadar ayrılır.
+  const placed = avoidCollisions(items, glyphR, glyphSize * 1.22);
 
   for (const item of placed) {
     const p = item.planet;
     const a = item.displayAngle;
     const color = PLANET_COLOR[p.name] || '#000000';
 
-    // Gerçek boylamdaki işaret (aspekt çemberi üzerinde)
+    // Gerçek boylamdaki işaret (aspekt çemberi üzerinde). Etiket kaydırılmışsa,
+    // gliften gerçek konuma ince bir kılavuz çizgi çeker (SolarFire de yapar).
     const trueA = lonToAngle(p.longitude, ascLon);
     const t1 = polarToXY(cx, cy, R.innerR, trueA);
     const t2 = polarToXY(cx, cy, R.innerR + R.R * 0.022, trueA);
@@ -522,14 +526,26 @@ function drawPlanets(ctx, cx, cy, planets, R, ascLon, partOfFortune) {
     ctx.stroke();
     ctx.restore();
 
-    // Etiket yığını
     const pos = formatDegMin(p.longitude);
     const signIdx = Math.floor(((p.longitude % 360) + 360) % 360 / 30);
     const sign = SIGNS[signIdx];
 
+    // Yığındaki her öğeyi çizmeden önce arkasını beyaza boya (halo). Böylece
+    // gezegenler ev/aspekt çizgilerinin ÜSTÜNDE net görünür — Satürn bir ev
+    // cuspunun tam üstünde olsa bile çizgi glifin içinden geçmez.
+    const halo = (x, y, rad) => {
+      ctx.save();
+      ctx.fillStyle = '#FFFFFF';
+      ctx.beginPath();
+      ctx.arc(x, y, rad, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    };
+
     let r = glyphR;
 
     const gp = polarToXY(cx, cy, r, a);
+    halo(gp.x, gp.y, glyphSize * 0.62);
     drawPlanet(ctx, p.name, gp.x, gp.y, glyphSize, color);
 
     ctx.save();
@@ -539,15 +555,18 @@ function drawPlanets(ctx, cx, cy, planets, R, ascLon, partOfFortune) {
 
     r -= rowGap;
     const dp = polarToXY(cx, cy, r, a);
+    halo(dp.x, dp.y, font * 0.62);
     ctx.fillStyle = LINE_COLOR;
     ctx.fillText(`${pos.deg}°`, dp.x, dp.y);
 
     r -= rowGap;
     const sp = polarToXY(cx, cy, r, a);
+    halo(sp.x, sp.y, signSize * 0.60);
     drawSign(ctx, signIdx, sp.x, sp.y, signSize, ELEMENT_COLOR[sign.element]);
 
     r -= rowGap;
     const mp = polarToXY(cx, cy, r, a);
+    halo(mp.x, mp.y, font * 0.62);
     ctx.fillStyle = LINE_COLOR;
     ctx.fillText(`${pos.min}'`, mp.x, mp.y);
 
@@ -556,6 +575,7 @@ function drawPlanets(ctx, cx, cy, planets, R, ascLon, partOfFortune) {
     if (p.isRetrograde) {
       r -= rowGap;
       const rp = polarToXY(cx, cy, r, a);
+      halo(rp.x, rp.y, font * 0.55);
       drawRx(ctx, rp.x, rp.y, font * 0.78);
     }
   }
