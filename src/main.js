@@ -963,6 +963,7 @@ function renderMemoryPanel() {
     <div class="mem-item mem-recent" data-list="recent" data-idx="${i}">
       <span class="mem-clock">🕐</span>
       <span class="mem-meta">${dateOf(e)} — ${e.cityName}</span>
+      <button type="button" class="mem-del" data-del-recent="${i}" title="Sil">×</button>
     </div>
   `).join('');
 
@@ -978,10 +979,19 @@ function renderMemoryPanel() {
       loadChartEntry(list[parseInt(el.dataset.idx)]);
     });
   });
-  body.querySelectorAll('.mem-del').forEach(btn => {
+  body.querySelectorAll('[data-del]').forEach(btn => {
     btn.addEventListener('click', (ev) => {
       ev.stopPropagation();
       deleteSaved(btn.dataset.del);
+    });
+  });
+  body.querySelectorAll('[data-del-recent]').forEach(btn => {
+    btn.addEventListener('click', (ev) => {
+      ev.stopPropagation();
+      const list = memRead(MEM_RECENT);
+      list.splice(parseInt(btn.dataset.delRecent), 1);
+      memWrite(MEM_RECENT, list);
+      renderMemoryPanel();
     });
   });
 }
@@ -3571,5 +3581,37 @@ document.querySelectorAll('.main-tab[data-main-tab="analysis"]').forEach(tab => 
     setTimeout(() => showAnalysisPanel(), 50);
   });
 });
+
+// ============================================
+// EASTER EGG — footer kalbi (Damla 💧)
+// ============================================
+// Kalbe tıklayınca ekrana kalpler, damlalar ve "D" harfleri fışkırıp yukarı
+// süzülür; ortada bir an "Damla 💧" belirir.
+function heartBurst() {
+  const glyphs = ['❤️', '💗', '💖', '💓', '💕', '💧', '💦', 'D', 'd'];
+  const n = 26;
+
+  for (let i = 0; i < n; i++) {
+    const el = document.createElement('span');
+    el.className = 'heart-particle';
+    el.textContent = glyphs[Math.floor(Math.random() * glyphs.length)];
+    el.style.left = `${Math.random() * 100}vw`;
+    el.style.fontSize = `${1.1 + Math.random() * 1.6}rem`;
+    el.style.setProperty('--dx', `${(Math.random() - 0.5) * 40}vw`);
+    el.style.setProperty('--rot', `${(Math.random() - 0.5) * 720}deg`);
+    el.style.animationDelay = `${Math.random() * 0.35}s`;
+    el.style.animationDuration = `${1.8 + Math.random() * 1.2}s`;
+    document.body.appendChild(el);
+    el.addEventListener('animationend', () => el.remove());
+  }
+
+  const banner = document.createElement('div');
+  banner.className = 'damla-banner';
+  banner.textContent = 'Damla 💧';
+  document.body.appendChild(banner);
+  banner.addEventListener('animationend', () => banner.remove());
+}
+
+$('heartEgg')?.addEventListener('click', heartBurst);
 
 init();

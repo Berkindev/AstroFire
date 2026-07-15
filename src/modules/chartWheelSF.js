@@ -248,6 +248,16 @@ function textRotation(angle) {
 }
 
 /**
+ * Yazıyı IŞIN boyunca (radyal, merkeze doğru) hizala — "spoke" gibi. Sağ yarıda
+ * ve sol yarıda okuma yönü ters düşmesin diye normalize edilir.
+ */
+function radialRotation(angle) {
+  let r = -angle;               // ışın yönü (canvas y aşağı)
+  if (Math.cos(angle) < 0) r += Math.PI;   // sol yarıda baş aşağı olmasın
+  return r;
+}
+
+/**
  * Üst üste binen gezegenleri açısal olarak ayırır — sıraları asla değişmez.
  * (SolarFire de aynısını yapıyor: Venüs ve Mars 1° arayken bile etiketleri ayrı.)
  */
@@ -345,7 +355,7 @@ function drawSignRing(ctx, cx, cy, R, ascLon) {
   // Boyut, bandın YÜKSEKLİĞİNE (outerR − signInR = 0.10R) göre ayarlı: glif
   // döndürülünce uzun kenarı teğetsel uzanır, kısa kenarı radyal — 0.095R'de
   // banda sığar, taşmaz. (0.135R banttan taşıyordu.)
-  const glyphSize = R.R * 0.098;
+  const glyphSize = R.R * 0.086;
   for (let s = 0; s < 12; s++) {
     const a = lonToAngle(s * 30 + 15, ascLon);
     const p = polarToXY(cx, cy, R.signGlyphR, a);
@@ -413,10 +423,13 @@ function drawHouseBand(ctx, cx, cy, houses, R, ascLon, opts = {}) {
     ctx.stroke();
     ctx.restore();
 
-    // Cusp derecesi: SolarFire derece ile dakikayı cusp çizgisinin İKİ YANINA
-    // ayırır (09° | 35'), ikisi de halkaya hizalı.
+    // Cusp derecesi: SolarFire cusp çizgisinin HEMEN BİR YANINA, derece ile
+    // dakikayı radyal olarak alt alta koyar (derece dışta, dakika içte) — tek
+    // kompakt blok. (Önceden derece ve dakika çizginin iki ayrı yanına
+    // dağılıyordu, dağınık duruyordu.)
     const { deg, min } = formatDegMin(cusp.longitude);
-    const spread = 0.030 * Math.PI;   // radyan cinsinden yanal kaçış
+    const off = 0.022 * Math.PI;   // çizginin bir yanına küçük kayma
+    const pa = a - off;
 
     ctx.save();
     ctx.fillStyle = LINE_COLOR;
@@ -424,9 +437,8 @@ function drawHouseBand(ctx, cx, cy, houses, R, ascLon, opts = {}) {
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
 
-    for (const [txt, offset] of [[`${deg}°`, -spread], [`${min}'`, spread]]) {
-      const pa = a + offset;
-      const p = polarToXY(cx, cy, R.labelR, pa);
+    for (const [txt, rr] of [[`${deg}°`, R.labelR + R.R * 0.024], [`${min}'`, R.labelR - R.R * 0.024]]) {
+      const p = polarToXY(cx, cy, rr, pa);
       ctx.save();
       ctx.translate(p.x, p.y);
       ctx.rotate(textRotation(pa));
@@ -535,15 +547,12 @@ function drawPlanets(ctx, cx, cy, planets, R, ascLon, partOfFortune) {
     // geçmez, gezegen net görünür. Yazılara halo YOK — geniş beyaz daireler
     // alttaki aspekt çizgilerini siliyordu ("16°" derecesinin altındaki çizgiler
     // yok olmuştu); yazılar zaten küçük, çizgi arkalarından geçse de okunur.
+    // Gezegen glifi doğrudan çizilir (halo yok). Gezegenler zaten en son
+    // çizildiği için ev/aspekt çizgilerinin ÜSTÜNDE kalır — beyaz halo etraflarını
+    // siliyor ve "silik" bir görünüm yaratıyordu.
     let r = glyphR;
 
     const gp = polarToXY(cx, cy, r, a);
-    ctx.save();
-    ctx.fillStyle = '#FFFFFF';
-    ctx.beginPath();
-    ctx.arc(gp.x, gp.y, glyphSize * 0.5, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.restore();
     drawPlanet(ctx, p.name, gp.x, gp.y, glyphSize, color);
 
     ctx.save();
@@ -1138,22 +1147,17 @@ export function drawSevenYearOverlay(canvas, chartData, sevensData, options = {}
       while (diff < -Math.PI) diff += 2 * Math.PI;
       const midAngle = startAngle + diff / 2;
 
-      // Yaş etiketi halkaya HİZALI (radyal), yatay değil — diğer tüm etiketler
-      // gibi. Arkasına beyaz halo konur ki alttaki aspekt/cusp çizgilerinin
-      // üstünde net görünsün.
-      const pos = polarToXY(cx, cy, R.houseInR - R.R * 0.03, midAngle);
-      const label = `${year.age}-${year.age + 1}`;
+      // Yaş etiketi RADYAL (ışın boyunca, merkeze doğru) — dar yaş segmentlerine
+      // teğetsel yazı sığmıyordu ("68-69..." çember boyunca üst üste biniyordu).
+      // Tek yaş sayısı yazılır; radyal olduğu için segmente rahat sığar.
+      const pos = polarToXY(cx, cy, R.houseInR - R.R * 0.035, midAngle);
+      const label = `${year.age}`;
       ctx.save();
       ctx.translate(pos.x, pos.y);
-      ctx.rotate(textRotation(midAngle));
-      ctx.font = `bold ${Math.max(8, R.R * 0.026)}px Arial, sans-serif`;
+      ctx.rotate(radialRotation(midAngle));
+      ctx.font = `bold ${Math.max(7, R.R * 0.024)}px Arial, sans-serif`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-
-      const w = ctx.measureText(label).width;
-      ctx.fillStyle = '#FFFFFF';
-      ctx.fillRect(-w / 2 - 1, -R.R * 0.017, w + 2, R.R * 0.034);
-
       ctx.fillStyle = AGE_COLOR[element] || '#666';
       ctx.fillText(label, 0, 0);
       ctx.restore();
