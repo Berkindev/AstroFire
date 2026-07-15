@@ -2986,3 +2986,20 @@ input::placeholder {
 .heart-egg:active {
   transform: scale(0.85);
 }
+
+/* "Damla"ya dönünce ekranın her yerinde patlayan kırmızı kalpler */
+.heart-particle {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  will-change: transform, opacity;
+  animation-name: heartFloat;
+  animation-timing-function: ease-out;
+  animation-fill-mode: forwards;
+}
+
+@keyframes heartFloat {
+  0%   { opacity: 0; transform: translate(0, 0) scale(0.2) rotate(0); }
+  15%  { opacity: 1; }
+  100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(1.4) rotate(var(--rot)); }
+}
