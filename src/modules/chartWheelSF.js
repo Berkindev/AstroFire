@@ -508,11 +508,12 @@ function drawPlanets(ctx, cx, cy, planets, R, ascLon, partOfFortune) {
   const font = Math.max(8, R.R * 0.038);
   const rowGap = R.R * 0.050;
 
-  // Çakışma önlemenin açısal aralığı. Etiket bloğu (glif + derece/burç/dakika)
-  // teğetsel değil radyal ama komşu gezegenlerin blokları yine de yatayda üst
-  // üste biniyordu (kompozitteki Oğlak yığını gibi 6 gezegen dar bir alanda).
-  // Daha geniş aralık onları birbirinden ayırır; hâlâ gerçek dereceye yakın.
-  const placed = avoidCollisions(items, glyphR, glyphSize * 1.55);
+  // Çakışma önlemenin açısal aralığı: gezegenler gerçek derecesine mümkün
+  // olduğunca YAKIN kalsın, sadece glifleri üst üste binmesin. 1.08 ≈ glif
+  // genişliği kadar (glif teğet ~0.066/0.80R). Daha büyük değerler yakın
+  // çiftleri (Chiron 18° / Şans Noktası 19°) aşırı ayırıyor, hatta uç
+  // gezegeni (Plüto) komşu evin içine itiyordu.
+  const placed = avoidCollisions(items, glyphR, glyphSize * 1.08);
 
   for (const item of placed) {
     const p = item.planet;
