@@ -293,9 +293,8 @@ function avoidCollisions(items, radius, minSpacing) {
 
 /** Tüm halka yarıçapları — overlay'ler de bunu kullanır ki hizalar tutsun. */
 export function wheelRadii(size) {
-  // SolarFire çarkı canvas'ın ~%80'ini kaplar (bizde %94'tü) — kenar boşluğu
-  // bilgi bloğuna ve dış etiketlere yer açıyor.
-  const R = size * 0.42;
+  // SolarFire çarkı canvas'ın ~%80'ini kaplar (R/canvas ≈ 0.40, ölçüldü).
+  const R = size * 0.40;
   return {
     R,
     outerR:   R,
@@ -346,7 +345,7 @@ function drawSignRing(ctx, cx, cy, R, ascLon) {
   // 0.17R: referansta burç glifleri geniş (Başak 156×52px @ R=858). Glifler
   // 0-100 kutusuna normalize olduğu için bu "en uzun kenar" boyutudur; glif
   // döndürüldüğünde uzun kenar teğetsel yönde uzanır, bant taşmaz.
-  const glyphSize = R.R * 0.118;
+  const glyphSize = R.R * 0.135;
   for (let s = 0; s < 12; s++) {
     const a = lonToAngle(s * 30 + 15, ascLon);
     const p = polarToXY(cx, cy, R.signGlyphR, a);
@@ -494,15 +493,16 @@ function drawPlanets(ctx, cx, cy, planets, R, ascLon, partOfFortune) {
     angle: lonToAngle(p.longitude, ascLon),
   }));
 
-  // Referanstan ölçüldü (Güneş ışını taraması): glif 0.800R, derece 0.745R,
-  // burç 0.695R, dakika 0.638R → satır aralığı ~0.054R.
+  // SolarFire'dan piksel ölçümü: derece/dakika font 0.037R, gezegen glifi 0.065R,
+  // yığın burç glifi 0.042R, satır aralığı ~0.044R. (Önceki değerler bunun
+  // %30-80 üstündeydi; etiketler iri kalıp yoğun kümede çakışıyordu.)
   const glyphR = R.R * 0.80;
-  const glyphSize = R.R * 0.080;
-  const signSize = R.R * 0.072;
-  const font = Math.max(9, R.R * 0.050);
-  const rowGap = R.R * 0.054;
+  const glyphSize = R.R * 0.068;
+  const signSize = R.R * 0.044;
+  const font = Math.max(8, R.R * 0.038);
+  const rowGap = R.R * 0.044;
 
-  const placed = avoidCollisions(items, glyphR, glyphSize * 1.2);
+  const placed = avoidCollisions(items, glyphR, glyphSize * 1.55);
 
   for (const item of placed) {
     const p = item.planet;
@@ -803,12 +803,12 @@ function drawOuterPlanets(ctx, cx, cy, planets, R, ascLon) {
   const items = planets.map(p => ({ planet: p, angle: lonToAngle(p.longitude, ascLon) }));
 
   const glyphR = R.outerGlyphR;
-  const glyphSize = R.R * 0.044;
-  const signSize = R.R * 0.050;
-  const font = Math.max(8, R.R * 0.030);
-  const rowGap = R.R * 0.030;
+  const glyphSize = R.R * 0.040;
+  const signSize = R.R * 0.026;
+  const font = Math.max(7, R.R * 0.024);
+  const rowGap = R.R * 0.028;
 
-  const placed = avoidCollisions(items, glyphR, glyphSize * 1.7);
+  const placed = avoidCollisions(items, glyphR, glyphSize * 1.6);
 
   for (const item of placed) {
     const p = item.planet;
@@ -872,10 +872,10 @@ function drawInnerPlanets(ctx, cx, cy, planets, R, ascLon, partOfFortune) {
   const items = list.map(p => ({ planet: p, angle: lonToAngle(p.longitude, ascLon) }));
 
   const glyphR = R.innerGlyphR;
-  const glyphSize = R.R * 0.044;
-  const signSize = R.R * 0.050;
-  const font = Math.max(8, R.R * 0.030);
-  const rowGap = R.R * 0.030;
+  const glyphSize = R.R * 0.040;
+  const signSize = R.R * 0.026;
+  const font = Math.max(7, R.R * 0.024);
+  const rowGap = R.R * 0.028;
 
   const placed = avoidCollisions(items, glyphR, glyphSize * 1.7);
 
