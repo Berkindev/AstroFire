@@ -6,3 +6,7 @@ exm
 solardatas
 solarexm
 sr-verification.html
+
+# Doğrulama araçlarının ürettiği geçici çıktılar
+snapshots/
+scratch-shots/

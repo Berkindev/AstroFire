@@ -45,32 +45,11 @@ export function formatLongitude(longitude, includeSeconds = true) {
 }
 
 /**
- * Gezegenin tam pozisyon bilgisini döndürür
- * @param {Object} planet - Gezegen verisi
- * @returns {string} ör: "☉ Güneş  15°♑23'  Ev 10  R"
- */
-export function formatPlanetPosition(planet) {
-  const pos = formatLongitude(planet.longitude);
-  const retro = planet.isRetrograde ? ' R' : '';
-  return `${planet.symbol} ${planet.name}  ${pos.formatted}${retro}  Ev ${planet.house}`;
-}
-
-/**
- * Ev cusp bilgisini formatlar
- * @param {Object} cusp - Ev cusp verisi
- * @returns {string} ör: "Ev 1: 15°♑23'"
- */
-export function formatHouseCusp(cusp) {
-  const pos = formatLongitude(cusp.longitude, false);
-  return `Ev ${String(cusp.house).padStart(2, ' ')}: ${pos.formatted}`;
-}
-
-/**
  * Aspekt bilgisini formatlar
  * @param {Object} aspect
  * @returns {string} ör: "☉ ☌ ☽ (Konjunksiyon, orb: 2°30')"
  */
-export function formatAspect(aspect) {
+function formatAspect(aspect) {
   const orbDeg = Math.floor(aspect.orb);
   const orbMin = Math.floor((aspect.orb - orbDeg) * 60);
   const applying = aspect.isApplying ? 'A' : 'S';

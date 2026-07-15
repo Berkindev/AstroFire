@@ -1,11 +1,34 @@
 /**
- * AstroFire - SolarFire Birebir Chart Wheel Renderer
- * SVG burç sembolleri, renkli arka plansız, shift çizgisiz
+ * AstroFire - SolarFire Birebir Chart Wheel
+ *
+ * Geometri, renkler, glif şekilleri ve etiket düzeni SolarFire referans
+ * haritalarından (solarfire/) ölçülerek çıkarıldı:
+ *
+ *   Halkalar (dış yarıçapın oranı olarak)
+ *     1.00  dış çember
+ *     0.90  burç bandı iç sınırı — tik cetveli burada, dışa doğru
+ *     0.84  ev bandı iç sınırı
+ *     0.55  aspekt çemberi
+ *     Burç glifleri 0.95'te, halkaya HİZALI (döndürülmüş)
+ *     Gezegen etiketleri 0.80'den içeri doğru istiflenir, DİK
+ *
+ *   Renkler: SolarFire 16 renkli VGA paletini kullanıyor
+ *     Element: ateş #FF0000 · toprak #00FF00 · hava #00CCC8 · su #0000FF
+ *     Aspekt : uyumlu #0000FF · sert #FF0000
+ *     Derece/dakika yazıları SİYAH; Rx daima KIRMIZI
+ *
+ * SEMBOLLER SolarFire'ın kendi fontundan DEĞİL, temiz standart vektörlerden gelir:
+ *   Burçlar   → public/Symbols/*.svg (dolgu tabanlı; tablolarda da bunlar kullanılıyor)
+ *   Gezegenler → symbols.js (çizgi tabanlı, Wikimedia "fixed width" ailesi)
+ * SolarFire'ın kendi glifleri referanstan çıkarılıp denendi ama o font elle
+ * çizilmiş/kıvrık bir estetiğe sahip; birebir kopyası haritayı çirkinleştiriyordu.
+ * Yani düzen SolarFire'ın, semboller temiz standart.
  */
 
 import { SIGNS } from './constants.js';
+import { PLANET_SYMBOLS, SYMBOL_BOX, SYMBOL_STROKE } from './symbols.js';
 
-// SVG imports (Vite ?raw)
+// Burç sembolleri — repoda zaten duran temiz SVG'ler (tablolarda da bunlar kullanılıyor)
 import ariesSvg from '../../public/Symbols/aries-symbol-icon.svg?raw';
 import taurusSvg from '../../public/Symbols/taurus-symbol-icon.svg?raw';
 import geminiSvg from '../../public/Symbols/gemini-symbol-icon.svg?raw';
@@ -25,118 +48,180 @@ const SIGN_SVGS = [
 ];
 
 // ============================================
-// ELEMENT COLORS (SVG semboller için — vivid)
+// PALET (SolarFire 16 renk)
 // ============================================
-const ELEMENT_SYMBOL_COLORS = {
-  fire:  '#ff0000',
-  earth: '#00ff00',
-  air:   '#00ccc8',
-  water: '#1b00ff',
+
+const ELEMENT_COLOR = {
+  fire:  '#FF0000',
+  earth: '#00FF00',
+  air:   '#00CCC8',
+  water: '#0000FF',
 };
 
-// ============================================
-// PLANET COLORS (SolarFire tarzı)
-// ============================================
-const PLANET_COLORS = {
-  'Güneş': '#DAA520',
-  'Ay': '#8B7355',
-  'Merkür': '#228B22',
-  'Venüs': '#008B8B',
-  'Mars': '#DC143C',
-  'Jüpiter': '#FF8C00',
-  'Satürn': '#8B6914',
-  'Uranüs': '#2E8B57',
-  'Neptün': '#191970',
-  'Plüton': '#800080',
-  'KAD': '#8B0000',
-  'GAD': '#556B2F',
-  'Lilith': '#4B0082',
-  'Chiron': '#2F4F4F',
-  'Şans Noktası': '#333333',
+/** Gezegen renkleri — referans haritadan piksel örneklemesiyle alındı. */
+const PLANET_COLOR = {
+  'Güneş':        '#808000',
+  'Ay':           '#808000',
+  'Merkür':       '#800080',
+  'Venüs':        '#008080',
+  'Mars':         '#FF0000',
+  'Jüpiter':      '#808080',
+  'Satürn':       '#800000',
+  'Uranüs':       '#0000FF',
+  'Neptün':       '#008080',
+  'Plüton':       '#800000',
+  'KAD':          '#000000',
+  'GAD':          '#000000',
+  'Chiron':       '#008000',
+  'Şans Noktası': '#000000',
 };
 
-// ============================================
-// PLANET SYMBOL SCALE FACTORS (normalize visual size)
-// Some Unicode glyphs are visually much smaller/larger than others
-// ============================================
-const PLANET_SYMBOL_SCALE = {
-  '☉': 1.0,    // Sun — normal
-  '☽': 1.1,    // Moon — slightly small
-  '☿': 1.0,    // Mercury
-  '♀': 1.0,    // Venus
-  '♂': 1.0,    // Mars
-  '♃': 0.85,   // Jupiter — visually large
-  '♄': 0.85,   // Saturn — visually large
-  '♅': 0.85,   // Uranus — visually large
-  '♆': 0.85,   // Neptune — visually large
-  '♇': 0.9,    // Pluto — large
-  '☊': 1.0,    // North Node
-  '⚸': 0.9,    // Lilith
-  '⚷': 0.9,    // Chiron
-  '⊕': 1.0,    // Part of Fortune
+/**
+ * Gezegen adı → [sembol anahtarı, dönüş açısı].
+ * GAD (☋) ayrı bir şekil değil: KAD'ın (☊) 180° döndürülmüş hâli.
+ */
+const PLANET_SYMBOL = {
+  'Güneş':        ['sun', 0],
+  'Ay':           ['moon', 0],
+  'Merkür':       ['mercury', 0],
+  'Venüs':        ['venus', 0],
+  'Mars':         ['mars', 0],
+  'Jüpiter':      ['jupiter', 0],
+  'Satürn':       ['saturn', 0],
+  'Uranüs':       ['uranus', 0],
+  'Neptün':       ['neptune', 0],
+  'Plüton':       ['pluto', 0],
+  'KAD':          ['northnode', 0],
+  'GAD':          ['northnode', Math.PI],
+  'Chiron':       ['chiron', 0],
+  'Şans Noktası': ['fortune', 0],
 };
 
-// ============================================
-// ASPECT STYLES (ince çizgiler)
-// ============================================
-const ASPECT_STYLES = {
-  0:   { color: '#0000CD', width: 1.8, dash: [] },
-  180: { color: '#DC143C', width: 1.5, dash: [] },
-  120: { color: '#0000CD', width: 1.2, dash: [] },
-  90:  { color: '#DC143C', width: 1.2, dash: [] },
-  60:  { color: '#0000CD', width: 0.8, dash: [] },
-  45:  { color: '#FF69B4', width: 0.5, dash: [3, 3] },
-  135: { color: '#FF69B4', width: 0.5, dash: [3, 3] },
-  30:  { color: '#32CD32', width: 0.5, dash: [2, 2] },
-  150: { color: '#32CD32', width: 0.5, dash: [2, 2] },
-  72:  { color: '#9370DB', width: 0.5, dash: [4, 2] },
-  144: { color: '#9370DB', width: 0.5, dash: [4, 2] },
+/**
+ * Aspekt stilleri. SolarFire uyumlu aspektleri MAVİ, sert aspektleri KIRMIZI
+ * çizer (saf #0000FF / #FF0000 — ara ton yok).
+ *
+ * Kalınlıklar referans haritadan ölçüldü: mavi çizgiler belirgin biçimde KALIN
+ * (5-7px @ R=858), kırmızılar İNCE (2-3px). Burada yarıçapın oranı olarak
+ * tutuluyor ki her canvas boyutunda aynı görünsün.
+ */
+const ASPECT_STYLE = {
+  0:   { color: '#0000FF', width: 0.0055, glyph: 'conjunction' },
+  120: { color: '#0000FF', width: 0.0050, glyph: 'trine' },
+  60:  { color: '#0000FF', width: 0.0026, glyph: 'sextile' },
+  180: { color: '#FF0000', width: 0.0030, glyph: 'opposition' },
+  90:  { color: '#FF0000', width: 0.0024, glyph: 'square' },
 };
 
-const ASPECT_SYMBOLS = {
-  0: '☌', 180: '☍', 120: '△', 90: '□', 60: '⚹',
-  45: '∠', 135: '⚼', 30: '⚺', 150: '⚻', 72: 'Q', 144: 'bQ',
-};
-
+const ANGLE_COLOR = '#FF0000';   // ASC/MC/DSC/IC eksenleri
+const LINE_COLOR = '#000000';
+const OUTER_RING_COLOR = '#7C3AED'; // bi-wheel'de dış haritanın çerçevesi
 
 // ============================================
-// SVG DRAWING HELPER
+// SEMBOL ÇİZİMİ
 // ============================================
+// Path2D nesneleri önbelleklenir — her karede yeniden ayrıştırmak pahalı.
 
-function drawSignSVG(ctx, svgString, x, y, targetSize, color) {
-  const vbMatch = svgString.match(/viewBox="([^"]+)"/);
-  if (!vbMatch) return;
-  const parts = vbMatch[1].split(/\s+/).map(Number);
-  const vbW = parts[2];
-  const vbH = parts[3];
+const signCache = new Map();
+const planetCache = new Map();
 
-  const pathMatches = svgString.matchAll(/<path\s[^>]*d="([^"]+)"/g);
-  const paths = [];
-  for (const m of pathMatches) {
-    paths.push(m[1]);
-  }
-  if (paths.length === 0) return;
+/** Burç SVG'sini bir kez ayrıştır: viewBox + dolgu path'leri. */
+function getSignShape(idx) {
+  let shape = signCache.get(idx);
+  if (shape) return shape;
 
-  const scale = targetSize / Math.max(vbW, vbH);
+  const svg = SIGN_SVGS[idx];
+  const vb = svg.match(/viewBox="([^"]+)"/);
+  const nums = vb ? vb[1].trim().split(/[\s,]+/).map(Number) : [0, 0, 100, 100];
+
+  shape = {
+    w: nums[2],
+    h: nums[3],
+    paths: [...svg.matchAll(/<path[^>]*\sd="([^"]+)"/g)].map(m => new Path2D(m[1])),
+  };
+  signCache.set(idx, shape);
+  return shape;
+}
+
+/** Burç sembolü — DOLGU tabanlı SVG. */
+function drawSign(ctx, idx, x, y, size, color, rotation = 0) {
+  const s = getSignShape(idx);
+  if (!s.paths.length) return;
+
+  const scale = size / Math.max(s.w, s.h);
 
   ctx.save();
-  ctx.translate(x - (vbW * scale) / 2, y - (vbH * scale) / 2);
+  ctx.translate(x, y);
+  if (rotation) ctx.rotate(rotation);
   ctx.scale(scale, scale);
+  ctx.translate(-s.w / 2, -s.h / 2);
   ctx.fillStyle = color;
+  for (const p of s.paths) ctx.fill(p);
+  ctx.restore();
+}
 
-  for (const d of paths) {
-    const path = new Path2D(d);
-    ctx.fill(path);
-  }
+function getPlanetShape(key) {
+  let shape = planetCache.get(key);
+  if (shape !== undefined) return shape;
+
+  const def = PLANET_SYMBOLS[key];
+  shape = def
+    ? {
+      stroke: def.stroke.map(d => new Path2D(d)),
+      fill: (def.fill || []).map(d => new Path2D(d)),
+    }
+    : null;
+  planetCache.set(key, shape);
+  return shape;
+}
+
+/**
+ * Gezegen sembolü — ÇİZGİ tabanlı (Wikimedia "fixed width" ailesi).
+ * Kalınlık sembol birimindedir ve ölçeklemeyle birlikte büyür, yani sembol
+ * her boyutta aynı orantıda ve net görünür.
+ */
+function drawPlanet(ctx, name, x, y, size, color) {
+  const entry = PLANET_SYMBOL[name];
+  if (!entry) return;
+
+  const [key, rotation] = entry;
+  const s = getPlanetShape(key);
+  if (!s) return;
+
+  ctx.save();
+  ctx.translate(x, y);
+  if (rotation) ctx.rotate(rotation);
+  ctx.scale(size / SYMBOL_BOX, size / SYMBOL_BOX);
+  ctx.translate(-SYMBOL_BOX / 2, -SYMBOL_BOX / 2);
+
+  ctx.strokeStyle = color;
+  ctx.fillStyle = color;
+  ctx.lineWidth = SYMBOL_STROKE;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+
+  for (const p of s.stroke) ctx.stroke(p);
+  for (const p of s.fill) ctx.fill(p);
 
   ctx.restore();
 }
 
+/** Retrograd işareti — kırmızı "Rx". */
+function drawRx(ctx, x, y, fontSize) {
+  ctx.save();
+  ctx.font = `bold ${fontSize}px Arial, sans-serif`;
+  ctx.fillStyle = '#FF0000';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('Rx', x, y);
+  ctx.restore();
+}
 
 // ============================================
-// COORDINATE HELPERS
+// GEOMETRİ
 // ============================================
 
+/** Ekliptik boylam → ekran açısı (radyan, matematik konvansiyonu: CCW, +x'ten). */
 function lonToAngle(lon, ascLon) {
   return Math.PI + (lon - ascLon) * Math.PI / 180;
 }
@@ -148,535 +233,542 @@ function polarToXY(cx, cy, r, angle) {
   };
 }
 
-function angleBetween(lon1, lon2) {
-  let diff = lon2 - lon1;
-  while (diff < 0) diff += 360;
-  while (diff >= 360) diff -= 360;
-  return diff;
+/**
+ * Halkaya hizalı çizim için dönüş açısı: glifin "yukarı"sı DIŞA bakar.
+ * (Çıkarım sırasında burç gliflerini tam bu açının tersiyle dikleştirdik.)
+ */
+function ringRotation(angle) {
+  return Math.PI / 2 - angle;
 }
 
+/** Yazıyı halkaya hizala ama baş aşağı düşmesin (alt yarıda 180° çevir). */
+function textRotation(angle) {
+  const r = ringRotation(angle);
+  return Math.sin(angle) < 0 ? r + Math.PI : r;
+}
 
-// ============================================
-// COLLISION AVOIDANCE
-// ============================================
+/**
+ * Yazıyı IŞIN boyunca (radyal, merkeze doğru) hizala — "spoke" gibi. Sağ yarıda
+ * ve sol yarıda okuma yönü ters düşmesin diye normalize edilir.
+ */
+function radialRotation(angle) {
+  let r = -angle;               // ışın yönü (canvas y aşağı)
+  if (Math.cos(angle) < 0) r += Math.PI;   // sol yarıda baş aşağı olmasın
+  return r;
+}
 
-function avoidCollisions(sortedPlanets, cx, cy, radius, minSpacing) {
-  if (sortedPlanets.length <= 1) return sortedPlanets.map(p => ({ ...p, displayAngle: p.angle }));
+/**
+ * Üst üste binen gezegenleri açısal olarak ayırır — sıraları asla değişmez.
+ * (SolarFire de aynısını yapıyor: Venüs ve Mars 1° arayken bile etiketleri ayrı.)
+ */
+function avoidCollisions(items, radius, minSpacing) {
+  if (items.length <= 1) return items.map(p => ({ ...p, displayAngle: p.angle }));
 
   const TWO_PI = Math.PI * 2;
   const minAngle = minSpacing / radius;
-  const n = sortedPlanets.length;
+  const n = items.length;
 
-  // Normalize angles to [0, 2π), sort by angle — order never changes
-  const items = sortedPlanets.map(p => {
-    let a = ((p.angle % TWO_PI) + TWO_PI) % TWO_PI;
-    return { ...p, origAngle: a, displayAngle: a };
+  const arr = items.map(p => {
+    const a = ((p.angle % TWO_PI) + TWO_PI) % TWO_PI;
+    return { ...p, displayAngle: a };
   });
-  items.sort((a, b) => a.origAngle - b.origAngle);
+  arr.sort((a, b) => a.displayAngle - b.displayAngle);
 
-  // Iterative relaxation — forward + backward passes for even distribution
-  for (let pass = 0; pass < 150; pass++) {
+  for (let pass = 0; pass < 200; pass++) {
     let moved = false;
 
-    // Forward pass: pairs (0,1), (1,2), ... (n-2, n-1)
     for (let i = 0; i < n - 1; i++) {
-      const gap = items[i + 1].displayAngle - items[i].displayAngle;
+      const gap = arr[i + 1].displayAngle - arr[i].displayAngle;
       if (gap < minAngle) {
         const push = (minAngle - gap) * 0.3;
-        items[i].displayAngle -= push;
-        items[i + 1].displayAngle += push;
+        arr[i].displayAngle -= push;
+        arr[i + 1].displayAngle += push;
         moved = true;
       }
     }
 
-    // Backward pass: pairs (n-1,n-2), ... (1,0)
-    for (let i = n - 1; i > 0; i--) {
-      const gap = items[i].displayAngle - items[i - 1].displayAngle;
-      if (gap < minAngle) {
-        const push = (minAngle - gap) * 0.3;
-        items[i - 1].displayAngle -= push;
-        items[i].displayAngle += push;
-        moved = true;
-      }
-    }
-
-    // Wrap-around: last → first
-    const wrapGap = (items[0].displayAngle + TWO_PI) - items[n - 1].displayAngle;
-    if (wrapGap < minAngle && wrapGap > 0 && wrapGap < Math.PI) {
-      const push = (minAngle - wrapGap) * 0.3;
-      items[n - 1].displayAngle -= push;
-      items[0].displayAngle += push;
+    const wrap = (arr[0].displayAngle + TWO_PI) - arr[n - 1].displayAngle;
+    if (wrap < minAngle && wrap > 0 && wrap < Math.PI) {
+      const push = (minAngle - wrap) * 0.3;
+      arr[n - 1].displayAngle -= push;
+      arr[0].displayAngle += push;
       moved = true;
     }
 
     if (!moved) break;
   }
 
-  return items;
+  return arr;
 }
 
+/** Tüm halka yarıçapları — overlay'ler de bunu kullanır ki hizalar tutsun. */
+export function wheelRadii(size) {
+  // SolarFire çarkı canvas'ın ~%80'ini kaplar (R/canvas ≈ 0.40, ölçüldü).
+  const R = size * 0.40;
+  return {
+    R,
+    outerR:   R,
+    signInR:  R * 0.875,       // burç bandı biraz genişledi (glife nefes açıyor)
+    houseInR: R * 0.82,
+    innerR:   R * 0.55,
+    signGlyphR: R * 0.9375,    // genişleyen bandın ortası
+    tickOutR: R * 0.905,
+    tickLongOutR: R * 0.92,
+    labelR:   R * 0.850,       // ev numaraları + cusp dereceleri
+  };
+}
 
 // ============================================
-// SIGN RING — Narrow band with SVG symbols + tick ruler inside
+// BURÇ HALKASI + TİK CETVELİ
 // ============================================
 
-function drawSignRing(ctx, cx, cy, radii, ascLon) {
-  const { outerR, signInR } = radii;
-  const bandWidth = outerR - signInR;
-
-  // Outer circle
-  ctx.strokeStyle = '#111111';
-  ctx.lineWidth = 2.0;
+function circle(ctx, cx, cy, r, width = 1.4, color = LINE_COLOR) {
+  ctx.save();
+  ctx.strokeStyle = color;
+  ctx.lineWidth = width;
   ctx.beginPath();
-  ctx.arc(cx, cy, outerR, 0, Math.PI * 2);
+  ctx.arc(cx, cy, r, 0, Math.PI * 2);
   ctx.stroke();
+  ctx.restore();
+}
 
-  // Inner circle of sign ring
-  ctx.lineWidth = 1.5;
-  ctx.beginPath();
-  ctx.arc(cx, cy, signInR, 0, Math.PI * 2);
-  ctx.stroke();
+function drawSignRing(ctx, cx, cy, R, ascLon) {
+  circle(ctx, cx, cy, R.outerR, 1.8);
+  circle(ctx, cx, cy, R.signInR, 1.4);
 
-  // 12 radial separators
-  for (let i = 0; i < 12; i++) {
-    const deg = i * 30;
-    const angle = lonToAngle(deg, ascLon);
-    const p1 = polarToXY(cx, cy, outerR, angle);
-    const p2 = polarToXY(cx, cy, signInR, angle);
-
-    ctx.strokeStyle = '#666666';
-    ctx.lineWidth = 0.8;
+  // Burç sınırları — yalnızca burç bandı içinde
+  ctx.save();
+  ctx.strokeStyle = LINE_COLOR;
+  ctx.lineWidth = 1.0;
+  for (let s = 0; s < 12; s++) {
+    const a = lonToAngle(s * 30, ascLon);
+    const p1 = polarToXY(cx, cy, R.signInR, a);
+    const p2 = polarToXY(cx, cy, R.outerR, a);
     ctx.beginPath();
     ctx.moveTo(p1.x, p1.y);
     ctx.lineTo(p2.x, p2.y);
     ctx.stroke();
   }
+  ctx.restore();
 
-  // Degree tick ruler INSIDE sign ring (from signInR upward into band)
+  // Burç glifleri — halkaya hizalı, element renginde.
+  // Boyut, bandın YÜKSEKLİĞİNE (outerR − signInR = 0.10R) göre ayarlı: glif
+  // döndürülünce uzun kenarı teğetsel uzanır, kısa kenarı radyal — 0.095R'de
+  // banda sığar, taşmaz. (0.135R banttan taşıyordu.)
+  const glyphSize = R.R * 0.086;
+  for (let s = 0; s < 12; s++) {
+    const a = lonToAngle(s * 30 + 15, ascLon);
+    const p = polarToXY(cx, cy, R.signGlyphR, a);
+    drawSign(ctx, s, p.x, p.y, glyphSize,
+      ELEMENT_COLOR[SIGNS[s].element], ringRotation(a));
+  }
+
+  // Tik cetveli: her 1°'de bir, burç sınırlarında (30°) daha uzun.
+  // 0.90 çemberinden DIŞA doğru uzanır.
+  ctx.save();
+  ctx.strokeStyle = LINE_COLOR;
   for (let deg = 0; deg < 360; deg++) {
-    const angle = lonToAngle(deg, ascLon);
-    const isMajor = deg % 10 === 0;
-    const is5 = deg % 5 === 0;
-
-    if (isMajor) {
-      ctx.strokeStyle = '#111111';
-      ctx.lineWidth = 1.2;
-    } else if (is5) {
-      ctx.strokeStyle = '#333333';
-      ctx.lineWidth = 1.0;
-    } else {
-      ctx.strokeStyle = '#666666';
-      ctx.lineWidth = 1.0;
-    }
-
-    const tickLen = isMajor ? 12 : (is5 ? 7 : 3);
-    const p1 = polarToXY(cx, cy, signInR, angle);
-    const p2 = polarToXY(cx, cy, signInR + tickLen, angle);
-
+    const a = lonToAngle(deg, ascLon);
+    const long = deg % 30 === 0;
+    const p1 = polarToXY(cx, cy, R.signInR, a);
+    const p2 = polarToXY(cx, cy, long ? R.tickLongOutR : R.tickOutR, a);
+    ctx.lineWidth = long ? 1.2 : 0.7;
     ctx.beginPath();
     ctx.moveTo(p1.x, p1.y);
     ctx.lineTo(p2.x, p2.y);
     ctx.stroke();
   }
+  ctx.restore();
+}
 
-  // SVG symbols — centered in band. Exact center of outerR and signInR.
-  const svgSize = bandWidth * 0.58;
-  const symbolR = (outerR + signInR) / 2;
+// ============================================
+// EV BANDI — cusp çizgileri, ev numaraları, cusp dereceleri
+// ============================================
+
+function formatDegMin(lon) {
+  const inSign = ((lon % 30) + 30) % 30;
+  const deg = Math.floor(inSign);
+  const min = Math.floor((inSign - deg) * 60);
+  return {
+    deg: String(deg).padStart(2, '0'),
+    min: String(min).padStart(2, '0'),
+  };
+}
+
+function drawHouseBand(ctx, cx, cy, houses, R, ascLon, opts = {}) {
+  if (!houses?.cusps) return;
+
+  const cusps = houses.cusps;
+  circle(ctx, cx, cy, R.houseInR, 1.4);
+
+  const angleHouses = new Set([1, 4, 7, 10]);
+  const degFont = Math.max(9, R.R * 0.036);
+  const numFont = Math.max(9, R.R * 0.040);
+
+  for (const cusp of cusps) {
+    const a = lonToAngle(cusp.longitude, ascLon);
+    const isAngle = angleHouses.has(cusp.house);
+
+    // Cusp çizgisi: aspekt çemberinden burç bandına kadar.
+    // Açı cuspları (ASC/IC/DSC/MC) kırmızı ve DIŞ çembere kadar uzar.
+    const p1 = polarToXY(cx, cy, R.innerR, a);
+    const p2 = polarToXY(cx, cy, isAngle ? R.outerR : R.signInR, a);
+
+    ctx.save();
+    ctx.strokeStyle = isAngle ? ANGLE_COLOR : LINE_COLOR;
+    ctx.lineWidth = isAngle ? 1.6 : 0.9;
+    ctx.beginPath();
+    ctx.moveTo(p1.x, p1.y);
+    ctx.lineTo(p2.x, p2.y);
+    ctx.stroke();
+    ctx.restore();
+
+    // Cusp derecesi: SolarFire gibi TEK satır "DD°MM'", halkaya TEĞET, cusp
+    // çizgisinin üzerinde ortalanmış, tik halkasının hemen içinde. (Önceden
+    // derece ve dakika radyal alt alta konuyordu; üst ve alt yarıda sıraları
+    // ters düşüp "28' / 03°" gibi kafa karıştırıyordu — SolarFire hep tek satır
+    // teğet yazıyor.)
+    const { deg, min } = formatDegMin(cusp.longitude);
+    const labelRadius = R.signInR - R.R * 0.032;
+    const lp = polarToXY(cx, cy, labelRadius, a);
+
+    ctx.save();
+    ctx.fillStyle = LINE_COLOR;
+    ctx.font = `${degFont}px Arial, sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.translate(lp.x, lp.y);
+    ctx.rotate(textRotation(a));
+    ctx.fillText(`${deg}°${min}'`, 0, 0);
+    ctx.restore();
+  }
+
+  // Ev numaraları — evin ortasında
+  ctx.save();
+  ctx.fillStyle = LINE_COLOR;
+  ctx.font = `${numFont}px Arial, sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+
   for (let i = 0; i < 12; i++) {
-    const sign = SIGNS[i];
-    const midDeg = i * 30 + 15;
-    const midAngle = lonToAngle(midDeg, ascLon);
-    const pos = polarToXY(cx, cy, symbolR, midAngle);
-    const color = ELEMENT_SYMBOL_COLORS[sign.element] || '#333333';
+    const cur = cusps[i];
+    const next = cusps[(i + 1) % 12];
 
-    drawSignSVG(ctx, SIGN_SVGS[i], pos.x, pos.y, svgSize, color);
-  }
-}
+    let span = next.longitude - cur.longitude;
+    while (span <= 0) span += 360;
+    const midLon = cur.longitude + span / 2;
 
-
-// ============================================
-// HOUSE BAND — narrow band: house numbers + cusp degrees
-// ============================================
-
-function drawHouseBand(ctx, cx, cy, houses, radii, ascLon) {
-  if (!houses || !houses.cusps) return;
-  const { signInR, houseInR, innerR } = radii;
-
-  // House band inner circle
-  ctx.strokeStyle = '#222222';
-  ctx.lineWidth = 1.5;
-  ctx.beginPath();
-  ctx.arc(cx, cy, houseInR, 0, Math.PI * 2);
-  ctx.stroke();
-
-  for (let i = 0; i < houses.cusps.length; i++) {
-    const cusp = houses.cusps[i];
-    const houseNum = cusp.house;
-    const lon = cusp.longitude;
-    const angle = lonToAngle(lon, ascLon);
-    const isAngular = [1, 4, 7, 10].includes(houseNum);
-
-    // Cusp line from signInR to innerR — angular cusps in RED
-    ctx.strokeStyle = isAngular ? '#DC143C' : '#555555';
-    ctx.lineWidth = isAngular ? 2.0 : 1.0;
-    const p1 = polarToXY(cx, cy, signInR, angle);
-    const p2 = polarToXY(cx, cy, innerR, angle);
-    ctx.beginPath();
-    ctx.moveTo(p1.x, p1.y);
-    ctx.lineTo(p2.x, p2.y);
-    ctx.stroke();
-
-    // House number — centered in house band
-    const nextCusp = houses.cusps[(i + 1) % 12];
-    let midLon = lon + angleBetween(lon, nextCusp.longitude) / 2;
-    if (midLon >= 360) midLon -= 360;
-    const midAngle = lonToAngle(midLon, ascLon);
-    const numR = (signInR + houseInR) / 2;
-    const numPos = polarToXY(cx, cy, numR, midAngle);
+    const a = lonToAngle(midLon, ascLon);
+    const p = polarToXY(cx, cy, R.labelR, a);
 
     ctx.save();
-    ctx.font = 'bold 13px Inter, sans-serif';
-    ctx.fillStyle = '#333333';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(houseNum.toString(), numPos.x, numPos.y);
-    ctx.restore();
-
-    // Cusp degree label — at the cusp line, in the house band
-    const labelR = (signInR + houseInR) / 2;
-    const labelPos = polarToXY(cx, cy, labelR, angle);
-
-    const signDeg = lon % 30;
-    const deg = Math.floor(signDeg);
-    const min = Math.floor((signDeg - deg) * 60);
-
-    ctx.save();
-    ctx.translate(labelPos.x, labelPos.y);
-
-    let textAngle = -angle + Math.PI / 2;
-    const norm = ((textAngle % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2);
-    if (norm > Math.PI / 2 && norm < Math.PI * 3 / 2) {
-      textAngle += Math.PI;
-    }
-    ctx.rotate(textAngle);
-
-    ctx.font = 'bold 16px JetBrains Mono, monospace';
-    ctx.fillStyle = '#111111';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(`${String(deg).padStart(2, '0')}°${String(min).padStart(2, '0')}'`, 0, 0);
+    ctx.translate(p.x, p.y);
+    ctx.rotate(textRotation(a));
+    ctx.fillText(String(cur.house), 0, 0);
     ctx.restore();
   }
-}
-
-
-// ============================================
-// INNER CIRCLE
-// ============================================
-
-function drawInnerCircle(ctx, cx, cy, innerR) {
-  ctx.strokeStyle = '#222222';
-  ctx.lineWidth = 1.5;
-  ctx.beginPath();
-  ctx.arc(cx, cy, innerR, 0, Math.PI * 2);
-  ctx.stroke();
-}
-
-
-// ============================================
-// ANGLES — ASC/DSC + MC/IC (thin, ring area only)
-// ============================================
-
-function drawAngles(ctx, cx, cy, houses, radii, ascLon) {
-  if (!houses) return;
-  const { outerR, innerR } = radii;
-
-  const ascAngle = lonToAngle(houses.ascendant, ascLon);
-  const dscAngle = lonToAngle(houses.descendant, ascLon);
-  const mcAngle = lonToAngle(houses.mc, ascLon);
-  const icAngle = lonToAngle(houses.ic, ascLon);
-
-  // ASC/DSC line — outerR to innerR only
-  ctx.strokeStyle = '#DC143C';
-  ctx.lineWidth = 1.5;
-  let p1 = polarToXY(cx, cy, outerR, ascAngle);
-  let p2 = polarToXY(cx, cy, innerR, ascAngle);
-  ctx.beginPath();
-  ctx.moveTo(p1.x, p1.y);
-  ctx.lineTo(p2.x, p2.y);
-  ctx.stroke();
-
-  p1 = polarToXY(cx, cy, outerR, dscAngle);
-  p2 = polarToXY(cx, cy, innerR, dscAngle);
-  ctx.beginPath();
-  ctx.moveTo(p1.x, p1.y);
-  ctx.lineTo(p2.x, p2.y);
-  ctx.stroke();
-
-  // MC/IC line
-  ctx.lineWidth = 1.2;
-  p1 = polarToXY(cx, cy, outerR, mcAngle);
-  p2 = polarToXY(cx, cy, innerR, mcAngle);
-  ctx.beginPath();
-  ctx.moveTo(p1.x, p1.y);
-  ctx.lineTo(p2.x, p2.y);
-  ctx.stroke();
-
-  p1 = polarToXY(cx, cy, outerR, icAngle);
-  p2 = polarToXY(cx, cy, innerR, icAngle);
-  ctx.beginPath();
-  ctx.moveTo(p1.x, p1.y);
-  ctx.lineTo(p2.x, p2.y);
-  ctx.stroke();
-
-  // Labels just outside the outer ring — only text, no degrees
-  drawAngleLabel(ctx, cx, cy, outerR + 8, ascAngle, 'ASC');
-  drawAngleLabel(ctx, cx, cy, outerR + 8, dscAngle, 'DSC');
-  drawAngleLabel(ctx, cx, cy, outerR + 8, mcAngle, 'MC');
-  drawAngleLabel(ctx, cx, cy, outerR + 8, icAngle, 'IC');
-}
-
-function drawAngleLabel(ctx, cx, cy, r, angle, label) {
-  const pos = polarToXY(cx, cy, r, angle);
-  ctx.save();
-  ctx.font = 'bold 14px Inter, sans-serif';
-  ctx.fillStyle = '#DC143C';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillText(label, pos.x, pos.y);
   ctx.restore();
 }
 
-function drawAngleDegreeLabel(ctx, cx, cy, r, angle, longitude) {
-  const pos = polarToXY(cx, cy, r, angle);
-  const signDeg = longitude % 30;
-  const deg = Math.floor(signDeg);
-  const min = Math.floor((signDeg - deg) * 60);
-
-  ctx.save();
-  ctx.font = 'bold 12px JetBrains Mono, monospace';
-  ctx.fillStyle = '#DC143C';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillText(`${String(deg).padStart(2, '0')}°`, pos.x, pos.y - 7);
-  ctx.fillText(`${String(min).padStart(2, '0')}'`, pos.x, pos.y + 7);
-  ctx.restore();
-}
-
-
 // ============================================
-// PLANETS — glyph + degree side by side, planet ticks on inner circle
-// Format: ☉ DD°♈MM'  (all on same radial line, close together)
+// GEZEGENLER — SolarFire etiket yığını
 // ============================================
 
-function drawPlanets(ctx, cx, cy, planets, radii, ascLon, partOfFortune) {
-  if (!planets) return;
-  const { houseInR, innerR } = radii;
+/**
+ * SolarFire gezegen etiketi, DİK olarak istiflenmiş satırlardan oluşur:
+ *
+ *     ☉        ← gezegen glifi (gezegen renginde)
+ *    13°       ← derece (SİYAH, sıfır dolgulu)
+ *     ♌        ← burç glifi (element renginde)
+ *    48'       ← dakika (SİYAH)
+ *     ℞        ← retrograd (KIRMIZI) — yalnızca gerekiyorsa
+ *
+ * Satırlar gezegenin açısı boyunca merkeze doğru iner. Ayrıca gezegenin GERÇEK
+ * boylamında aspekt çemberi üzerine renkli bir işaret konur — etiket çakışma
+ * önleme ile kaydırılsa bile gerçek konum görünür kalır.
+ */
+function drawPlanets(ctx, cx, cy, planets, R, ascLon, partOfFortune) {
+  if (!planets?.length) return;
 
-  // SolarFire RADIAL layout: items placed at different radii along same angle
-  // From outer to inner: Symbol → DD° → sign icon → MM' → [Rx]
-  // This naturally flows correctly in every direction around the wheel
-
-  const symR  = houseInR - 40;   // planet symbol (outermost) — room for decan labels
-  const degR  = symR - 28;       // degree number
-  const signR = degR - 22;       // sign SVG icon
-  const minR  = signR - 22;      // minutes
-  const retroR = minR - 16;      // retrograde marker
-
-  const collisionR = symR;       // collision check at symbol radius
-  const minSpacing = 26;         // min pixel spacing — compact but readable
-
-  const allPlanets = [...planets];
+  const list = [...planets];
   if (partOfFortune) {
-    allPlanets.push({ ...partOfFortune, isRetrograde: false, id: -99 });
+    list.push({ ...partOfFortune, isRetrograde: false, id: -99 });
   }
 
-  const withAngles = allPlanets.map(p => ({
-    ...p,
+  const items = list.map(p => ({
+    planet: p,
     angle: lonToAngle(p.longitude, ascLon),
-  })).sort((a, b) => a.angle - b.angle);
+  }));
 
-  const positioned = avoidCollisions(withAngles, cx, cy, collisionR, minSpacing);
+  // SolarFire'dan piksel ölçümü: derece/dakika font 0.037R, gezegen glifi 0.065R,
+  // yığın burç glifi 0.042R, satır aralığı ~0.050R.
+  const glyphR = R.R * 0.80;
+  const glyphSize = R.R * 0.066;
+  const signSize = R.R * 0.042;
+  const font = Math.max(8, R.R * 0.038);
+  const rowGap = R.R * 0.050;
 
-  for (const planet of positioned) {
-    const color = PLANET_COLORS[planet.name] || '#333333';
-    const dispAngle = planet.displayAngle ?? planet.angle;
+  // Çakışma önlemenin açısal aralığı. Etiket bloğu (glif + derece/burç/dakika)
+  // teğetsel değil radyal ama komşu gezegenlerin blokları yine de yatayda üst
+  // üste biniyordu (kompozitteki Oğlak yığını gibi 6 gezegen dar bir alanda).
+  // Daha geniş aralık onları birbirinden ayırır; hâlâ gerçek dereceye yakın.
+  const placed = avoidCollisions(items, glyphR, glyphSize * 1.55);
 
-    // Sign info
-    const signIdx = Math.floor(planet.longitude / 30);
-    const signElement = SIGNS[signIdx].element;
-    const signColor = ELEMENT_SYMBOL_COLORS[signElement] || '#333333';
-    const signDeg = planet.longitude % 30;
-    const deg = Math.floor(signDeg);
-    const min = Math.floor((signDeg - deg) * 60);
+  for (const item of placed) {
+    const p = item.planet;
+    const a = item.displayAngle;
+    const color = PLANET_COLOR[p.name] || '#000000';
 
-    // 1) Planet symbol — outermost (size-normalized)
-    const symScale = PLANET_SYMBOL_SCALE[planet.symbol] || 1.0;
-    const symSize = Math.round(36 * symScale);
-    const symPos = polarToXY(cx, cy, symR, dispAngle);
+    // Gerçek boylamdaki işaret (aspekt çemberi üzerinde). Etiket kaydırılmışsa,
+    // gliften gerçek konuma ince bir kılavuz çizgi çeker (SolarFire de yapar).
+    const trueA = lonToAngle(p.longitude, ascLon);
+    const t1 = polarToXY(cx, cy, R.innerR, trueA);
+    const t2 = polarToXY(cx, cy, R.innerR + R.R * 0.022, trueA);
     ctx.save();
-    ctx.font = `bold ${symSize}px serif`;
-    ctx.fillStyle = color;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(planet.symbol, symPos.x, symPos.y);
-    ctx.restore();
-
-    // 2) DD° — degree
-    const degPos = polarToXY(cx, cy, degR, dispAngle);
-    ctx.save();
-    ctx.font = 'bold 16px JetBrains Mono, monospace';
-    ctx.fillStyle = color;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(`${deg}°`, degPos.x, degPos.y);
-    ctx.restore();
-
-    // 3) Sign SVG icon
-    const signPos = polarToXY(cx, cy, signR, dispAngle);
-    drawSignSVG(ctx, SIGN_SVGS[signIdx], signPos.x, signPos.y, 17, signColor);
-
-    // 4) MM' — minutes
-    const minPos = polarToXY(cx, cy, minR, dispAngle);
-    ctx.save();
-    ctx.font = 'bold 16px JetBrains Mono, monospace';
-    ctx.fillStyle = color;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(`${String(min).padStart(2, '0')}'`, minPos.x, minPos.y);
-    ctx.restore();
-
-    // 5) Retrograde Rx — innermost (bigger)
-    if (planet.isRetrograde) {
-      const retroPos = polarToXY(cx, cy, retroR, dispAngle);
-      ctx.save();
-      ctx.font = 'bold 16px serif';
-      ctx.fillStyle = '#DC143C';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText('Rx', retroPos.x, retroPos.y);
-      ctx.restore();
-    }
-
-    // Tick on inner circle — planet's own color, 3x thicker
-    const tickStart = polarToXY(cx, cy, innerR, planet.angle);
-    const tickEnd = polarToXY(cx, cy, innerR + 10, planet.angle);
     ctx.strokeStyle = color;
-    ctx.lineWidth = 3;
+    ctx.lineWidth = 2.2;
     ctx.beginPath();
-    ctx.moveTo(tickStart.x, tickStart.y);
-    ctx.lineTo(tickEnd.x, tickEnd.y);
+    ctx.moveTo(t1.x, t1.y);
+    ctx.lineTo(t2.x, t2.y);
     ctx.stroke();
+    ctx.restore();
+
+    const pos = formatDegMin(p.longitude);
+    const signIdx = Math.floor(((p.longitude % 360) + 360) % 360 / 30);
+    const sign = SIGNS[signIdx];
+
+    // Yalnızca gezegen GLİFİNİN arkasına dar bir beyaz maske: glif bir ev/aspekt
+    // çizgisinin üstündeyse (ör. Satürn 6. ev girişinde) çizgi glifin içinden
+    // geçmez, gezegen net görünür. Yazılara halo YOK — geniş beyaz daireler
+    // alttaki aspekt çizgilerini siliyordu ("16°" derecesinin altındaki çizgiler
+    // yok olmuştu); yazılar zaten küçük, çizgi arkalarından geçse de okunur.
+    // Gezegen glifi doğrudan çizilir (halo yok). Gezegenler zaten en son
+    // çizildiği için ev/aspekt çizgilerinin ÜSTÜNDE kalır — beyaz halo etraflarını
+    // siliyor ve "silik" bir görünüm yaratıyordu.
+    let r = glyphR;
+
+    const gp = polarToXY(cx, cy, r, a);
+    drawPlanet(ctx, p.name, gp.x, gp.y, glyphSize, color);
+
+    ctx.save();
+    ctx.font = `${font}px Arial, sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+
+    r -= rowGap;
+    const dp = polarToXY(cx, cy, r, a);
+    ctx.fillStyle = LINE_COLOR;
+    ctx.fillText(`${pos.deg}°`, dp.x, dp.y);
+
+    r -= rowGap;
+    const sp = polarToXY(cx, cy, r, a);
+    ctx.restore();
+    drawSign(ctx, signIdx, sp.x, sp.y, signSize, ELEMENT_COLOR[sign.element]);
+
+    ctx.save();
+    ctx.font = `${font}px Arial, sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    r -= rowGap;
+    const mp = polarToXY(cx, cy, r, a);
+    ctx.fillStyle = LINE_COLOR;
+    ctx.fillText(`${pos.min}'`, mp.x, mp.y);
+    ctx.restore();
+
+    if (p.isRetrograde) {
+      r -= rowGap;
+      const rp = polarToXY(cx, cy, r, a);
+      drawRx(ctx, rp.x, rp.y, font * 0.78);
+    }
   }
 }
 
-
 // ============================================
-// ASPECTS
+// ASPEKTLER
 // ============================================
 
-function drawAspects(ctx, cx, cy, planets, aspects, innerR, ascLon, partOfFortune) {
-  if (!aspects || !planets) return;
+/** Aspekt sembolleri — SolarFire'ınkiler basit geometrik şekiller. */
+function drawAspectGlyph(ctx, x, y, kind, color, size) {
+  ctx.save();
+  ctx.strokeStyle = color;
+  ctx.fillStyle = '#FFFFFF';
+  ctx.lineWidth = 1.1;
+  const s = size / 2;
 
-  const lonMap = {};
-  for (const p of planets) {
-    lonMap[p.name] = p.longitude;
-    if (p.symbol) lonMap[p.symbol] = p.longitude;
+  // Sembolün arkasını temizle ki çizgi içinden geçmesin
+  ctx.beginPath();
+  ctx.arc(x, y, s * 1.15, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.beginPath();
+  if (kind === 'square') {
+    ctx.rect(x - s, y - s, s * 2, s * 2);
+  } else if (kind === 'trine') {
+    ctx.moveTo(x, y - s);
+    ctx.lineTo(x + s, y + s * 0.8);
+    ctx.lineTo(x - s, y + s * 0.8);
+    ctx.closePath();
+  } else if (kind === 'sextile') {
+    for (let i = 0; i < 3; i++) {
+      const ang = (i * Math.PI) / 3;
+      ctx.moveTo(x - s * Math.cos(ang), y - s * Math.sin(ang));
+      ctx.lineTo(x + s * Math.cos(ang), y + s * Math.sin(ang));
+    }
+  } else if (kind === 'opposition') {
+    ctx.moveTo(x - s, y);
+    ctx.lineTo(x + s, y);
+    ctx.moveTo(x, y - s);
+    ctx.lineTo(x, y + s);
+    ctx.arc(x, y, s, 0, Math.PI * 2);
+  } else { // conjunction
+    ctx.arc(x - s * 0.35, y, s * 0.5, 0, Math.PI * 2);
+    ctx.moveTo(x + s * 0.9, y - s * 0.5);
+    ctx.lineTo(x + s * 0.2, y + s * 0.6);
   }
-  if (partOfFortune) lonMap[partOfFortune.name] = partOfFortune.longitude;
+  ctx.stroke();
+  ctx.restore();
+}
 
-  const majorAngles = [0, 180, 120, 90, 60];
+/**
+ * @param {Set<string>|null} activeSet - Görünür gezegen adları. null → hepsi.
+ *   Bir aspekt çizilir eğer EN AZ BİR ucu bu sette (ders modu: tek gezegen
+ *   seçip onun bütün açılarını görmek için).
+ */
+function drawAspects(ctx, cx, cy, planets, aspects, R, ascLon, partOfFortune, activeSet = null) {
+  if (!aspects?.length) return;
+
+  const lonOf = {};
+  for (const p of planets) lonOf[p.name] = p.longitude;
+  if (partOfFortune) lonOf[partOfFortune.name] = partOfFortune.longitude;
+
+  const visible = (asp) => !activeSet
+    || activeSet.has(asp.planet1?.name) || activeSet.has(asp.planet2?.name);
+
+  const glyphSize = R.R * 0.026;
 
   for (const aspect of aspects) {
-    const style = ASPECT_STYLES[aspect.angle];
+    if (!visible(aspect)) continue;
+    const style = ASPECT_STYLE[aspect.angle];
     if (!style) continue;
-    if (!majorAngles.includes(aspect.angle)) continue;
 
-    const lon1 = lonMap[aspect.planet1.name] ?? lonMap[aspect.planet1.symbol];
-    const lon2 = lonMap[aspect.planet2.name] ?? lonMap[aspect.planet2.symbol];
-    if (lon1 === undefined || lon2 === undefined) continue;
+    const l1 = lonOf[aspect.planet1?.name];
+    const l2 = lonOf[aspect.planet2?.name];
+    if (l1 === undefined || l2 === undefined) continue;
 
-    const r = innerR - 3;
-    const p1 = polarToXY(cx, cy, r, lonToAngle(lon1, ascLon));
-    const p2 = polarToXY(cx, cy, r, lonToAngle(lon2, ascLon));
+    const p1 = polarToXY(cx, cy, R.innerR, lonToAngle(l1, ascLon));
+    const p2 = polarToXY(cx, cy, R.innerR, lonToAngle(l2, ascLon));
 
     ctx.save();
     ctx.strokeStyle = style.color;
-    ctx.lineWidth = style.width;
-    if (style.dash.length > 0) ctx.setLineDash(style.dash);
-    if (aspect.orb < 1) ctx.lineWidth = style.width * 1.5;
-    else if (aspect.orb > 5) ctx.globalAlpha = 0.4;
-
+    ctx.lineWidth = Math.max(1, style.width * R.R);
     ctx.beginPath();
     ctx.moveTo(p1.x, p1.y);
     ctx.lineTo(p2.x, p2.y);
     ctx.stroke();
     ctx.restore();
+  }
 
-    // Aspect symbol at midpoint
-    const midX = (p1.x + p2.x) / 2;
-    const midY = (p1.y + p2.y) / 2;
-    const sym = ASPECT_SYMBOLS[aspect.angle];
-    if (sym) {
-      ctx.save();
-      ctx.font = 'bold 19px serif';
-      ctx.fillStyle = style.color;
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(sym, midX, midY);
-      ctx.restore();
-    }
+  // Semboller çizgilerin ÜSTÜNE — arka planları temizlenerek
+  for (const aspect of aspects) {
+    if (!visible(aspect)) continue;
+    const style = ASPECT_STYLE[aspect.angle];
+    if (!style) continue;
+
+    const l1 = lonOf[aspect.planet1?.name];
+    const l2 = lonOf[aspect.planet2?.name];
+    if (l1 === undefined || l2 === undefined) continue;
+
+    const p1 = polarToXY(cx, cy, R.innerR, lonToAngle(l1, ascLon));
+    const p2 = polarToXY(cx, cy, R.innerR, lonToAngle(l2, ascLon));
+
+    drawAspectGlyph(ctx, (p1.x + p2.x) / 2, (p1.y + p2.y) / 2,
+      style.glyph, style.color, glyphSize);
   }
 }
 
-
 // ============================================
-// INFO BLOCK
+// BİLGİ BLOĞU
 // ============================================
 
-function drawInfoBlock(ctx, options) {
-  const x = 15;
-  let y = 22;
-  const lineH = 20;
+function drawInfoBlock(ctx, options, R) {
+  const x = R.R * 0.04;
+  let y = R.R * 0.05;
+  const lh = Math.max(14, R.R * 0.042);
 
   ctx.save();
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'top';
 
   if (options.title) {
-    ctx.font = 'bold 20px Inter, sans-serif';
+    ctx.font = `bold ${lh * 1.15}px Arial, sans-serif`;
     ctx.fillStyle = '#000000';
-    ctx.textAlign = 'left';
-    ctx.textBaseline = 'top';
     ctx.fillText(options.title, x, y);
-    y += lineH + 2;
+    y += lh * 1.35;
   }
 
   if (options.subtitle) {
-    const lines = options.subtitle.split('\n');
-    ctx.font = 'bold 15px Inter, sans-serif';
+    ctx.font = `${lh * 0.85}px Arial, sans-serif`;
     ctx.fillStyle = '#000000';
-    ctx.fillText(lines[0], x, y);
-    y += lineH;
-
-    ctx.font = '14px Inter, sans-serif';
-    for (let i = 1; i < lines.length; i++) {
-      ctx.fillText(lines[i], x, y);
-      y += lineH - 2;
+    for (const line of options.subtitle.split('\n')) {
+      ctx.fillText(line, x, y);
+      y += lh * 0.95;
     }
   }
 
-  ctx.font = 'italic 14px Inter, sans-serif';
-  ctx.fillStyle = '#DC143C';
-  ctx.fillText('Geocentric', x, y); y += lineH - 3;
-  ctx.fillText('Tropical', x, y);   y += lineH - 3;
-  ctx.fillText('Placidus', x, y);   y += lineH - 3;
-  ctx.fillText('Mean Node', x, y);
+  // Hesaplama ayarları. Kompozit bir midpoint haritasıdır — cuspları bir ev
+  // SİSTEMİNDEN değil, iki haritanın cusplarının orta noktasından gelir.
+  const houseLabel = options.chartType === 'composite'
+    ? 'Composite Midpoint Houses'
+    : 'Placidus';
+
+  ctx.font = `italic ${lh * 0.85}px Arial, sans-serif`;
+  ctx.fillStyle = ANGLE_COLOR;
+  for (const s of ['Geocentric', 'Tropical', houseLabel, 'Mean Node']) {
+    ctx.fillText(s, x, y);
+    y += lh * 0.9;
+  }
 
   ctx.restore();
 }
 
+/**
+ * ASC / DESC / MC / IC etiketlerini çarkın DIŞ tarafına yazar (dış çemberin
+ * hemen ötesine). Yalnızca dört ana açı; kırmızı, küçük, radyal.
+ */
+function drawAngleLabels(ctx, cx, cy, houses, R, ascLon) {
+  if (!houses) return;
+
+  const angles = [
+    ['ASC', houses.ascendant],
+    ['DESC', houses.descendant ?? (houses.ascendant + 180)],
+    ['MC', houses.mc],
+    ['IC', houses.ic ?? (houses.mc + 180)],
+  ];
+
+  const labelR = R.outerR + R.R * 0.045;
+  const fontSize = Math.max(9, R.R * 0.034);
+
+  ctx.save();
+  ctx.font = `bold ${fontSize}px Arial, sans-serif`;
+  ctx.fillStyle = ANGLE_COLOR;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+
+  for (const [name, lon] of angles) {
+    if (lon == null) continue;
+    const a = lonToAngle(lon, ascLon);
+    const p = polarToXY(cx, cy, labelR, a);
+    ctx.save();
+    ctx.translate(p.x, p.y);
+    ctx.rotate(textRotation(a));
+    ctx.fillText(name, 0, 0);
+    ctx.restore();
+  }
+  ctx.restore();
+}
 
 // ============================================
-// MAIN EXPORT — drawChartWheel
+// TEKİL ÇARK
 // ============================================
 
 export function drawChartWheel(canvas, chartData, options = {}) {
@@ -691,183 +783,304 @@ export function drawChartWheel(canvas, chartData, options = {}) {
   ctx.fillStyle = '#FFFFFF';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // SolarFire layers (outer to inner):
-  // 1. Sign ring (narrow) + tick ruler inside
-  const outerR   = size * 0.47;
-  const signInR  = size * 0.42;
-  // 2. House band (very narrow — numbers + cusp degrees)
-  const houseInR = size * 0.395;
-  // 3. Planet zone (glyph + label side by side)
-  // 4. Aspect circle (large)
-  const innerR   = size * 0.25;
-
-  const radii = { outerR, signInR, houseInR, innerR };
+  const R = wheelRadii(size);
   const ascLon = chartData.houses?.ascendant ?? 0;
 
-  // Draw layers back-to-front
-  drawSignRing(ctx, cx, cy, radii, ascLon);
-  drawHouseBand(ctx, cx, cy, chartData.houses, radii, ascLon);
-  drawInnerCircle(ctx, cx, cy, innerR);
-  drawAngles(ctx, cx, cy, chartData.houses, radii, ascLon);
+  drawSignRing(ctx, cx, cy, R, ascLon);
+  drawHouseBand(ctx, cx, cy, chartData.houses, R, ascLon);
+  drawAngleLabels(ctx, cx, cy, chartData.houses, R, ascLon);
+  circle(ctx, cx, cy, R.innerR, 1.4);
+
+  // Dekan halkası (varsa) — gezegenlerden ÖNCE ki gezegenler üstte kalsın.
+  if (options.decans) {
+    drawDecanLayer(ctx, cx, cy, options.decans, R, ascLon);
+  }
 
   if (options.showAspects !== false && chartData.aspects) {
-    drawAspects(ctx, cx, cy, chartData.planets, chartData.aspects, innerR, ascLon, chartData.partOfFortune);
+    drawAspects(ctx, cx, cy, chartData.planets, chartData.aspects, R, ascLon, chartData.partOfFortune, options.activePlanets || null);
   }
 
-  drawPlanets(ctx, cx, cy, chartData.planets, radii, ascLon, chartData.partOfFortune);
+  drawPlanets(ctx, cx, cy, chartData.planets, R, ascLon, chartData.partOfFortune);
 
-  if (options.title) {
-    drawInfoBlock(ctx, options);
-  }
+  if (options.title) drawInfoBlock(ctx, options, R);
 }
 
-
 // ============================================
-// SEVEN YEAR OVERLAY
+// BI-WHEEL — içte natal/Kişi A, dışta transit/progres/Kişi B
 // ============================================
 
-export function drawSevenYearOverlay(canvas, chartData, sevensData, options = {}) {
-  if (!canvas || !chartData || !sevensData) return;
-  const { showAges = true } = options;
+export function wheelRadiiBi(size) {
+  const R = size * 0.47;
+  return {
+    R,
+    outerR:   R,                 // dış çember — dış haritanın çerçevesi
+    outerGlyphR: R * 0.945,      // dış haritanın gezegen glifi; satırlar içeri iner
+    signOutR: R * 0.775,
+    signInR:  R * 0.700,
+    houseInR: R * 0.650,
+    innerR:   R * 0.380,         // aspekt çemberi
+    signGlyphR: R * 0.7375,
+    tickOutR:     R * 0.718,
+    tickLongOutR: R * 0.730,
+    labelR:   R * 0.675,         // ev numaraları + cusp dereceleri
+    innerGlyphR: R * 0.590,      // iç haritanın gezegen glifi
+  };
+}
 
-  const ctx = canvas.getContext('2d');
-  const size = Math.min(canvas.width, canvas.height);
-  const cx = canvas.width / 2;
-  const cy = canvas.height / 2;
+function drawBiSignRing(ctx, cx, cy, R, ascLon) {
+  circle(ctx, cx, cy, R.signOutR, 1.4);
+  circle(ctx, cx, cy, R.signInR, 1.4);
 
-  const houseInR = size * 0.395;
-  const innerR   = size * 0.25;
-  const ascLon = chartData.houses?.ascendant ?? 0;
+  ctx.save();
+  ctx.strokeStyle = LINE_COLOR;
+  ctx.lineWidth = 0.9;
+  for (let s = 0; s < 12; s++) {
+    const a = lonToAngle(s * 30, ascLon);
+    const p1 = polarToXY(cx, cy, R.signInR, a);
+    const p2 = polarToXY(cx, cy, R.signOutR, a);
+    ctx.beginPath();
+    ctx.moveTo(p1.x, p1.y);
+    ctx.lineTo(p2.x, p2.y);
+    ctx.stroke();
+  }
+  ctx.restore();
 
-  if (showAges) {
-    for (const house of sevensData) {
-      for (const year of house.years) {
-        const startAngle = lonToAngle(year.startLongitude, ascLon);
-        const endAngle = lonToAngle(year.endLongitude, ascLon);
+  const glyphSize = R.R * 0.058;
+  for (let s = 0; s < 12; s++) {
+    const a = lonToAngle(s * 30 + 15, ascLon);
+    const p = polarToXY(cx, cy, R.signGlyphR, a);
+    drawSign(ctx, s, p.x, p.y, glyphSize,
+      ELEMENT_COLOR[SIGNS[s].element], ringRotation(a));
+  }
 
-        const element = year.decanSign?.element || 'fire';
+  // Tik cetveli — tekil çarktaki gibi, 1° adımlarla
+  ctx.save();
+  ctx.strokeStyle = LINE_COLOR;
+  for (let deg = 0; deg < 360; deg++) {
+    const a = lonToAngle(deg, ascLon);
+    const long = deg % 30 === 0;
+    const p1 = polarToXY(cx, cy, R.signInR, a);
+    const p2 = polarToXY(cx, cy, long ? R.tickLongOutR : R.tickOutR, a);
+    ctx.lineWidth = long ? 1.1 : 0.6;
+    ctx.beginPath();
+    ctx.moveTo(p1.x, p1.y);
+    ctx.lineTo(p2.x, p2.y);
+    ctx.stroke();
+  }
+  ctx.restore();
+}
 
-        // Draw divider line between years (skip first year in each house)
-        if (year.yearIndex > 0) {
-          const p1 = polarToXY(cx, cy, houseInR - 2, startAngle);
-          const p2 = polarToXY(cx, cy, innerR + 2, startAngle);
-          ctx.save();
-          ctx.strokeStyle = 'rgba(140,120,200,0.4)';
-          ctx.lineWidth = 0.8;
-          ctx.setLineDash([3, 3]);
-          ctx.beginPath();
-          ctx.moveTo(p1.x, p1.y);
-          ctx.lineTo(p2.x, p2.y);
-          ctx.stroke();
-          ctx.restore();
-        }
+/**
+ * Dış haritanın gezegenleri. Yığın DIŞA doğru açılır: glif burç halkasının
+ * hemen dışında (gerçek pozisyon işaretine yakın), derece/burç/dakika ondan
+ * DIŞARI doğru. Böylece glif ile çizgisi arasında boşluk kalmaz.
+ */
+function drawOuterPlanets(ctx, cx, cy, planets, R, ascLon) {
+  if (!planets?.length) return;
 
-        // Age label at the center of the segment
-        let midAngle;
-        let diff = endAngle - startAngle;
-        // Normalize diff to [-PI, PI]
-        while (diff > Math.PI) diff -= 2 * Math.PI;
-        while (diff < -Math.PI) diff += 2 * Math.PI;
-        midAngle = startAngle + diff / 2;
+  const items = planets.map(p => ({ planet: p, angle: lonToAngle(p.longitude, ascLon) }));
 
-        // Age number at outer edge, no background
-        const AGE_COLORS = {
-          fire:  '#ff0000',
-          earth: '#00cc00',
-          air:   '#00ccc8',
-          water: '#1b00ff',
-        };
-        const agePos = polarToXY(cx, cy, houseInR - 12, midAngle);
-        ctx.save();
-        ctx.font = 'bold 9px Inter, sans-serif';
-        ctx.fillStyle = AGE_COLORS[element] || '#666';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText(`${year.age}-${year.age + 1}`, agePos.x, agePos.y);
-        ctx.restore();
-      }
+  const glyphR = R.signOutR + R.R * 0.045;   // burç halkasının hemen dışı
+  const glyphSize = R.R * 0.033;
+  const signSize = R.R * 0.022;
+  const font = Math.max(7, R.R * 0.021);
+  const rowGap = R.R * 0.027;
+
+  const placed = avoidCollisions(items, glyphR, glyphSize * 1.7);
+
+  for (const item of placed) {
+    const p = item.planet;
+    const a = item.displayAngle;
+    const color = PLANET_COLOR[p.name] || '#000000';
+
+    // Gerçek boylam işareti — glifin hemen içinde, burç halkasına değecek
+    const trueA = lonToAngle(p.longitude, ascLon);
+    const t1 = polarToXY(cx, cy, R.signOutR, trueA);
+    const t2 = polarToXY(cx, cy, R.signOutR + R.R * 0.030, trueA);
+    ctx.save();
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(t1.x, t1.y);
+    ctx.lineTo(t2.x, t2.y);
+    ctx.stroke();
+    ctx.restore();
+
+    const pos = formatDegMin(p.longitude);
+    const signIdx = Math.floor(((p.longitude % 360) + 360) % 360 / 30);
+
+    let r = glyphR;
+    const gp = polarToXY(cx, cy, r, a);
+    drawPlanet(ctx, p.name, gp.x, gp.y, glyphSize, color);
+
+    ctx.save();
+    ctx.font = `${font}px Arial, sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = LINE_COLOR;
+
+    r += rowGap;
+    const dp = polarToXY(cx, cy, r, a);
+    ctx.fillText(`${pos.deg}°`, dp.x, dp.y);
+
+    r += rowGap;
+    const sp = polarToXY(cx, cy, r, a);
+    drawSign(ctx, signIdx, sp.x, sp.y, signSize, ELEMENT_COLOR[SIGNS[signIdx].element]);
+
+    r += rowGap;
+    const mp = polarToXY(cx, cy, r, a);
+    ctx.fillText(`${pos.min}'`, mp.x, mp.y);
+    ctx.restore();
+
+    if (p.isRetrograde) {
+      r += rowGap;
+      const rp = polarToXY(cx, cy, r, a);
+      drawRx(ctx, rp.x, rp.y, font * 0.78);
     }
   }
+}
 
-  // Draw aspects on top of the overlay (always)
-  if (chartData.aspects && chartData.planets) {
-    drawAspects(ctx, cx, cy, chartData.planets, chartData.aspects, innerR, ascLon, chartData.partOfFortune);
+/** İç haritanın gezegenleri — burç halkasının içinde. */
+function drawInnerPlanets(ctx, cx, cy, planets, R, ascLon, partOfFortune) {
+  if (!planets?.length) return;
+
+  const list = [...planets];
+  if (partOfFortune) list.push({ ...partOfFortune, isRetrograde: false, id: -99 });
+
+  const items = list.map(p => ({ planet: p, angle: lonToAngle(p.longitude, ascLon) }));
+
+  const glyphR = R.innerGlyphR;
+  const glyphSize = R.R * 0.033;
+  const signSize = R.R * 0.022;
+  const font = Math.max(7, R.R * 0.021);
+  const rowGap = R.R * 0.026;
+
+  const placed = avoidCollisions(items, glyphR, glyphSize * 1.8);
+
+  for (const item of placed) {
+    const p = item.planet;
+    const a = item.displayAngle;
+    const color = PLANET_COLOR[p.name] || '#000000';
+
+    const trueA = lonToAngle(p.longitude, ascLon);
+    const t1 = polarToXY(cx, cy, R.innerR, trueA);
+    const t2 = polarToXY(cx, cy, R.innerR + R.R * 0.020, trueA);
+    ctx.save();
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(t1.x, t1.y);
+    ctx.lineTo(t2.x, t2.y);
+    ctx.stroke();
+    ctx.restore();
+
+    const pos = formatDegMin(p.longitude);
+    const signIdx = Math.floor(((p.longitude % 360) + 360) % 360 / 30);
+
+    let r = glyphR;
+    const gp = polarToXY(cx, cy, r, a);
+    drawPlanet(ctx, p.name, gp.x, gp.y, glyphSize, color);
+
+    ctx.save();
+    ctx.font = `${font}px Arial, sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = LINE_COLOR;
+
+    r -= rowGap;
+    const dp = polarToXY(cx, cy, r, a);
+    ctx.fillText(`${pos.deg}°`, dp.x, dp.y);
+
+    r -= rowGap;
+    const sp = polarToXY(cx, cy, r, a);
+    drawSign(ctx, signIdx, sp.x, sp.y, signSize, ELEMENT_COLOR[SIGNS[signIdx].element]);
+
+    r -= rowGap;
+    const mp = polarToXY(cx, cy, r, a);
+    ctx.fillText(`${pos.min}'`, mp.x, mp.y);
+    ctx.restore();
+
+    if (p.isRetrograde) {
+      r -= rowGap;
+      const rp = polarToXY(cx, cy, r, a);
+      drawRx(ctx, rp.x, rp.y, font * 0.78);
+    }
   }
 }
 
+/** Dış haritanın kendi ev cuspları (varsa) — mor, en dış bantta. */
+function drawOuterFrame(ctx, cx, cy, houses, R, ascLon) {
+  if (!houses?.cusps) return;
 
-// ============================================
-// DECAN OVERLAY
-// ============================================
+  circle(ctx, cx, cy, R.outerR, 1.2, OUTER_RING_COLOR);
 
-export function drawDecanOverlay(canvas, chartData, decanData) {
-  if (!canvas || !chartData || !decanData) return;
+  ctx.save();
+  ctx.strokeStyle = OUTER_RING_COLOR;
+  ctx.lineWidth = 0.9;
+  for (const cusp of houses.cusps) {
+    const a = lonToAngle(cusp.longitude, ascLon);
+    const p1 = polarToXY(cx, cy, R.signOutR, a);
+    const p2 = polarToXY(cx, cy, R.outerR, a);
+    ctx.beginPath();
+    ctx.moveTo(p1.x, p1.y);
+    ctx.lineTo(p2.x, p2.y);
+    ctx.stroke();
+  }
+  ctx.restore();
+}
 
-  const ctx = canvas.getContext('2d');
-  const size = Math.min(canvas.width, canvas.height);
-  const cx = canvas.width / 2;
-  const cy = canvas.height / 2;
+function drawBiWheelAspects(ctx, cx, cy, outerPlanets, innerPlanets, aspects, R, ascLon, activeSet = null) {
+  if (!aspects?.length) return;
 
-  const houseInR = size * 0.395;
-  const innerR   = size * 0.25;
-  const ascLon = chartData.houses?.ascendant ?? 0;
+  const outerLon = {};
+  for (const p of outerPlanets) outerLon[p.name] = p.longitude;
+  const innerLon = {};
+  for (const p of innerPlanets) innerLon[p.name] = p.longitude;
 
-  const DECAN_COLORS = {
-    fire:  '#ff0000',
-    earth: '#00b800',
-    air:   '#00c8c8',
-    water: '#1b00ff',
+  const visible = (aspect) => !activeSet
+    || activeSet.has(aspect.transitPlanet?.name)
+    || activeSet.has(aspect.natalPlanet?.name);
+
+  const endpoints = (aspect) => {
+    const style = ASPECT_STYLE[aspect.angle];
+    if (!style) return null;
+    const l1 = outerLon[aspect.transitPlanet?.name];
+    const l2 = innerLon[aspect.natalPlanet?.name];
+    if (l1 === undefined || l2 === undefined) return null;
+    return {
+      style,
+      p1: polarToXY(cx, cy, R.innerR, lonToAngle(l1, ascLon)),
+      p2: polarToXY(cx, cy, R.innerR, lonToAngle(l2, ascLon)),
+    };
   };
 
-  for (const house of decanData) {
-    for (const decan of house.decans) {
-      const startAngle = lonToAngle(decan.startLongitude, ascLon);
-      const endAngle = lonToAngle(decan.endLongitude, ascLon);
+  // Çizgiler
+  for (const aspect of aspects) {
+    if (!visible(aspect)) continue;
+    const e = endpoints(aspect);
+    if (!e) continue;
 
-      // Decan boundary line (skip first — it's the house cusp)
-      if (decan.index > 0) {
-        const p1 = polarToXY(cx, cy, houseInR - 2, startAngle);
-        const p2 = polarToXY(cx, cy, innerR + 2, startAngle);
-
-        ctx.save();
-        ctx.strokeStyle = 'rgba(140, 120, 200, 0.5)';
-        ctx.lineWidth = 1.2;
-        ctx.setLineDash([5, 4]);
-        ctx.beginPath();
-        ctx.moveTo(p1.x, p1.y);
-        ctx.lineTo(p2.x, p2.y);
-        ctx.stroke();
-        ctx.restore();
-      }
-
-      // Mid-angle of this decan
-      let diff = endAngle - startAngle;
-      while (diff > Math.PI) diff -= 2 * Math.PI;
-      while (diff < -Math.PI) diff += 2 * Math.PI;
-      const midAngle = startAngle + diff / 2;
-
-      const element = decan.decanSign?.element || 'fire';
-      const color = DECAN_COLORS[element] || '#666';
-
-      // Decan sign icon — tucked right against house ring
-      const signIdx = SIGNS.indexOf(decan.decanSign);
-      if (signIdx >= 0) {
-        const symPos = polarToXY(cx, cy, houseInR - 14, midAngle);
-        drawSignSVG(ctx, SIGN_SVGS[signIdx], symPos.x, symPos.y, 15, color);
-      }
-    }
+    ctx.save();
+    ctx.strokeStyle = e.style.color;
+    ctx.lineWidth = Math.max(1, e.style.width * R.R * 0.85);
+    ctx.beginPath();
+    ctx.moveTo(e.p1.x, e.p1.y);
+    ctx.lineTo(e.p2.x, e.p2.y);
+    ctx.stroke();
+    ctx.restore();
   }
 
-  // Redraw aspects on top
-  if (chartData.aspects && chartData.planets) {
-    drawAspects(ctx, cx, cy, chartData.planets, chartData.aspects, innerR, ascLon, chartData.partOfFortune);
+  // Aspekt sembolleri (kare/üçgen/…) çizgilerin ÜSTÜNE — natal çarkındaki gibi,
+  // hangi açının ne olduğu belli olsun.
+  const glyphSize = R.R * 0.024;
+  for (const aspect of aspects) {
+    if (!visible(aspect)) continue;
+    const e = endpoints(aspect);
+    if (!e) continue;
+    drawAspectGlyph(ctx, (e.p1.x + e.p2.x) / 2, (e.p1.y + e.p2.y) / 2,
+      e.style.glyph, e.style.color, glyphSize);
   }
 }
-
-
-// ============================================
-// BI-WHEEL (Transit)
-// ============================================
 
 export function drawBiWheel(canvas, natalData, transitData, options = {}) {
   if (!canvas || !natalData || !transitData) return;
@@ -881,350 +1094,139 @@ export function drawBiWheel(canvas, natalData, transitData, options = {}) {
   ctx.fillStyle = '#FFFFFF';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // ── Astro-Seek tarzı çift halka ──────────────────────────────
-  // Dıştan içe: [dış harita gezegenleri] · zodyak · [ev no'ları] · [iç/natal gezegenleri] · aspekt çemberi
-  const outerR    = size * 0.49;    // en dış çember (dış gezegenleri çevreler)
-  const signOutR  = size * 0.365;   // zodyak halkası dış kenarı
-  const signInR   = size * 0.305;   // zodyak halkası iç kenarı
-  const houseInR  = size * 0.285;   // ev numarası bandı iç kenarı
-  const innerR    = size * 0.135;   // aspekt çemberi
-
-  // Dış harita (progres/transit) gezegen yerleşimi — zodyağın DIŞINDA
-  const outerLayout = {
-    symR:   size * 0.448,           // sembol (en dışta)
-    degR:   size * 0.448 - 46,      // derece
-    signR:  size * 0.448 - 78,      // burç ikonu
-    minR:   size * 0.448 - 108,     // dakika
-    retroR: size * 0.448 + 28,      // Rx (sembolün dışında)
-  };
-  // İç harita (natal) gezegen yerleşimi — zodyağın İÇİNDE
-  const innerBandMid = (houseInR + innerR) / 2;
-  const innerLayout = {
-    symR:   innerBandMid - 40,
-    degR:   innerBandMid + 4,
-    signR:  innerBandMid + 36,
-    minR:   innerBandMid + 68,
-    retroR: innerBandMid - 68,
-  };
-
+  const R = wheelRadiiBi(size);
+  // Çerçeveyi İÇ harita kurar
   const ascLon = natalData.houses?.ascendant ?? 0;
 
-  // Zodyak + ev bandı (natal çerçevesi, natal ASC'ye göre yönlendirilir)
-  drawSignRing(ctx, cx, cy, { outerR: signOutR, signInR }, ascLon);
-  drawHouseBand(ctx, cx, cy, natalData.houses, { signInR, houseInR, innerR }, ascLon);
+  drawBiSignRing(ctx, cx, cy, R, ascLon);
+  drawHouseBand(ctx, cx, cy, natalData.houses, R, ascLon);
+  circle(ctx, cx, cy, R.innerR, 1.4);
 
-  // Dış haritanın kendi ev cuspları + numaraları (varsa — progres haritasında)
-  // Transit'te ayrı ev sistemi yok, bu yüzden yalnızca houses içeren bi-wheel'lerde çizilir.
-  if (transitData.houses?.cusps) {
-    drawBiWheelOuterFrame(ctx, cx, cy, transitData.houses, { outerR, signOutR }, ascLon);
-  }
-
-  // Dış harita gezegenleri (en dış halka)
-  drawBiWheelOuterPlanets(ctx, cx, cy, transitData.planets, outerLayout, ascLon);
-
-  // En dış çember
-  ctx.strokeStyle = '#111111';
-  ctx.lineWidth = 1.5;
-  ctx.beginPath();
-  ctx.arc(cx, cy, outerR, 0, Math.PI * 2);
-  ctx.stroke();
-
-  drawInnerCircle(ctx, cx, cy, innerR);
-  drawAngles(ctx, cx, cy, natalData.houses, { outerR, innerR }, ascLon);
+  // Not: dış haritanın (progres) kendi ev çerçevesini ÇİZMİYORUZ. Progres'te
+  // vardı ama transit'te yok; tutarlılık için her bi-wheel transit gibi görünür.
+  // (drawOuterFrame korunuyor ama artık çağrılmıyor.)
 
   if (transitData.transitNatalAspects) {
-    drawBiWheelAspects(ctx, cx, cy, transitData.planets, natalData.planets, transitData.transitNatalAspects, innerR, ascLon);
+    drawBiWheelAspects(ctx, cx, cy, transitData.planets, natalData.planets,
+      transitData.transitNatalAspects, R, ascLon, options.activePlanets || null);
   }
 
-  // İç harita (natal) gezegenleri (iç halka)
-  drawBiWheelInnerPlanets(ctx, cx, cy, natalData.planets, innerLayout, ascLon, natalData.partOfFortune);
+  drawInnerPlanets(ctx, cx, cy, natalData.planets, R, ascLon, natalData.partOfFortune);
+  drawOuterPlanets(ctx, cx, cy, transitData.planets, R, ascLon);
 
-  // Dış haritanın açı etiketleri (ASC/MC/DSC/IC) — gezegenlerin ÜSTÜNE, hep görünür
-  if (transitData.houses?.cusps) {
-    drawBiWheelOuterAngleLabels(ctx, cx, cy, transitData.houses, { outerR }, ascLon);
-  }
-
-  if (options.title) {
-    drawInfoBlock(ctx, options);
-  }
+  if (options.title) drawInfoBlock(ctx, options, R);
 }
 
 // ============================================
-// BI-WHEEL — DIŞ HARİTA EV ÇERÇEVESİ (progres/transit)
-// Dış halkada dış haritanın ev cuspları, numaraları ve açıları
-// ============================================
-const OUTER_FRAME_COLOR = '#7c3aed'; // mor — dış (progres) harita
-
-function drawBiWheelOuterFrame(ctx, cx, cy, houses, radii, ascLon) {
-  if (!houses || !houses.cusps) return;
-  const { outerR, signOutR } = radii;
-  const numR = outerR - 22;
-
-  for (let i = 0; i < houses.cusps.length; i++) {
-    const cusp = houses.cusps[i];
-    const lon = cusp.longitude;
-    const angle = lonToAngle(lon, ascLon);
-    const isAngular = [1, 4, 7, 10].includes(cusp.house);
-
-    // Cusp çizgisi — zodyak dış kenarından en dış çembere
-    ctx.save();
-    ctx.strokeStyle = isAngular ? OUTER_FRAME_COLOR : 'rgba(124, 58, 237, 0.30)';
-    ctx.lineWidth = isAngular ? 2.2 : 0.8;
-    const p1 = polarToXY(cx, cy, signOutR, angle);
-    const p2 = polarToXY(cx, cy, outerR, angle);
-    ctx.beginPath();
-    ctx.moveTo(p1.x, p1.y);
-    ctx.lineTo(p2.x, p2.y);
-    ctx.stroke();
-    ctx.restore();
-
-    // Ev numarası — evin ortasında, en dış kenarda
-    const nextCusp = houses.cusps[(i + 1) % 12];
-    let midLon = lon + angleBetween(lon, nextCusp.longitude) / 2;
-    if (midLon >= 360) midLon -= 360;
-    const midAngle = lonToAngle(midLon, ascLon);
-    const numPos = polarToXY(cx, cy, numR, midAngle);
-    ctx.save();
-    ctx.font = 'bold 15px Inter, sans-serif';
-    ctx.fillStyle = 'rgba(124, 58, 237, 0.75)';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(cusp.house.toString(), numPos.x, numPos.y);
-    ctx.restore();
-  }
-}
-
-function drawBiWheelOuterAngleLabels(ctx, cx, cy, houses, radii, ascLon) {
-  if (!houses) return;
-  const { outerR } = radii;
-  const labelR = outerR - 48;
-  const angles = [
-    { lon: houses.ascendant, label: 'ASC' },
-    { lon: houses.mc, label: 'MC' },
-    { lon: houses.descendant, label: 'DSC' },
-    { lon: houses.ic, label: 'IC' },
-  ];
-  for (const a of angles) {
-    if (a.lon === undefined || a.lon === null) continue;
-    const angle = lonToAngle(a.lon, ascLon);
-    const pos = polarToXY(cx, cy, labelR, angle);
-    ctx.save();
-    // Okunurluk için arka plan rozeti
-    ctx.font = 'bold 17px Inter, sans-serif';
-    const w = ctx.measureText(a.label).width + 8;
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
-    ctx.fillRect(pos.x - w / 2, pos.y - 11, w, 22);
-    ctx.fillStyle = OUTER_FRAME_COLOR;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(a.label, pos.x, pos.y);
-    ctx.restore();
-  }
-}
-
-
-// ============================================
-// BI-WHEEL TRANSIT PLANETS
+// OVERLAY'LER (dekan / 7'ler) — mevcut çarkın ÜSTÜNE çizer
 // ============================================
 
-function drawBiWheelOuterPlanets(ctx, cx, cy, planets, layout, ascLon) {
-  if (!planets) return;
-  const { symR, degR, signR, minR, retroR } = layout;
+export function drawSevenYearOverlay(canvas, chartData, sevensData, options = {}) {
+  if (!canvas || !chartData || !sevensData) return;
+  const { showAges = true } = options;
+  if (!showAges) return;
 
-  const withAngles = [...planets].map(p => ({
-    ...p,
-    angle: lonToAngle(p.longitude, ascLon),
-  })).sort((a, b) => a.angle - b.angle);
+  const ctx = canvas.getContext('2d');
+  const size = Math.min(canvas.width, canvas.height);
+  const cx = canvas.width / 2;
+  const cy = canvas.height / 2;
 
-  const positioned = avoidCollisions(withAngles, cx, cy, symR, 42);
+  const R = wheelRadii(size);
+  const ascLon = chartData.houses?.ascendant ?? 0;
 
-  for (const planet of positioned) {
-    const color = PLANET_COLORS[planet.name] || '#333333';
-    const dispAngle = planet.displayAngle ?? planet.angle;
+  const AGE_COLOR = { fire: '#FF0000', earth: '#00AA00', air: '#00A8A5', water: '#0000FF' };
 
-    const signIdx = Math.floor(planet.longitude / 30);
-    const signElement = SIGNS[signIdx].element;
-    const signColor = ELEMENT_SYMBOL_COLORS[signElement] || '#333333';
-    const signDeg = planet.longitude % 30;
-    const deg = Math.floor(signDeg);
-    const min = Math.floor((signDeg - deg) * 60);
+  for (const house of sevensData) {
+    for (const year of house.years) {
+      const startAngle = lonToAngle(year.startLongitude, ascLon);
+      const endAngle = lonToAngle(year.endLongitude, ascLon);
+      const element = year.decanSign?.element || 'fire';
 
-    // 1) Planet symbol
-    const symScale = PLANET_SYMBOL_SCALE[planet.symbol] || 1.0;
-    const symSize = Math.round(56 * symScale);
-    const symPos = polarToXY(cx, cy, symR, dispAngle);
-    ctx.save();
-    ctx.font = `bold ${symSize}px serif`;
-    ctx.fillStyle = color;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(planet.symbol, symPos.x, symPos.y);
-    ctx.restore();
+      if (year.yearIndex > 0) {
+        const p1 = polarToXY(cx, cy, R.houseInR - 2, startAngle);
+        const p2 = polarToXY(cx, cy, R.innerR + 2, startAngle);
+        ctx.save();
+        ctx.strokeStyle = 'rgba(140,120,200,0.4)';
+        ctx.lineWidth = 0.8;
+        ctx.setLineDash([3, 3]);
+        ctx.beginPath();
+        ctx.moveTo(p1.x, p1.y);
+        ctx.lineTo(p2.x, p2.y);
+        ctx.stroke();
+        ctx.restore();
+      }
 
-    // 2) DD°
-    const degPos = polarToXY(cx, cy, degR, dispAngle);
-    ctx.save();
-    ctx.font = 'bold 28px JetBrains Mono, monospace';
-    ctx.fillStyle = color;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(`${deg}°`, degPos.x, degPos.y);
-    ctx.restore();
+      let diff = endAngle - startAngle;
+      while (diff > Math.PI) diff -= 2 * Math.PI;
+      while (diff < -Math.PI) diff += 2 * Math.PI;
+      const midAngle = startAngle + diff / 2;
 
-    // 3) Sign SVG icon
-    const signPos = polarToXY(cx, cy, signR, dispAngle);
-    drawSignSVG(ctx, SIGN_SVGS[signIdx], signPos.x, signPos.y, 28, signColor);
-
-    // 4) MM'
-    const minPos = polarToXY(cx, cy, minR, dispAngle);
-    ctx.save();
-    ctx.font = 'bold 26px JetBrains Mono, monospace';
-    ctx.fillStyle = color;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(`${String(min).padStart(2, '0')}'`, minPos.x, minPos.y);
-    ctx.restore();
-
-    // 5) Rx
-    if (planet.isRetrograde) {
-      const retroPos = polarToXY(cx, cy, retroR, dispAngle);
+      // Yaş etiketi RADYAL (ışın boyunca, merkeze doğru) — dar yaş segmentlerine
+      // teğetsel yazı sığmıyordu ("68-69..." çember boyunca üst üste biniyordu).
+      // Tek yaş sayısı yazılır; radyal olduğu için segmente rahat sığar.
+      const pos = polarToXY(cx, cy, R.houseInR - R.R * 0.035, midAngle);
+      // Yaşam yılı 1'den başlar (age 0 = 1. yıl). SolarFire de 1-84 sayar.
+      const label = `${year.age + 1}`;
       ctx.save();
-      ctx.font = 'bold 24px serif';
-      ctx.fillStyle = '#DC143C';
+      ctx.translate(pos.x, pos.y);
+      ctx.rotate(radialRotation(midAngle));
+      ctx.font = `bold ${Math.max(7, R.R * 0.024)}px Arial, sans-serif`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText('Rx', retroPos.x, retroPos.y);
+      ctx.fillStyle = AGE_COLOR[element] || '#666';
+      ctx.fillText(label, 0, 0);
       ctx.restore();
     }
   }
 }
 
+/**
+ * Dekan katmanı — GEZEGENLERDEN ÖNCE çizilir (drawChartWheel içinden), böylece
+ * bir gezegen bir dekan sınırındaysa gezegen üstte kalır, dekan sembolü onu
+ * ezmez. Dekan burç sembolleri ev bandının iç kenarında ince bir halka olur.
+ */
+function drawDecanLayer(ctx, cx, cy, decanData, R, ascLon) {
+  for (const house of decanData) {
+    for (const decan of house.decans) {
+      const startAngle = lonToAngle(decan.startLongitude, ascLon);
+      const endAngle = lonToAngle(decan.endLongitude, ascLon);
 
-// ============================================
-// BI-WHEEL NATAL PLANETS
-// ============================================
+      // Dekan sınır çizgisi (ilk dekan = ev cuspu, atlanır)
+      if (decan.index > 0) {
+        const p1 = polarToXY(cx, cy, R.houseInR - 2, startAngle);
+        const p2 = polarToXY(cx, cy, R.innerR + 2, startAngle);
+        ctx.save();
+        ctx.strokeStyle = 'rgba(140, 120, 200, 0.45)';
+        ctx.lineWidth = 1;
+        ctx.setLineDash([5, 4]);
+        ctx.beginPath();
+        ctx.moveTo(p1.x, p1.y);
+        ctx.lineTo(p2.x, p2.y);
+        ctx.stroke();
+        ctx.restore();
+      }
 
-function drawBiWheelInnerPlanets(ctx, cx, cy, planets, layout, ascLon, partOfFortune) {
-  if (!planets) return;
-  const { symR, degR, signR, minR, retroR } = layout;
+      let diff = endAngle - startAngle;
+      while (diff > Math.PI) diff -= 2 * Math.PI;
+      while (diff < -Math.PI) diff += 2 * Math.PI;
+      const midAngle = startAngle + diff / 2;
 
-  const allPlanets = [...planets];
-  if (partOfFortune) {
-    allPlanets.push({ ...partOfFortune, isRetrograde: false, id: -99 });
-  }
-
-  const withAngles = allPlanets.map(p => ({
-    ...p,
-    angle: lonToAngle(p.longitude, ascLon),
-  })).sort((a, b) => a.angle - b.angle);
-
-  const positioned = avoidCollisions(withAngles, cx, cy, minR, 42);
-
-  for (const planet of positioned) {
-    const color = PLANET_COLORS[planet.name] || '#333333';
-    const dispAngle = planet.displayAngle ?? planet.angle;
-
-    const signIdx = Math.floor(planet.longitude / 30);
-    const signElement = SIGNS[signIdx].element;
-    const signColor = ELEMENT_SYMBOL_COLORS[signElement] || '#333333';
-    const signDeg = planet.longitude % 30;
-    const deg = Math.floor(signDeg);
-    const min = Math.floor((signDeg - deg) * 60);
-
-    // 1) Planet symbol
-    const symScale = PLANET_SYMBOL_SCALE[planet.symbol] || 1.0;
-    const symSize = Math.round(52 * symScale);
-    const symPos = polarToXY(cx, cy, symR, dispAngle);
-    ctx.save();
-    ctx.font = `bold ${symSize}px serif`;
-    ctx.fillStyle = color;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(planet.symbol, symPos.x, symPos.y);
-    ctx.restore();
-
-    // 2) DD°
-    const degPos = polarToXY(cx, cy, degR, dispAngle);
-    ctx.save();
-    ctx.font = 'bold 26px JetBrains Mono, monospace';
-    ctx.fillStyle = color;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(`${deg}°`, degPos.x, degPos.y);
-    ctx.restore();
-
-    // 3) Sign SVG icon
-    const signPos = polarToXY(cx, cy, signR, dispAngle);
-    drawSignSVG(ctx, SIGN_SVGS[signIdx], signPos.x, signPos.y, 26, signColor);
-
-    // 4) MM'
-    const minPos = polarToXY(cx, cy, minR, dispAngle);
-    ctx.save();
-    ctx.font = 'bold 24px JetBrains Mono, monospace';
-    ctx.fillStyle = color;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(`${String(min).padStart(2, '0')}'`, minPos.x, minPos.y);
-    ctx.restore();
-
-    // 5) Rx
-    if (planet.isRetrograde) {
-      const retroPos = polarToXY(cx, cy, retroR, dispAngle);
-      ctx.save();
-      ctx.font = 'bold 22px serif';
-      ctx.fillStyle = '#DC143C';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText('Rx', retroPos.x, retroPos.y);
-      ctx.restore();
+      const signIdx = SIGNS.indexOf(decan.decanSign);
+      if (signIdx >= 0) {
+        const p = polarToXY(cx, cy, R.houseInR - R.R * 0.028, midAngle);
+        drawSign(ctx, signIdx, p.x, p.y, R.R * 0.030,
+          ELEMENT_COLOR[decan.decanSign.element]);
+      }
     }
   }
 }
 
-
-// ============================================
-// BI-WHEEL ASPECTS
-// ============================================
-
-function drawBiWheelAspects(ctx, cx, cy, transitPlanets, natalPlanets, aspects, innerR, ascLon) {
-  if (!aspects) return;
-
-  const transitLonMap = {};
-  for (const p of transitPlanets) {
-    transitLonMap[p.name] = p.longitude;
-  }
-
-  const natalLonMap = {};
-  for (const p of natalPlanets) {
-    natalLonMap[p.name] = p.longitude;
-  }
-
-  const majorAngles = [0, 180, 120, 90, 60];
-
-  for (const aspect of aspects) {
-    const style = ASPECT_STYLES[aspect.angle];
-    if (!style) continue;
-    if (!majorAngles.includes(aspect.angle)) continue;
-
-    const lon1 = transitLonMap[aspect.transitPlanet.name];
-    const lon2 = natalLonMap[aspect.natalPlanet.name];
-    if (lon1 === undefined || lon2 === undefined) continue;
-
-    const r = innerR - 3;
-    const p1 = polarToXY(cx, cy, r, lonToAngle(lon1, ascLon));
-    const p2 = polarToXY(cx, cy, r, lonToAngle(lon2, ascLon));
-
-    ctx.save();
-    ctx.strokeStyle = style.color;
-    ctx.lineWidth = style.width * 0.8;
-    ctx.setLineDash([4, 3]);
-    if (aspect.orb < 1) ctx.lineWidth = style.width;
-    else if (aspect.orb > 5) ctx.globalAlpha = 0.3;
-
-    ctx.beginPath();
-    ctx.moveTo(p1.x, p1.y);
-    ctx.lineTo(p2.x, p2.y);
-    ctx.stroke();
-    ctx.restore();
-  }
+/** Geriye uyumlu dış API — artık drawChartWheel options.decans tercih edilir. */
+export function drawDecanOverlay(canvas, chartData, decanData) {
+  if (!canvas || !chartData || !decanData) return;
+  const ctx = canvas.getContext('2d');
+  const size = Math.min(canvas.width, canvas.height);
+  const R = wheelRadii(size);
+  drawDecanLayer(ctx, canvas.width / 2, canvas.height / 2, decanData, R,
+    chartData.houses?.ascendant ?? 0);
 }

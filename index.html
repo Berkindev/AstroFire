@@ -32,8 +32,23 @@
         <button class="main-tab" data-main-tab="lunar">🌙 Lunar Return</button>
         <button class="main-tab" data-main-tab="transit">🔄 Transitler</button>
         <button class="main-tab" data-main-tab="progression">📈 Progres</button>
+        <button class="main-tab" data-main-tab="synastry">💞 Sinastri</button>
         <button class="main-tab" data-main-tab="analysis" style="display:none;">📊 Analiz</button>
       </div>
+
+      <!-- Kayıtlı Haritalar (localStorage) -->
+      <section class="panel memory-panel" id="memoryPanel" style="display:none;">
+        <div class="memory-header" id="memoryHeader">
+          <span class="memory-title"><span class="panel-icon">📁</span> Kayıtlı Haritalar</span>
+          <div class="memory-header-actions">
+            <button type="button" id="saveChartBtn" class="btn-save" disabled>
+              <span class="btn-icon">💾</span> Bu haritayı kaydet
+            </button>
+            <span class="toggle-icon" id="memoryToggleIcon">▼</span>
+          </div>
+        </div>
+        <div class="memory-body" id="memoryBody"></div>
+      </section>
 
       <!-- Input Panel (toggle edilebilir) -->
       <section class="panel input-panel">
@@ -144,29 +159,31 @@
           </div>
 
           <!-- Tab Contents -->
-          <div id="tab-chart" class="tab-content active">
+          <div id="tab-chart" class="tab-content na-tab-content active">
             <div class="chart-canvas-container">
               <canvas id="natalChartCanvas" width="1200" height="1200"></canvas>
             </div>
             <label class="chart-overlay-toggle" id="decanOverlayToggle">
-              <input type="checkbox" id="decanOverlayCheck" checked>
+              <input type="checkbox" id="decanOverlayCheck">
               <span>Dekanları Göster</span>
             </label>
+            <!-- Gezegen açı filtresi (ders modu) -->
+            <div class="planet-filter" id="natalPlanetFilter"></div>
           </div>
 
-          <div id="tab-planets" class="tab-content">
+          <div id="tab-planets" class="tab-content na-tab-content">
             <div id="planetsTable"></div>
           </div>
 
-          <div id="tab-houses" class="tab-content">
+          <div id="tab-houses" class="tab-content na-tab-content">
             <div id="housesTable"></div>
           </div>
 
-          <div id="tab-aspects" class="tab-content">
+          <div id="tab-aspects" class="tab-content na-tab-content">
             <div id="aspectsTable"></div>
           </div>
 
-          <div id="tab-debug" class="tab-content">
+          <div id="tab-debug" class="tab-content na-tab-content">
             <pre id="debugOutput" class="debug-output"></pre>
           </div>
 
@@ -289,6 +306,7 @@
               <div class="chart-canvas-container">
                 <canvas id="lrChartCanvas" width="1200" height="1200"></canvas>
               </div>
+              <div class="planet-filter" id="lrPlanetFilter"></div>
             </div>
             <div id="tab-lr-planets" class="tab-content lr-tab-content">
               <div id="lrPlanetsTable"></div>
@@ -425,6 +443,7 @@
               <div class="chart-canvas-container">
                 <canvas id="trChartCanvas" width="1800" height="1800"></canvas>
               </div>
+              <div class="planet-filter" id="transitPlanetFilter"></div>
             </div>
             <div id="tab-tr-planets" class="tab-content tr-tab-content">
               <div id="trPlanetsTable"></div>
@@ -508,6 +527,7 @@
               <div class="chart-canvas-container">
                 <canvas id="prChartCanvas" width="1800" height="1800"></canvas>
               </div>
+              <div class="planet-filter" id="progressionPlanetFilter"></div>
             </div>
             <div id="tab-pr-planets" class="tab-content pr-tab-content">
               <div id="prPlanetsTable"></div>
@@ -545,6 +565,8 @@
               <div class="form-group">
                 <label for="srYear">Solar Return Yılı</label>
                 <input type="number" id="srYear" min="1900" max="2100" required>
+                <!-- Girilen yılın hangi dönemi kapsadığı — konvansiyon görünür olsun -->
+                <div class="sr-period-hint hidden" id="srPeriodHint"></div>
               </div>
             </div>
 
@@ -610,6 +632,7 @@
               <div class="chart-canvas-container">
                 <canvas id="srChartCanvas" width="1200" height="1200"></canvas>
               </div>
+              <div class="planet-filter" id="srPlanetFilter"></div>
             </div>
             <div id="tab-sr-planets" class="tab-content sr-tab-content">
               <div id="srPlanetsTable"></div>
@@ -626,6 +649,169 @@
 
             <!-- SR Dekanlar (her zaman görünür) -->
             <div id="srDecansDisplay" class="decans-section"></div>
+          </div>
+        </section>
+      </section>
+
+      <!-- SİNASTRİ PANEL (Sinastri + Kompozit + Davison) -->
+      <section class="main-tab-content" id="mainTab-synastry">
+        <section class="panel sy-panel" id="synastryPanel">
+          <h2 class="panel-title">
+            <span class="panel-icon">💞</span>
+            Sinastri
+          </h2>
+
+          <!-- Kişi A özeti (üstteki natal formdan gelir) -->
+          <div class="sy-person-a" id="syPersonA">
+            <span class="sy-person-label">Kişi A</span>
+            <span class="sy-person-info" id="syPersonAInfo">Önce natal harita hesaplayın</span>
+          </div>
+
+          <!-- Kişi B doğum formu -->
+          <div class="sy-form">
+            <div class="sy-form-title">
+              <span class="sy-person-label sy-label-b">Kişi B</span>
+              <span class="sy-form-hint">İkinci kişinin doğum bilgileri</span>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="syBirthDay">Gün</label>
+                <input type="number" id="syBirthDay" min="1" max="31">
+              </div>
+              <div class="form-group">
+                <label for="syBirthMonth">Ay</label>
+                <input type="number" id="syBirthMonth" min="1" max="12">
+              </div>
+              <div class="form-group">
+                <label for="syBirthYear">Yıl</label>
+                <input type="number" id="syBirthYear" min="1" max="2100">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="syBirthHour">Saat</label>
+                <input type="number" id="syBirthHour" min="0" max="23">
+              </div>
+              <div class="form-group">
+                <label for="syBirthMinute">Dakika</label>
+                <input type="number" id="syBirthMinute" min="0" max="59">
+              </div>
+            </div>
+
+            <div class="form-group full-width">
+              <label for="syCitySearch">Doğum Yeri</label>
+              <div class="city-search-wrapper">
+                <input type="text" id="syCitySearch" autocomplete="off">
+                <div id="syCityDropdown" class="city-dropdown hidden"></div>
+              </div>
+              <div class="quick-city-buttons" id="syQuickCityButtons">
+                <button type="button" class="sy-quick-city-btn" data-city="istanbul">İstanbul</button>
+                <button type="button" class="sy-quick-city-btn" data-city="ankara">Ankara</button>
+                <button type="button" class="sy-quick-city-btn" data-city="izmir">İzmir</button>
+                <button type="button" class="sy-quick-city-btn" data-city="antalya">Antalya</button>
+                <button type="button" class="sy-quick-city-btn" data-city="eskisehir">Eskişehir</button>
+              </div>
+            </div>
+
+            <div id="syLocationInfo" class="location-info hidden">
+              <div class="location-detail">
+                <span class="detail-label">Koordinat:</span>
+                <span id="syCoordDisplay" class="detail-value"></span>
+              </div>
+              <div class="location-detail">
+                <span class="detail-label">Timezone:</span>
+                <span id="syTimezoneDisplay" class="detail-value"></span>
+              </div>
+            </div>
+
+            <!-- Kompozit ev yöntemi (SolarFire anchor ayarı) -->
+            <div class="form-group full-width sy-anchor-group">
+              <label for="syAnchor">Kompozit ev çapası</label>
+              <select id="syAnchor" class="sy-select">
+                <option value="auto">Otomatik (SolarFire varsayılanı)</option>
+                <option value="asc">1. Ev (ASC) sabit</option>
+                <option value="mc">10. Ev (MC) sabit</option>
+              </select>
+              <p class="sy-anchor-hint">
+                Kompozit cusplar iki haritanın karşılık gelen cusplarının orta noktasıdır.
+                Cusplar neredeyse karşıt olduğunda zodyak sırası bozulur; çapa, hangi cuspun
+                sabit tutulacağını belirler.
+              </p>
+            </div>
+
+            <button type="button" id="syCalculateBtn" class="btn-calculate sy-btn" disabled>
+              <span class="btn-icon">💞</span>
+              İlişki Haritalarını Hesapla
+            </button>
+          </div>
+
+          <!-- Sonuçlar -->
+          <div class="sy-results hidden" id="syResults">
+            <div class="sy-summary-card" id="sySummaryCard"></div>
+
+            <div class="tabs sy-tabs">
+              <button class="tab active" data-sy-tab="sy-chart">🗺️ Sinastri Haritası</button>
+              <button class="tab" data-sy-tab="sy-aspects">🔗 Çapraz Aspektler</button>
+              <button class="tab" data-sy-tab="sy-grid">▦ Aspekt Gridi</button>
+              <button class="tab" data-sy-tab="sy-houses">🏠 Ev Yerleşimleri</button>
+              <button class="tab" data-sy-tab="sy-composite">⊕ Kompozit</button>
+              <button class="tab" data-sy-tab="sy-davison">🕐 Davison</button>
+            </div>
+
+            <div id="tab-sy-chart" class="tab-content sy-tab-content active">
+              <!-- Çerçeve İÇ haritanın ASC'sine göre kurulur; takas iki ayrı okuma verir -->
+              <div class="sy-chart-toolbar">
+                <button type="button" id="sySwapBtn" class="sy-swap-btn">
+                  <span class="sy-swap-icon">⇄</span>
+                  <span id="sySwapLabel">Kişi B'yi içe al</span>
+                </button>
+                <span class="sy-swap-hint">
+                  Harita çerçevesini iç haritanın evleri kurar — takas edince
+                  gezegenlerin hangi kişinin evlerine düştüğünü görürsün.
+                </span>
+              </div>
+
+              <div class="chart-canvas-container">
+                <canvas id="syChartCanvas" width="1800" height="1800"></canvas>
+              </div>
+              <div class="planet-filter" id="synastryPlanetFilter"></div>
+              <p class="sy-legend">
+                <span class="sy-legend-inner" id="syLegendInner">İç halka: Kişi A</span>
+                <span class="sy-legend-outer" id="syLegendOuter">Dış halka: Kişi B</span>
+              </p>
+            </div>
+
+            <div id="tab-sy-aspects" class="tab-content sy-tab-content">
+              <div id="syAspectsTable"></div>
+            </div>
+
+            <div id="tab-sy-grid" class="tab-content sy-tab-content">
+              <div id="syGridTable"></div>
+            </div>
+
+            <div id="tab-sy-houses" class="tab-content sy-tab-content">
+              <div id="syHousesTable"></div>
+            </div>
+
+            <div id="tab-sy-composite" class="tab-content sy-tab-content">
+              <div class="sy-subchart-card" id="syCompositeCard"></div>
+              <div class="chart-canvas-container">
+                <canvas id="syCompositeCanvas" width="1200" height="1200"></canvas>
+              </div>
+              <div id="syCompositePlanetsTable"></div>
+              <div id="syCompositeAspectsTable"></div>
+            </div>
+
+            <div id="tab-sy-davison" class="tab-content sy-tab-content">
+              <div class="sy-subchart-card" id="syDavisonCard"></div>
+              <div class="chart-canvas-container">
+                <canvas id="syDavisonCanvas" width="1200" height="1200"></canvas>
+              </div>
+              <div id="syDavisonPlanetsTable"></div>
+              <div id="syDavisonAspectsTable"></div>
+            </div>
           </div>
         </section>
       </section>
@@ -650,7 +836,8 @@
     </main>
 
     <footer class="app-footer">
-      Değerli hocalarım Beyza &amp; Serkan Aslan için hazırlanmıştır. ❤️ Kerem
+      Değerli hocalarım Beyza &amp; Serkan Aslan için hazırlanmıştır.
+      <span id="heartEgg" class="heart-egg" title="🤫">❤️</span> Kerem
     </footer>
   </div>
 
