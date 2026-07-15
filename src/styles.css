@@ -2973,7 +2973,7 @@ input::placeholder {
 }
 
 /* ============================================
-   EASTER EGG — footer kalbi (Damla 💧)
+   EASTER EGG — footer kalbi (Kerem ⇄ Damla)
    ============================================ */
 .heart-egg {
   cursor: pointer;
@@ -2985,42 +2985,4 @@ input::placeholder {
 }
 .heart-egg:active {
   transform: scale(0.85);
-}
-
-.heart-particle {
-  position: fixed;
-  pointer-events: none;
-  z-index: 9999;
-  will-change: transform, opacity;
-  animation-name: heartFloat;
-  animation-timing-function: ease-out;
-  animation-fill-mode: forwards;
-}
-
-/* Ekranın rastgele bir noktasında belirir, rastgele yöne (her yöne) süzülür. */
-@keyframes heartFloat {
-  0%   { opacity: 0; transform: translate(0, 0) scale(0.3) rotate(0); }
-  15%  { opacity: 1; }
-  100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(1.3) rotate(var(--rot)); }
-}
-
-.damla-banner {
-  position: fixed;
-  top: 42%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 10000;
-  pointer-events: none;
-  font-size: 2.6rem;
-  font-weight: 700;
-  color: #ec4899;
-  text-shadow: 0 2px 20px rgba(236, 72, 153, 0.5);
-  animation: damlaPop 2s ease-out forwards;
-}
-
-@keyframes damlaPop {
-  0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.3); }
-  20%  { opacity: 1; transform: translate(-50%, -50%) scale(1.15); }
-  70%  { opacity: 1; transform: translate(-50%, -55%) scale(1); }
-  100% { opacity: 0; transform: translate(-50%, -75%) scale(1.1); }
 }

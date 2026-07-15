@@ -3636,40 +3636,13 @@ document.querySelectorAll('.main-tab[data-main-tab="analysis"]').forEach(tab => 
 });
 
 // ============================================
-// EASTER EGG — footer kalbi (Damla ❤️)
+// EASTER EGG — footer kalbi (Kerem ⇄ Damla)
 // ============================================
-// Kalbe tıklayınca ekranın HER YERİNDEN (sol/sağ/üst/alt/orta) farklı kalp
-// emojileri belirip rastgele yönlere süzülür; ortada bir an "Damla ❤️" belirir.
-function heartBurst() {
-  const glyphs = ['❤️', '🧡', '💛', '💚', '💙', '💜', '🤍', '🖤', '🤎',
-    '💗', '💖', '💓', '💕', '💞', '💝', '💘', '❣️', '💟'];
-  const n = 44;
-
-  for (let i = 0; i < n; i++) {
-    const el = document.createElement('span');
-    el.className = 'heart-particle';
-    el.textContent = glyphs[Math.floor(Math.random() * glyphs.length)];
-    // Başlangıç: ekranın herhangi bir yeri
-    el.style.left = `${Math.random() * 100}vw`;
-    el.style.top = `${Math.random() * 100}vh`;
-    el.style.fontSize = `${1.1 + Math.random() * 1.8}rem`;
-    // Rastgele yöne akış
-    el.style.setProperty('--dx', `${(Math.random() - 0.5) * 70}vw`);
-    el.style.setProperty('--dy', `${(Math.random() - 0.5) * 70}vh`);
-    el.style.setProperty('--rot', `${(Math.random() - 0.5) * 720}deg`);
-    el.style.animationDelay = `${Math.random() * 0.4}s`;
-    el.style.animationDuration = `${1.6 + Math.random() * 1.4}s`;
-    document.body.appendChild(el);
-    el.addEventListener('animationend', () => el.remove());
-  }
-
-  const banner = document.createElement('div');
-  banner.className = 'damla-banner';
-  banner.textContent = 'Damla ❤️';
-  document.body.appendChild(banner);
-  banner.addEventListener('animationend', () => banner.remove());
-}
-
-$('heartEgg')?.addEventListener('click', heartBurst);
+// Kalbe tıklayınca footer'daki isim "Kerem" ↔ "Damla" arasında geçiş yapar.
+$('heartEgg')?.addEventListener('click', () => {
+  const name = $('footerName');
+  if (!name) return;
+  name.textContent = name.textContent.trim() === 'Kerem' ? 'Damla' : 'Kerem';
+});
 
 init();
