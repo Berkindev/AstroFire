@@ -411,8 +411,11 @@ function drawHouseBand(ctx, cx, cy, houses, R, ascLon, opts = {}) {
 
     // Cusp çizgisi: aspekt çemberinden burç bandına kadar.
     // Açı cuspları (ASC/IC/DSC/MC) kırmızı ve DIŞ çembere kadar uzar.
+    // Bi-wheel'de natal açı çizgileri zodyak içinde kesilir (opts.angleOutR) ki
+    // dış transit halkasına taşıp transit açılarıyla karışmasın.
+    const angleOutR = opts.angleOutR ?? R.outerR;
     const p1 = polarToXY(cx, cy, R.innerR, a);
-    const p2 = polarToXY(cx, cy, isAngle ? R.outerR : R.signInR, a);
+    const p2 = polarToXY(cx, cy, isAngle ? angleOutR : R.signInR, a);
 
     ctx.save();
     ctx.strokeStyle = isAngle ? ANGLE_COLOR : LINE_COLOR;
@@ -422,6 +425,10 @@ function drawHouseBand(ctx, cx, cy, houses, R, ascLon, opts = {}) {
     ctx.lineTo(p2.x, p2.y);
     ctx.stroke();
     ctx.restore();
+
+    // Bi-wheel'de açı cusplarının (1/4/7/10) derecesi yazılmaz; oraya
+    // drawInnerAngles "ASC/IC/DSC/MC" etiketini koyar (çakışmayı önler).
+    if (opts.skipAngleDeg && isAngle) continue;
 
     // Cusp derecesi: SolarFire gibi TEK satır "DD°MM'", halkaya TEĞET, cusp
     // çizgisinin üzerinde ortalanmış, tik halkasının hemen içinde. (Önceden
@@ -860,20 +867,20 @@ export function drawChartWheel(canvas, chartData, options = {}) {
 // ============================================
 
 export function wheelRadiiBi(size) {
-  const R = size * 0.47;
+  const R = size * 0.475;
   return {
     R,
-    outerR:   R,                 // dış çember — dış haritanın çerçevesi
-    outerGlyphR: R * 0.945,      // dış haritanın gezegen glifi; satırlar içeri iner
-    signOutR: R * 0.775,
-    signInR:  R * 0.700,
-    houseInR: R * 0.650,
-    innerR:   R * 0.380,         // aspekt çemberi
-    signGlyphR: R * 0.7375,
-    tickOutR:     R * 0.718,
-    tickLongOutR: R * 0.730,
-    labelR:   R * 0.675,         // ev numaraları + cusp dereceleri
-    innerGlyphR: R * 0.590,      // iç haritanın gezegen glifi
+    outerR:   R,                 // en dış çember — transit (dış harita) çerçevesi
+    signOutR: R * 0.790,         // zodyak dış
+    signInR:  R * 0.710,         // zodyak iç
+    houseInR: R * 0.655,         // natal ev bandı iç
+    innerR:   R * 0.400,         // aspekt çemberi
+    signGlyphR:   R * 0.750,     // zodyak glifi (bandın ortası)
+    tickOutR:     R * 0.725,
+    tickLongOutR: R * 0.740,
+    labelR:       R * 0.620,     // natal ev numaraları + cusp dereceleri
+    innerGlyphR:  R * 0.560,     // iç (natal) gezegen glifi
+    outerGlyphR:  R * 0.835,     // dış (transit) gezegen glifi — zodyağın hemen dışı
   };
 }
 
@@ -895,7 +902,7 @@ function drawBiSignRing(ctx, cx, cy, R, ascLon) {
   }
   ctx.restore();
 
-  const glyphSize = R.R * 0.058;
+  const glyphSize = R.R * 0.066;
   for (let s = 0; s < 12; s++) {
     const a = lonToAngle(s * 30 + 15, ascLon);
     const p = polarToXY(cx, cy, R.signGlyphR, a);
@@ -930,11 +937,11 @@ function drawOuterPlanets(ctx, cx, cy, planets, R, ascLon) {
 
   const items = planets.map(p => ({ planet: p, angle: lonToAngle(p.longitude, ascLon) }));
 
-  const glyphR = R.signOutR + R.R * 0.045;   // burç halkasının hemen dışı
-  const glyphSize = R.R * 0.033;
-  const signSize = R.R * 0.022;
-  const font = Math.max(7, R.R * 0.021);
-  const rowGap = R.R * 0.027;
+  const glyphR = R.outerGlyphR;              // burç halkasının hemen dışı
+  const glyphSize = R.R * 0.040;
+  const signSize = R.R * 0.027;
+  const font = Math.max(8, R.R * 0.025);
+  const rowGap = R.R * 0.031;
 
   const placed = avoidCollisions(items, glyphR, glyphSize * 1.7);
 
@@ -1000,10 +1007,10 @@ function drawInnerPlanets(ctx, cx, cy, planets, R, ascLon, partOfFortune) {
   const items = list.map(p => ({ planet: p, angle: lonToAngle(p.longitude, ascLon) }));
 
   const glyphR = R.innerGlyphR;
-  const glyphSize = R.R * 0.033;
-  const signSize = R.R * 0.022;
-  const font = Math.max(7, R.R * 0.021);
-  const rowGap = R.R * 0.026;
+  const glyphSize = R.R * 0.040;
+  const signSize = R.R * 0.027;
+  const font = Math.max(8, R.R * 0.025);
+  const rowGap = R.R * 0.030;
 
   const placed = avoidCollisions(items, glyphR, glyphSize * 1.8);
 
@@ -1132,6 +1139,64 @@ function drawBiWheelAspects(ctx, cx, cy, outerPlanets, innerPlanets, aspects, R,
   }
 }
 
+/**
+ * Natal (İÇ) haritanın açı etiketleri — zodyağın hemen içinde, kırmızı, radyal.
+ * Eksen çizgileri drawHouseBand'de (angleOutR = signInR) zodyak içinde çizilir.
+ * Bi-wheel'deki "birinci ASC" budur (natal ASC).
+ */
+function drawInnerAngles(ctx, cx, cy, houses, R, ascLon) {
+  if (!houses) return;
+
+  const angles = [
+    ['ASC', houses.ascendant],
+    ['DESC', houses.descendant ?? (houses.ascendant + 180)],
+    ['MC', houses.mc],
+    ['IC', houses.ic ?? (houses.mc + 180)],
+  ];
+
+  const labelR = R.signInR - R.R * 0.032;
+  const fontSize = Math.max(9, R.R * 0.032);
+
+  ctx.save();
+  ctx.font = `bold ${fontSize}px Arial, sans-serif`;
+  ctx.fillStyle = ANGLE_COLOR;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  for (const [name, lon] of angles) {
+    if (lon == null) continue;
+    const a = lonToAngle(lon, ascLon);
+    const p = polarToXY(cx, cy, labelR, a);
+    ctx.save();
+    ctx.translate(p.x, p.y);
+    ctx.rotate(textRotation(a));
+    ctx.fillText(name, 0, 0);
+    ctx.restore();
+  }
+  ctx.restore();
+}
+
+/**
+ * Dış (transit/progres) haritanın ev cusp çizgileri — dış bantta, ince gri.
+ * Açı cuspları (ASC/MC/DSC/IC) ayrıca drawOuterAngles'da kırmızı vurgulanır.
+ */
+function drawOuterHouseCusps(ctx, cx, cy, houses, R, ascLon) {
+  if (!houses?.cusps) return;
+
+  ctx.save();
+  ctx.strokeStyle = LINE_COLOR;
+  ctx.lineWidth = 0.7;
+  for (const cusp of houses.cusps) {
+    const a = lonToAngle(cusp.longitude, ascLon);
+    const p1 = polarToXY(cx, cy, R.signOutR, a);
+    const p2 = polarToXY(cx, cy, R.outerR, a);
+    ctx.beginPath();
+    ctx.moveTo(p1.x, p1.y);
+    ctx.lineTo(p2.x, p2.y);
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+
 export function drawBiWheel(canvas, natalData, transitData, options = {}) {
   if (!canvas || !natalData || !transitData) return;
 
@@ -1145,27 +1210,26 @@ export function drawBiWheel(canvas, natalData, transitData, options = {}) {
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   const R = wheelRadiiBi(size);
-  // Çerçeveyi İÇ harita kurar
+  // Çerçeveyi İÇ (natal) harita kurar
   const ascLon = natalData.houses?.ascendant ?? 0;
 
   drawBiSignRing(ctx, cx, cy, R, ascLon);
-  drawHouseBand(ctx, cx, cy, natalData.houses, R, ascLon);
+  // Natal ev bandı — açı çizgileri zodyak içinde kesilir; açı cusp dereceleri
+  // yerine "ASC/IC/DSC/MC" etiketi konur (drawInnerAngles).
+  drawHouseBand(ctx, cx, cy, natalData.houses, R, ascLon, { angleOutR: R.signInR, skipAngleDeg: true });
   circle(ctx, cx, cy, R.innerR, 1.4);
+  circle(ctx, cx, cy, R.outerR, 1.4);   // en dış çerçeve (transit halkası)
 
-  // Açı etiketleri (ASC/MC/DSC/IC) — natal tekil haritadaki gibi kırmızı eksen + etiket.
-  // - Progres: DIŞ haritanın (progres) kendi açıları çizilir (dış bantta).
-  // - Transit: transit'in kendi ev sistemi yoktur; çerçeve natal olduğundan
-  //   natal ASC/MC/DSC/IC etiketlenir (kırmızı eksen çizgileri house band'de zaten var).
-  //   Transit'in Şans Noktası da natal çerçeveden gelir (iç halkada çizilir).
-  if (transitData.type === 'progression' && transitData.houses) {
-    drawOuterAngles(ctx, cx, cy, transitData.houses, R, ascLon);
-  } else {
-    drawAngleLabels(ctx, cx, cy, natalData.houses, R, ascLon);
+  // Dış (transit/progres) haritanın kendi ev cuspları — dış bantta.
+  if (transitData.houses) {
+    drawOuterHouseCusps(ctx, cx, cy, transitData.houses, R, ascLon);
   }
 
-  // Not: dış haritanın (progres) kendi ev çerçevesini ÇİZMİYORUZ. Progres'te
-  // vardı ama transit'te yok; tutarlılık için her bi-wheel transit gibi görünür.
-  // (drawOuterFrame korunuyor ama artık çağrılmıyor.)
+  // İKİ ASC (astro-seek mantığı): natal açıları İÇTE, transit/progres açıları DIŞTA.
+  drawInnerAngles(ctx, cx, cy, natalData.houses, R, ascLon);
+  if (transitData.houses) {
+    drawOuterAngles(ctx, cx, cy, transitData.houses, R, ascLon);
+  }
 
   if (transitData.transitNatalAspects) {
     drawBiWheelAspects(ctx, cx, cy, transitData.planets, natalData.planets,
