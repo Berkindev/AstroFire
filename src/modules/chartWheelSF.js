@@ -768,6 +768,55 @@ function drawAngleLabels(ctx, cx, cy, houses, R, ascLon) {
   ctx.restore();
 }
 
+/**
+ * Bi-wheel'de DIŞ haritanın (progres) açılarını çizer: ASC/MC/DSC/IC için
+ * kırmızı eksen çizgisi + etiket. Çerçeve (iç) natal açı çizgileri house band'de
+ * zaten tam boy çiziliyor; progres açıları yalnızca DIŞ bantta (burç halkasının
+ * dışında, progres gezegenlerinin arasında) işaretlenir ki iki set karışmasın.
+ */
+function drawOuterAngles(ctx, cx, cy, houses, R, ascLon) {
+  if (!houses) return;
+
+  const angles = [
+    ['ASC', houses.ascendant],
+    ['DESC', houses.descendant ?? (houses.ascendant + 180)],
+    ['MC', houses.mc],
+    ['IC', houses.ic ?? (houses.mc + 180)],
+  ];
+
+  const labelR = R.outerR + R.R * 0.045;
+  const fontSize = Math.max(9, R.R * 0.034);
+
+  for (const [name, lon] of angles) {
+    if (lon == null) continue;
+    const a = lonToAngle(lon, ascLon);
+
+    // Kırmızı eksen çizgisi — burç halkasının dışından dış çembere.
+    const p1 = polarToXY(cx, cy, R.signOutR, a);
+    const p2 = polarToXY(cx, cy, R.outerR, a);
+    ctx.save();
+    ctx.strokeStyle = ANGLE_COLOR;
+    ctx.lineWidth = 1.4;
+    ctx.beginPath();
+    ctx.moveTo(p1.x, p1.y);
+    ctx.lineTo(p2.x, p2.y);
+    ctx.stroke();
+    ctx.restore();
+
+    // Etiket — dış çemberin hemen ötesinde.
+    const p = polarToXY(cx, cy, labelR, a);
+    ctx.save();
+    ctx.font = `bold ${fontSize}px Arial, sans-serif`;
+    ctx.fillStyle = ANGLE_COLOR;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.translate(p.x, p.y);
+    ctx.rotate(textRotation(a));
+    ctx.fillText(name, 0, 0);
+    ctx.restore();
+  }
+}
+
 // ============================================
 // TEKİL ÇARK
 // ============================================
@@ -1102,6 +1151,17 @@ export function drawBiWheel(canvas, natalData, transitData, options = {}) {
   drawBiSignRing(ctx, cx, cy, R, ascLon);
   drawHouseBand(ctx, cx, cy, natalData.houses, R, ascLon);
   circle(ctx, cx, cy, R.innerR, 1.4);
+
+  // Açı etiketleri (ASC/MC/DSC/IC) — natal tekil haritadaki gibi kırmızı eksen + etiket.
+  // - Progres: DIŞ haritanın (progres) kendi açıları çizilir (dış bantta).
+  // - Transit: transit'in kendi ev sistemi yoktur; çerçeve natal olduğundan
+  //   natal ASC/MC/DSC/IC etiketlenir (kırmızı eksen çizgileri house band'de zaten var).
+  //   Transit'in Şans Noktası da natal çerçeveden gelir (iç halkada çizilir).
+  if (transitData.type === 'progression' && transitData.houses) {
+    drawOuterAngles(ctx, cx, cy, transitData.houses, R, ascLon);
+  } else {
+    drawAngleLabels(ctx, cx, cy, natalData.houses, R, ascLon);
+  }
 
   // Not: dış haritanın (progres) kendi ev çerçevesini ÇİZMİYORUZ. Progres'te
   // vardı ama transit'te yok; tutarlılık için her bi-wheel transit gibi görünür.
