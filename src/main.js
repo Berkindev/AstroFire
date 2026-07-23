@@ -377,6 +377,12 @@ function setupEventListeners() {
   // SR hesapla
   elements.srCalculateBtn.addEventListener('click', handleSRCalculate);
 
+  // SR form katla/aç
+  $('srFormToggle')?.addEventListener('click', () => {
+    $('srForm')?.classList.toggle('collapsed');
+    $('srFormToggleIcon')?.classList.toggle('collapsed');
+  });
+
   // SR yıl değişince buton durumunu güncelle
   elements.srYear.addEventListener('input', updateSRButtonState);
 
@@ -423,6 +429,12 @@ function setupEventListeners() {
 
   // LR hesapla
   elements.lrCalculateBtn.addEventListener('click', handleLRCalculate);
+
+  // LR form katla/aç
+  $('lrFormToggle')?.addEventListener('click', () => {
+    $('lrForm')?.classList.toggle('collapsed');
+    $('lrFormToggleIcon')?.classList.toggle('collapsed');
+  });
 
   // LR gün/yıl/ay değişince buton durumunu güncelle
   elements.lrDay.addEventListener('input', updateLRButtonState);
@@ -1640,7 +1652,10 @@ async function handleSRCalculate() {
     currentSolarReturn = await calculateSolarReturn(currentChart, year, location);
     renderSRResults(currentSolarReturn);
     elements.srResults.classList.remove('hidden');
-    
+    // Hesaplamadan sonra formu katla (harita yukarı kaysın)
+    $('srForm')?.classList.add('collapsed');
+    $('srFormToggleIcon')?.classList.add('collapsed');
+
     // Scroll to SR results
     elements.srResults.scrollIntoView({ behavior: 'smooth' });
   } catch (error) {
@@ -1871,7 +1886,7 @@ function renderSevens(chart) {
       drawChartWheel(canvas, chart, {
         title: '7\'ler Kanunu',
         subtitle: `Natal Chart\n${dateStr}\n${timeStr}  ${getUtcOffsetStr(bd)}\n${bd.timezone}\n${cityName}`,
-        showAspects: false,
+        showAspects: true,
         chartType: 'natal',
       });
       const showAges = elements.sevensAgeCheck ? elements.sevensAgeCheck.checked : true;
@@ -2243,6 +2258,9 @@ async function handleLRCalculate() {
     currentLunarReturn = await calculateLunarReturn(currentChart, year, month, day, location);
     renderLRResults(currentLunarReturn);
     elements.lrResults.classList.remove('hidden');
+    // Hesaplamadan sonra formu katla (harita yukarı kaysın)
+    $('lrForm')?.classList.add('collapsed');
+    $('lrFormToggleIcon')?.classList.add('collapsed');
 
     // Scroll to LR results
     elements.lrResults.scrollIntoView({ behavior: 'smooth' });
