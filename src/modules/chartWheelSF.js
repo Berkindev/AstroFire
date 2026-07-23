@@ -943,7 +943,9 @@ function drawOuterPlanets(ctx, cx, cy, planets, R, ascLon) {
   const font = Math.max(9, R.R * 0.030);
   const rowGap = R.R * 0.036;
 
-  const placed = avoidCollisions(items, glyphR, glyphSize * 1.5);
+  // Çarpan DÜŞÜK (1.08): gezegen gerçek derecesine yakın kalsın, ev sınırını
+  // aşıp yanlış eve düşmesin. Sadece glifler üst üste binmesin diye ayrılır.
+  const placed = avoidCollisions(items, glyphR, glyphSize * 1.08);
 
   for (const item of placed) {
     const p = item.planet;
@@ -1012,7 +1014,9 @@ function drawInnerPlanets(ctx, cx, cy, planets, R, ascLon, partOfFortune) {
   const font = Math.max(9, R.R * 0.030);
   const rowGap = R.R * 0.034;
 
-  const placed = avoidCollisions(items, glyphR, glyphSize * 1.55);
+  // Çarpan DÜŞÜK (1.08): gezegen gerçek derecesine yakın kalsın, ev sınırını
+  // aşıp yanlış eve düşmesin. Sadece glifler üst üste binmesin diye ayrılır.
+  const placed = avoidCollisions(items, glyphR, glyphSize * 1.08);
 
   for (const item of placed) {
     const p = item.planet;
