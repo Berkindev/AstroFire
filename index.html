@@ -517,6 +517,14 @@
           <div class="pr-results hidden" id="prResults">
             <!-- Harita her zaman EN ÜSTTE, kendi kutusunda -->
             <div class="pr-chart-box">
+              <!-- Yıl/Ay ileri/geri + hedef tarih & yaş -->
+              <div class="tr-step-buttons pr-step-buttons" id="prStepButtons">
+                <span class="step-period" id="prStepPeriod"></span>
+                <button type="button" class="tr-step-btn tr-step-back pr-step-btn" data-years="-1">◀ 1 yıl</button>
+                <button type="button" class="tr-step-btn tr-step-back pr-step-btn" data-months="-1">◀ 1 ay</button>
+                <button type="button" class="tr-step-btn tr-step-fwd pr-step-btn" data-months="1">1 ay ▶</button>
+                <button type="button" class="tr-step-btn tr-step-fwd pr-step-btn" data-years="1">1 yıl ▶</button>
+              </div>
               <div class="chart-canvas-container">
                 <canvas id="prChartCanvas" width="1800" height="1800"></canvas>
               </div>
