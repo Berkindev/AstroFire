@@ -451,6 +451,12 @@ function setupEventListeners() {
     });
   });
 
+  // TR form katla/aç (başlığa tıkla)
+  $('trFormToggle')?.addEventListener('click', () => {
+    $('trForm')?.classList.toggle('collapsed');
+    $('trFormToggleIcon')?.classList.toggle('collapsed');
+  });
+
   // TR tarih değişince buton durumunu güncelle
   ['trDay', 'trMonth', 'trYear', 'trHour', 'trMinute'].forEach(id => {
     $(id).addEventListener('input', updateTRButtonState);
@@ -472,6 +478,12 @@ function setupEventListeners() {
 
   // PR hesapla
   elements.prCalculateBtn.addEventListener('click', handlePRCalculate);
+
+  // PR form katla/aç (başlığa tıkla)
+  $('prFormToggle')?.addEventListener('click', () => {
+    $('prForm')?.classList.toggle('collapsed');
+    $('prFormToggleIcon')?.classList.toggle('collapsed');
+  });
 
   // PR "Bugün" butonu
   elements.prTodayBtn.addEventListener('click', handlePRTodayClick);
@@ -2576,6 +2588,9 @@ async function handleTRCalculate() {
     currentTransit = await calculateTransits(currentChart, date, location);
     renderTRResults(currentTransit);
     elements.trResults.classList.remove('hidden');
+    // Hesaplamadan sonra tarih formunu default olarak katla (harita yukarı kaysın)
+    $('trForm')?.classList.add('collapsed');
+    $('trFormToggleIcon')?.classList.add('collapsed');
   } catch (error) {
     console.error('Transit hesaplama hatası:', error);
     alert('Transit hesaplama hatası: ' + error.message);
@@ -2861,6 +2876,9 @@ async function handlePRCalculate() {
     currentProgression = await calculateSecondaryProgression(currentChart, targetDate, { angleMethod });
     renderPRResults(currentProgression);
     elements.prResults.classList.remove('hidden');
+    // Hesaplamadan sonra tarih formunu default olarak katla (harita yukarı kaysın)
+    $('prForm')?.classList.add('collapsed');
+    $('prFormToggleIcon')?.classList.add('collapsed');
   } catch (error) {
     console.error('Progres hesaplama hatası:', error);
     alert('Progres hesaplama hatası: ' + error.message);

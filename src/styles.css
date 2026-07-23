@@ -1429,6 +1429,35 @@ input::placeholder {
   gap: 1rem;
 }
 
+/* Tarih formu katla/aç — hesaplamadan sonra default kapalı, harita yukarı kayar */
+.tr-form.collapsed,
+.pr-form.collapsed {
+  display: none;
+}
+
+.form-toggle-title {
+  cursor: pointer;
+  user-select: none;
+  margin-bottom: 1rem;
+}
+
+.form-toggle-icon {
+  margin-left: auto;
+  font-size: 0.72em;
+  color: var(--text-secondary);
+  transition: transform 0.2s ease;
+}
+
+.form-toggle-icon.collapsed {
+  transform: rotate(-90deg);
+}
+
+/* Harita kutusu — sonuçların en üstünde */
+.tr-chart-box,
+.pr-chart-box {
+  margin-bottom: 1.25rem;
+}
+
 .tr-input-row {
   flex-wrap: wrap;
 }
@@ -1519,8 +1548,9 @@ input::placeholder {
 .tr-step-buttons {
   display: flex;
   justify-content: center;
-  gap: 0.3rem;
-  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 0.75rem;
 }
 
 .tr-step-btn {
