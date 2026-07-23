@@ -880,7 +880,7 @@ export function wheelRadiiBi(size) {
     tickLongOutR: R * 0.740,
     labelR:       R * 0.620,     // natal ev numaraları + cusp dereceleri
     innerGlyphR:  R * 0.560,     // iç (natal) gezegen glifi
-    outerGlyphR:  R * 0.835,     // dış (transit) gezegen glifi — zodyağın hemen dışı
+    outerGlyphR:  R * 0.820,     // dış (transit) gezegen glifi — zodyağın hemen dışı
   };
 }
 
@@ -938,12 +938,12 @@ function drawOuterPlanets(ctx, cx, cy, planets, R, ascLon) {
   const items = planets.map(p => ({ planet: p, angle: lonToAngle(p.longitude, ascLon) }));
 
   const glyphR = R.outerGlyphR;              // burç halkasının hemen dışı
-  const glyphSize = R.R * 0.040;
-  const signSize = R.R * 0.027;
-  const font = Math.max(8, R.R * 0.025);
-  const rowGap = R.R * 0.031;
+  const glyphSize = R.R * 0.050;
+  const signSize = R.R * 0.033;
+  const font = Math.max(9, R.R * 0.030);
+  const rowGap = R.R * 0.036;
 
-  const placed = avoidCollisions(items, glyphR, glyphSize * 1.7);
+  const placed = avoidCollisions(items, glyphR, glyphSize * 1.5);
 
   for (const item of placed) {
     const p = item.planet;
@@ -1007,12 +1007,12 @@ function drawInnerPlanets(ctx, cx, cy, planets, R, ascLon, partOfFortune) {
   const items = list.map(p => ({ planet: p, angle: lonToAngle(p.longitude, ascLon) }));
 
   const glyphR = R.innerGlyphR;
-  const glyphSize = R.R * 0.040;
-  const signSize = R.R * 0.027;
-  const font = Math.max(8, R.R * 0.025);
-  const rowGap = R.R * 0.030;
+  const glyphSize = R.R * 0.050;
+  const signSize = R.R * 0.033;
+  const font = Math.max(9, R.R * 0.030);
+  const rowGap = R.R * 0.034;
 
-  const placed = avoidCollisions(items, glyphR, glyphSize * 1.8);
+  const placed = avoidCollisions(items, glyphR, glyphSize * 1.55);
 
   for (const item of placed) {
     const p = item.planet;
