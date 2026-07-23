@@ -383,6 +383,11 @@ function setupEventListeners() {
     $('srFormToggleIcon')?.classList.toggle('collapsed');
   });
 
+  // SR yıl ileri/geri
+  document.querySelectorAll('.sr-step-btn').forEach(btn => {
+    btn.addEventListener('click', () => handleSRStep(parseInt(btn.dataset.step)));
+  });
+
   // SR yıl değişince buton durumunu güncelle
   elements.srYear.addEventListener('input', updateSRButtonState);
 
@@ -1620,8 +1625,17 @@ function updateSRPeriodHint(year) {
   hint.classList.remove('hidden');
 }
 
+// Yıl ileri/geri — SR yılını değiştir ve yeniden hesapla (sayfayı zıplatma)
+function handleSRStep(deltaYears) {
+  const y = parseInt(elements.srYear.value);
+  if (Number.isNaN(y)) return;
+  elements.srYear.value = y + deltaYears;
+  updateSRButtonState();
+  handleSRCalculate({ scroll: false });
+}
+
 // SR Calculate
-async function handleSRCalculate() {
+async function handleSRCalculate({ scroll = true } = {}) {
   if (!currentChart) {
     alert('Önce natal harita hesaplayın.');
     return;
@@ -1656,8 +1670,8 @@ async function handleSRCalculate() {
     $('srForm')?.classList.add('collapsed');
     $('srFormToggleIcon')?.classList.add('collapsed');
 
-    // Scroll to SR results
-    elements.srResults.scrollIntoView({ behavior: 'smooth' });
+    // Scroll to SR results (yıl adımlarında zıplatma)
+    if (scroll) elements.srResults.scrollIntoView({ behavior: 'smooth' });
   } catch (error) {
     console.error('Solar Return hesaplama hatası:', error);
     alert('Solar Return hesaplama hatası: ' + error.message);
