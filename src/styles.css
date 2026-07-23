@@ -1456,8 +1456,20 @@ input::placeholder {
 
 /* Harita kutusu — sonuçların en üstünde */
 .tr-chart-box,
-.pr-chart-box {
+.pr-chart-box,
+.sr-chart-box,
+.lr-chart-box {
   margin-bottom: 1.25rem;
+}
+
+/* Adım satırındaki dönem/tarih (form katlıyken görünsün) */
+.step-period {
+  align-self: center;
+  margin-right: 0.5rem;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
 }
 
 .tr-input-row {

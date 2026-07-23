@@ -441,6 +441,11 @@ function setupEventListeners() {
     $('lrFormToggleIcon')?.classList.toggle('collapsed');
   });
 
+  // LR ay ileri/geri
+  document.querySelectorAll('.lr-step-btn').forEach(btn => {
+    btn.addEventListener('click', () => handleLRStep(parseInt(btn.dataset.step)));
+  });
+
   // LR gün/yıl/ay değişince buton durumunu güncelle
   elements.lrDay.addEventListener('input', updateLRButtonState);
   elements.lrYear.addEventListener('input', updateLRButtonState);
@@ -1972,12 +1977,24 @@ function renderSevensHTML(data, aspects) {
 
 function renderSRResults(sr) {
   renderSRTimingCard(sr);
+  renderSRStepPeriod();
   renderSRChart(sr);
   renderSRPlanets(sr);
   renderSRHouses(sr);
   renderSRAspects(sr);
   renderSRDebug(sr);
   renderSRDecans(sr);
+}
+
+/** Yıl adım satırındaki dönem tarihini yazar (form katlıyken görünsün). */
+function renderSRStepPeriod() {
+  const el = $('srStepPeriod');
+  if (!el || !currentChart) return;
+  const year = parseInt(elements.srYear.value);
+  if (Number.isNaN(year)) { el.textContent = ''; return; }
+  const p = solarPeriod(currentChart.birthData, year);
+  const dayStr = `${p.day} ${MONTH_NAMES[p.month]}`;
+  el.textContent = `${dayStr} ${p.startYear} – ${dayStr} ${p.endYear}`;
 }
 
 function renderSRChart(sr) {
@@ -2238,8 +2255,22 @@ function updateLRButtonState() {
   elements.lrCalculateBtn.disabled = !(hasDay && hasYear && hasLocation);
 }
 
+// Ay ileri/geri — mevcut dönüşten ±1 sideral ay kayıp komşu Lunar Return'e geç.
+// LR algoritması verilen tarihe EN YAKIN dönüşü bulduğu için ~27 gün kaydırmak yeterli.
+function handleLRStep(dir) {
+  if (!currentLunarReturn?.local) return;
+  const l = currentLunarReturn.local;
+  const d = new Date(l.year, l.month - 1, l.day, l.hour || 12, l.minute || 0);
+  d.setDate(d.getDate() + dir * 27);
+  elements.lrDay.value = d.getDate();
+  elements.lrMonth.value = d.getMonth() + 1;
+  elements.lrYear.value = d.getFullYear();
+  updateLRButtonState();
+  handleLRCalculate({ scroll: false });
+}
+
 // LR Calculate
-async function handleLRCalculate() {
+async function handleLRCalculate({ scroll = true } = {}) {
   if (!currentChart) {
     alert('Önce natal harita hesaplayın.');
     return;
@@ -2276,8 +2307,8 @@ async function handleLRCalculate() {
     $('lrForm')?.classList.add('collapsed');
     $('lrFormToggleIcon')?.classList.add('collapsed');
 
-    // Scroll to LR results
-    elements.lrResults.scrollIntoView({ behavior: 'smooth' });
+    // Scroll to LR results (ay adımlarında zıplatma)
+    if (scroll) elements.lrResults.scrollIntoView({ behavior: 'smooth' });
   } catch (error) {
     console.error('Lunar Return hesaplama hatası:', error);
     alert('Lunar Return hesaplama hatası: ' + error.message);
@@ -2293,12 +2324,21 @@ async function handleLRCalculate() {
 
 function renderLRResults(lr) {
   renderLRTimingCard(lr);
+  renderLRStepPeriod(lr);
   renderLRChart(lr);
   renderLRPlanets(lr);
   renderLRHouses(lr);
   renderLRAspects(lr);
   renderLRDebug(lr);
   renderLRDecans(lr);
+}
+
+/** Ay adım satırındaki dönüş tarihini yazar (form katlıyken görünsün). */
+function renderLRStepPeriod(lr) {
+  const el = $('lrStepPeriod');
+  if (!el || !lr?.local) return;
+  const l = lr.local;
+  el.textContent = `${l.day} ${MONTH_NAMES[l.month]} ${l.year}`;
 }
 
 function renderLRChart(lr) {

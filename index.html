@@ -291,25 +291,31 @@
 
           <!-- LR Results -->
           <div class="lr-results hidden" id="lrResults">
-            <!-- LR Timing bilgisi -->
-            <div class="lr-timing-card" id="lrTimingCard"></div>
-
-            <!-- LR Tabs -->
-            <div class="tabs lr-tabs">
-              <button class="tab active" data-lr-tab="lr-chart">🗺️ Harita</button>
-              <button class="tab" data-lr-tab="lr-planets">🪐 Gezegenler</button>
-              <button class="tab" data-lr-tab="lr-houses">🏠 Evler</button>
-              <button class="tab" data-lr-tab="lr-aspects">🔗 Aspektler</button>
-              <button class="tab" data-lr-tab="lr-debug">📊 Ham Veri</button>
-            </div>
-
-            <div id="tab-lr-chart" class="tab-content lr-tab-content active">
+            <!-- Harita en üstte, kendi kutusunda -->
+            <div class="lr-chart-box">
+              <!-- Ay ileri/geri + dönüş tarihi -->
+              <div class="tr-step-buttons lr-step-buttons" id="lrStepButtons">
+                <span class="step-period" id="lrStepPeriod"></span>
+                <button type="button" class="tr-step-btn tr-step-back lr-step-btn" data-step="-1">◀ 1 ay</button>
+                <button type="button" class="tr-step-btn tr-step-fwd lr-step-btn" data-step="1">1 ay ▶</button>
+              </div>
               <div class="chart-canvas-container">
                 <canvas id="lrChartCanvas" width="1200" height="1200"></canvas>
               </div>
               <div class="planet-filter" id="lrPlanetFilter"></div>
             </div>
-            <div id="tab-lr-planets" class="tab-content lr-tab-content">
+
+            <!-- Haritanın altında: özet + sekmeli tablolar -->
+            <div class="lr-timing-card" id="lrTimingCard"></div>
+
+            <div class="tabs lr-tabs">
+              <button class="tab active" data-lr-tab="lr-planets">🪐 Gezegenler</button>
+              <button class="tab" data-lr-tab="lr-houses">🏠 Evler</button>
+              <button class="tab" data-lr-tab="lr-aspects">🔗 Aspektler</button>
+              <button class="tab" data-lr-tab="lr-debug">📊 Ham Veri</button>
+            </div>
+
+            <div id="tab-lr-planets" class="tab-content lr-tab-content active">
               <div id="lrPlanetsTable"></div>
             </div>
             <div id="tab-lr-houses" class="tab-content lr-tab-content">
@@ -616,21 +622,11 @@
 
           <!-- SR Results -->
           <div class="sr-results hidden" id="srResults">
-            <!-- SR Timing bilgisi -->
-            <div class="sr-timing-card" id="srTimingCard"></div>
-
-            <!-- SR Tabs -->
-            <div class="tabs sr-tabs">
-              <button class="tab active" data-sr-tab="sr-chart">🗺️ Harita</button>
-              <button class="tab" data-sr-tab="sr-planets">🪐 Gezegenler</button>
-              <button class="tab" data-sr-tab="sr-houses">🏠 Evler</button>
-              <button class="tab" data-sr-tab="sr-aspects">🔗 Aspektler</button>
-              <button class="tab" data-sr-tab="sr-debug">📊 Ham Veri</button>
-            </div>
-
-            <div id="tab-sr-chart" class="tab-content sr-tab-content active">
-              <!-- Yıl ileri/geri -->
+            <!-- Harita en üstte, kendi kutusunda -->
+            <div class="sr-chart-box">
+              <!-- Yıl ileri/geri + dönem tarihi -->
               <div class="tr-step-buttons sr-step-buttons" id="srStepButtons">
+                <span class="step-period" id="srStepPeriod"></span>
                 <button type="button" class="tr-step-btn tr-step-back sr-step-btn" data-step="-1">◀ 1 yıl</button>
                 <button type="button" class="tr-step-btn tr-step-fwd sr-step-btn" data-step="1">1 yıl ▶</button>
               </div>
@@ -639,7 +635,18 @@
               </div>
               <div class="planet-filter" id="srPlanetFilter"></div>
             </div>
-            <div id="tab-sr-planets" class="tab-content sr-tab-content">
+
+            <!-- Haritanın altında: özet + sekmeli tablolar -->
+            <div class="sr-timing-card" id="srTimingCard"></div>
+
+            <div class="tabs sr-tabs">
+              <button class="tab active" data-sr-tab="sr-planets">🪐 Gezegenler</button>
+              <button class="tab" data-sr-tab="sr-houses">🏠 Evler</button>
+              <button class="tab" data-sr-tab="sr-aspects">🔗 Aspektler</button>
+              <button class="tab" data-sr-tab="sr-debug">📊 Ham Veri</button>
+            </div>
+
+            <div id="tab-sr-planets" class="tab-content sr-tab-content active">
               <div id="srPlanetsTable"></div>
             </div>
             <div id="tab-sr-houses" class="tab-content sr-tab-content">
