@@ -932,10 +932,13 @@ function drawBiSignRing(ctx, cx, cy, R, ascLon) {
  * hemen dışında (gerçek pozisyon işaretine yakın), derece/burç/dakika ondan
  * DIŞARI doğru. Böylece glif ile çizgisi arasında boşluk kalmaz.
  */
-function drawOuterPlanets(ctx, cx, cy, planets, R, ascLon) {
+function drawOuterPlanets(ctx, cx, cy, planets, R, ascLon, partOfFortune) {
   if (!planets?.length) return;
 
-  const items = planets.map(p => ({ planet: p, angle: lonToAngle(p.longitude, ascLon) }));
+  const list = [...planets];
+  if (partOfFortune) list.push({ ...partOfFortune, isRetrograde: false, id: -99 });
+
+  const items = list.map(p => ({ planet: p, angle: lonToAngle(p.longitude, ascLon) }));
 
   const glyphR = R.outerGlyphR;              // burç halkasının hemen dışı
   const glyphSize = R.R * 0.050;
@@ -1241,7 +1244,7 @@ export function drawBiWheel(canvas, natalData, transitData, options = {}) {
   }
 
   drawInnerPlanets(ctx, cx, cy, natalData.planets, R, ascLon, natalData.partOfFortune);
-  drawOuterPlanets(ctx, cx, cy, transitData.planets, R, ascLon);
+  drawOuterPlanets(ctx, cx, cy, transitData.planets, R, ascLon, transitData.partOfFortune);
 
   if (options.title) drawInfoBlock(ctx, options, R);
 }
