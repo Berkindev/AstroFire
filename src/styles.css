@@ -153,10 +153,10 @@ body {
 .main {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 1.5rem;
+  padding: 1.25rem 1.5rem;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 0.9rem;
 }
 
 /* ============================================
@@ -1429,6 +1429,49 @@ input::placeholder {
   gap: 1rem;
 }
 
+/* Tarih formu katla/aç — hesaplamadan sonra default kapalı, harita yukarı kayar */
+.tr-form.collapsed,
+.pr-form.collapsed,
+.sr-form.collapsed,
+.lr-form.collapsed {
+  display: none;
+}
+
+.form-toggle-title {
+  cursor: pointer;
+  user-select: none;
+  margin-bottom: 1rem;
+}
+
+.form-toggle-icon {
+  margin-left: auto;
+  font-size: 0.72em;
+  color: var(--text-secondary);
+  transition: transform 0.2s ease;
+}
+
+.form-toggle-icon.collapsed {
+  transform: rotate(-90deg);
+}
+
+/* Harita kutusu — sonuçların en üstünde */
+.tr-chart-box,
+.pr-chart-box,
+.sr-chart-box,
+.lr-chart-box {
+  margin-bottom: 1.25rem;
+}
+
+/* Adım satırındaki dönem/tarih (form katlıyken görünsün) */
+.step-period {
+  align-self: center;
+  margin-right: 0.5rem;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
 .tr-input-row {
   flex-wrap: wrap;
 }
@@ -1519,8 +1562,9 @@ input::placeholder {
 .tr-step-buttons {
   display: flex;
   justify-content: center;
-  gap: 0.3rem;
-  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 0.75rem;
 }
 
 .tr-step-btn {
@@ -1926,6 +1970,11 @@ input::placeholder {
 /* ============================================
    FORM TOGGLE (Collapsible)
    ============================================ */
+/* Üst "Doğum Bilgileri" paneli — kompakt (özellikle katlıyken slim bar) */
+.input-panel {
+  padding: 0.7rem 1.25rem;
+}
+
 .form-toggle {
   display: flex;
   align-items: center;
@@ -2821,7 +2870,7 @@ input::placeholder {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem 1.5rem;
+  padding: 0.55rem 1.25rem;
   cursor: pointer;
   user-select: none;
 }

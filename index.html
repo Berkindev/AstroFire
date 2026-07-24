@@ -209,12 +209,13 @@
       <!-- LUNAR RETURN PANEL -->
       <section class="main-tab-content" id="mainTab-lunar">
         <section class="panel lr-panel" id="lunarReturnPanel">
-          <h2 class="panel-title">
+          <h2 class="panel-title form-toggle-title" id="lrFormToggle">
             <span class="panel-icon">🌙</span>
             Lunar Return
+            <span class="form-toggle-icon" id="lrFormToggleIcon">▼</span>
           </h2>
 
-          <div class="lr-form">
+          <div class="lr-form" id="lrForm">
             <!-- Ay ve Yıl girişi -->
             <div class="form-row lr-input-row">
               <div class="form-group">
@@ -290,25 +291,31 @@
 
           <!-- LR Results -->
           <div class="lr-results hidden" id="lrResults">
-            <!-- LR Timing bilgisi -->
-            <div class="lr-timing-card" id="lrTimingCard"></div>
-
-            <!-- LR Tabs -->
-            <div class="tabs lr-tabs">
-              <button class="tab active" data-lr-tab="lr-chart">🗺️ Harita</button>
-              <button class="tab" data-lr-tab="lr-planets">🪐 Gezegenler</button>
-              <button class="tab" data-lr-tab="lr-houses">🏠 Evler</button>
-              <button class="tab" data-lr-tab="lr-aspects">🔗 Aspektler</button>
-              <button class="tab" data-lr-tab="lr-debug">📊 Ham Veri</button>
-            </div>
-
-            <div id="tab-lr-chart" class="tab-content lr-tab-content active">
+            <!-- Harita en üstte, kendi kutusunda -->
+            <div class="lr-chart-box">
+              <!-- Ay ileri/geri + dönüş tarihi -->
+              <div class="tr-step-buttons lr-step-buttons" id="lrStepButtons">
+                <span class="step-period" id="lrStepPeriod"></span>
+                <button type="button" class="tr-step-btn tr-step-back lr-step-btn" data-step="-1">◀ 1 ay</button>
+                <button type="button" class="tr-step-btn tr-step-fwd lr-step-btn" data-step="1">1 ay ▶</button>
+              </div>
               <div class="chart-canvas-container">
                 <canvas id="lrChartCanvas" width="1200" height="1200"></canvas>
               </div>
               <div class="planet-filter" id="lrPlanetFilter"></div>
             </div>
-            <div id="tab-lr-planets" class="tab-content lr-tab-content">
+
+            <!-- Haritanın altında: özet + sekmeli tablolar -->
+            <div class="lr-timing-card" id="lrTimingCard"></div>
+
+            <div class="tabs lr-tabs">
+              <button class="tab active" data-lr-tab="lr-planets">🪐 Gezegenler</button>
+              <button class="tab" data-lr-tab="lr-houses">🏠 Evler</button>
+              <button class="tab" data-lr-tab="lr-aspects">🔗 Aspektler</button>
+              <button class="tab" data-lr-tab="lr-debug">📊 Ham Veri</button>
+            </div>
+
+            <div id="tab-lr-planets" class="tab-content lr-tab-content active">
               <div id="lrPlanetsTable"></div>
             </div>
             <div id="tab-lr-houses" class="tab-content lr-tab-content">
@@ -330,12 +337,13 @@
       <!-- TRANSIT PANEL -->
       <section class="main-tab-content" id="mainTab-transit">
         <section class="panel tr-panel" id="transitPanel">
-          <h2 class="panel-title">
+          <h2 class="panel-title form-toggle-title" id="trFormToggle">
             <span class="panel-icon">🔄</span>
             Transitler
+            <span class="form-toggle-icon" id="trFormToggleIcon">▼</span>
           </h2>
 
-          <div class="tr-form">
+          <div class="tr-form" id="trForm">
             <!-- Tarih ve Saat girişi -->
             <div class="form-row tr-input-row">
               <div class="form-group">
@@ -412,40 +420,36 @@
 
           <!-- TR Results -->
           <div class="tr-results hidden" id="trResults">
-            <!-- TR Timing bilgisi -->
-            <div class="tr-timing-card" id="trTimingCard"></div>
-
-            <!-- TR Tabs -->
-            <div class="tabs tr-tabs">
-              <button class="tab active" data-tr-tab="tr-chart">🗺️ Harita</button>
-              <button class="tab" data-tr-tab="tr-planets">🪐 Transit Gezegenler</button>
-              <button class="tab" data-tr-tab="tr-natal-aspects">🔗 Transit-Natal Aspektler</button>
-              <button class="tab" data-tr-tab="tr-aspects">🔗 Transit Aspektler</button>
-              <button class="tab" data-tr-tab="tr-debug">📊 Ham Veri</button>
-            </div>
-
-            <div id="tab-tr-chart" class="tab-content tr-tab-content active">
-              <!-- Zaman Adım Butonları -->
+            <!-- Harita her zaman EN ÜSTTE, kendi kutusunda -->
+            <div class="tr-chart-box">
+              <!-- Zaman Adım Butonları: 1 saat / 1 gün / 1 hafta / 1 ay -->
               <div class="tr-step-buttons" id="trStepButtons">
-                <button type="button" class="tr-step-btn tr-step-back" data-step="-1440">◀◀ 1g</button>
-                <button type="button" class="tr-step-btn tr-step-back" data-step="-720">◀ 12s</button>
-                <button type="button" class="tr-step-btn tr-step-back" data-step="-360">◀ 6s</button>
-                <button type="button" class="tr-step-btn tr-step-back" data-step="-60">◀ 1s</button>
-                <button type="button" class="tr-step-btn tr-step-back" data-step="-5">◀ 5d</button>
-                <button type="button" class="tr-step-btn tr-step-back" data-step="-1">◀ 1d</button>
-                <button type="button" class="tr-step-btn tr-step-fwd" data-step="1">1d ▶</button>
-                <button type="button" class="tr-step-btn tr-step-fwd" data-step="5">5d ▶</button>
-                <button type="button" class="tr-step-btn tr-step-fwd" data-step="60">1s ▶</button>
-                <button type="button" class="tr-step-btn tr-step-fwd" data-step="360">6s ▶</button>
-                <button type="button" class="tr-step-btn tr-step-fwd" data-step="720">12s ▶</button>
-                <button type="button" class="tr-step-btn tr-step-fwd" data-step="1440">1g ▶▶</button>
+                <button type="button" class="tr-step-btn tr-step-back" data-step="-43200">◀◀ 1 ay</button>
+                <button type="button" class="tr-step-btn tr-step-back" data-step="-10080">◀ 1 hafta</button>
+                <button type="button" class="tr-step-btn tr-step-back" data-step="-1440">◀ 1 gün</button>
+                <button type="button" class="tr-step-btn tr-step-back" data-step="-60">◀ 1 saat</button>
+                <button type="button" class="tr-step-btn tr-step-fwd" data-step="60">1 saat ▶</button>
+                <button type="button" class="tr-step-btn tr-step-fwd" data-step="1440">1 gün ▶</button>
+                <button type="button" class="tr-step-btn tr-step-fwd" data-step="10080">1 hafta ▶</button>
+                <button type="button" class="tr-step-btn tr-step-fwd" data-step="43200">1 ay ▶▶</button>
               </div>
               <div class="chart-canvas-container">
                 <canvas id="trChartCanvas" width="1800" height="1800"></canvas>
               </div>
               <div class="planet-filter" id="transitPlanetFilter"></div>
             </div>
-            <div id="tab-tr-planets" class="tab-content tr-tab-content">
+
+            <!-- Haritanın ALTINDA: özet + sekmeli tablolar -->
+            <div class="tr-timing-card" id="trTimingCard"></div>
+
+            <div class="tabs tr-tabs">
+              <button class="tab active" data-tr-tab="tr-planets">🪐 Transit Gezegenler</button>
+              <button class="tab" data-tr-tab="tr-natal-aspects">🔗 Transit-Natal Aspektler</button>
+              <button class="tab" data-tr-tab="tr-aspects">🔗 Transit Aspektler</button>
+              <button class="tab" data-tr-tab="tr-debug">📊 Ham Veri</button>
+            </div>
+
+            <div id="tab-tr-planets" class="tab-content tr-tab-content active">
               <div id="trPlanetsTable"></div>
             </div>
             <div id="tab-tr-natal-aspects" class="tab-content tr-tab-content">
@@ -467,12 +471,13 @@
       <!-- PROGRESYON PANEL -->
       <section class="main-tab-content" id="mainTab-progression">
         <section class="panel pr-panel" id="progressionPanel">
-          <h2 class="panel-title">
+          <h2 class="panel-title form-toggle-title" id="prFormToggle">
             <span class="panel-icon">📈</span>
             Progres Harita (İkincil Progresyon)
+            <span class="form-toggle-icon" id="prFormToggleIcon">▼</span>
           </h2>
 
-          <div class="pr-form">
+          <div class="pr-form" id="prForm">
             <!-- Hedef tarih girişi -->
             <div class="form-row pr-input-row">
               <div class="form-group">
@@ -510,26 +515,34 @@
 
           <!-- PR Results -->
           <div class="pr-results hidden" id="prResults">
-            <!-- PR Timing bilgisi -->
+            <!-- Harita her zaman EN ÜSTTE, kendi kutusunda -->
+            <div class="pr-chart-box">
+              <!-- Yıl/Ay ileri/geri + hedef tarih & yaş -->
+              <div class="tr-step-buttons pr-step-buttons" id="prStepButtons">
+                <span class="step-period" id="prStepPeriod"></span>
+                <button type="button" class="tr-step-btn tr-step-back pr-step-btn" data-years="-1">◀ 1 yıl</button>
+                <button type="button" class="tr-step-btn tr-step-back pr-step-btn" data-months="-1">◀ 1 ay</button>
+                <button type="button" class="tr-step-btn tr-step-fwd pr-step-btn" data-months="1">1 ay ▶</button>
+                <button type="button" class="tr-step-btn tr-step-fwd pr-step-btn" data-years="1">1 yıl ▶</button>
+              </div>
+              <div class="chart-canvas-container">
+                <canvas id="prChartCanvas" width="1800" height="1800"></canvas>
+              </div>
+              <div class="planet-filter" id="progressionPlanetFilter"></div>
+            </div>
+
+            <!-- Haritanın ALTINDA: özet + sekmeli tablolar -->
             <div class="pr-timing-card" id="prTimingCard"></div>
 
-            <!-- PR Tabs -->
             <div class="tabs pr-tabs">
-              <button class="tab active" data-pr-tab="pr-chart">🗺️ Harita</button>
-              <button class="tab" data-pr-tab="pr-planets">🪐 Progres Gezegenler</button>
+              <button class="tab active" data-pr-tab="pr-planets">🪐 Progres Gezegenler</button>
               <button class="tab" data-pr-tab="pr-houses">🏠 Progres Evler</button>
               <button class="tab" data-pr-tab="pr-natal-aspects">🔗 Progres-Natal Aspektler</button>
               <button class="tab" data-pr-tab="pr-aspects">🔗 Progres Aspektler</button>
               <button class="tab" data-pr-tab="pr-debug">📊 Ham Veri</button>
             </div>
 
-            <div id="tab-pr-chart" class="tab-content pr-tab-content active">
-              <div class="chart-canvas-container">
-                <canvas id="prChartCanvas" width="1800" height="1800"></canvas>
-              </div>
-              <div class="planet-filter" id="progressionPlanetFilter"></div>
-            </div>
-            <div id="tab-pr-planets" class="tab-content pr-tab-content">
+            <div id="tab-pr-planets" class="tab-content pr-tab-content active">
               <div id="prPlanetsTable"></div>
             </div>
             <div id="tab-pr-houses" class="tab-content pr-tab-content">
@@ -554,12 +567,13 @@
       <!-- SOLAR RETURN PANEL -->
       <section class="main-tab-content" id="mainTab-solar">
         <section class="panel sr-panel" id="solarReturnPanel">
-          <h2 class="panel-title">
+          <h2 class="panel-title form-toggle-title" id="srFormToggle">
             <span class="panel-icon">☀️</span>
             Solar Return
+            <span class="form-toggle-icon" id="srFormToggleIcon">▼</span>
           </h2>
 
-          <div class="sr-form">
+          <div class="sr-form" id="srForm">
             <!-- Yıl girişi -->
             <div class="form-row sr-input-row">
               <div class="form-group">
@@ -616,25 +630,31 @@
 
           <!-- SR Results -->
           <div class="sr-results hidden" id="srResults">
-            <!-- SR Timing bilgisi -->
-            <div class="sr-timing-card" id="srTimingCard"></div>
-
-            <!-- SR Tabs -->
-            <div class="tabs sr-tabs">
-              <button class="tab active" data-sr-tab="sr-chart">🗺️ Harita</button>
-              <button class="tab" data-sr-tab="sr-planets">🪐 Gezegenler</button>
-              <button class="tab" data-sr-tab="sr-houses">🏠 Evler</button>
-              <button class="tab" data-sr-tab="sr-aspects">🔗 Aspektler</button>
-              <button class="tab" data-sr-tab="sr-debug">📊 Ham Veri</button>
-            </div>
-
-            <div id="tab-sr-chart" class="tab-content sr-tab-content active">
+            <!-- Harita en üstte, kendi kutusunda -->
+            <div class="sr-chart-box">
+              <!-- Yıl ileri/geri + dönem tarihi -->
+              <div class="tr-step-buttons sr-step-buttons" id="srStepButtons">
+                <span class="step-period" id="srStepPeriod"></span>
+                <button type="button" class="tr-step-btn tr-step-back sr-step-btn" data-step="-1">◀ 1 yıl</button>
+                <button type="button" class="tr-step-btn tr-step-fwd sr-step-btn" data-step="1">1 yıl ▶</button>
+              </div>
               <div class="chart-canvas-container">
                 <canvas id="srChartCanvas" width="1200" height="1200"></canvas>
               </div>
               <div class="planet-filter" id="srPlanetFilter"></div>
             </div>
-            <div id="tab-sr-planets" class="tab-content sr-tab-content">
+
+            <!-- Haritanın altında: özet + sekmeli tablolar -->
+            <div class="sr-timing-card" id="srTimingCard"></div>
+
+            <div class="tabs sr-tabs">
+              <button class="tab active" data-sr-tab="sr-planets">🪐 Gezegenler</button>
+              <button class="tab" data-sr-tab="sr-houses">🏠 Evler</button>
+              <button class="tab" data-sr-tab="sr-aspects">🔗 Aspektler</button>
+              <button class="tab" data-sr-tab="sr-debug">📊 Ham Veri</button>
+            </div>
+
+            <div id="tab-sr-planets" class="tab-content sr-tab-content active">
               <div id="srPlanetsTable"></div>
             </div>
             <div id="tab-sr-houses" class="tab-content sr-tab-content">

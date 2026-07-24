@@ -377,6 +377,17 @@ function setupEventListeners() {
   // SR hesapla
   elements.srCalculateBtn.addEventListener('click', handleSRCalculate);
 
+  // SR form katla/aç
+  $('srFormToggle')?.addEventListener('click', () => {
+    $('srForm')?.classList.toggle('collapsed');
+    $('srFormToggleIcon')?.classList.toggle('collapsed');
+  });
+
+  // SR yıl ileri/geri
+  document.querySelectorAll('.sr-step-btn').forEach(btn => {
+    btn.addEventListener('click', () => handleSRStep(parseInt(btn.dataset.step)));
+  });
+
   // SR yıl değişince buton durumunu güncelle
   elements.srYear.addEventListener('input', updateSRButtonState);
 
@@ -424,6 +435,17 @@ function setupEventListeners() {
   // LR hesapla
   elements.lrCalculateBtn.addEventListener('click', handleLRCalculate);
 
+  // LR form katla/aç
+  $('lrFormToggle')?.addEventListener('click', () => {
+    $('lrForm')?.classList.toggle('collapsed');
+    $('lrFormToggleIcon')?.classList.toggle('collapsed');
+  });
+
+  // LR ay ileri/geri
+  document.querySelectorAll('.lr-step-btn').forEach(btn => {
+    btn.addEventListener('click', () => handleLRStep(parseInt(btn.dataset.step)));
+  });
+
   // LR gün/yıl/ay değişince buton durumunu güncelle
   elements.lrDay.addEventListener('input', updateLRButtonState);
   elements.lrYear.addEventListener('input', updateLRButtonState);
@@ -443,12 +465,19 @@ function setupEventListeners() {
   // TR "Şu An" butonu
   elements.trNowBtn.addEventListener('click', handleTRNowClick);
 
-  // TR step buttons
-  document.querySelectorAll('.tr-step-btn').forEach(btn => {
+  // TR step buttons — YALNIZCA transit kutusundakiler (sr/lr/pr butonları da stil
+  // için .tr-step-btn taşır; container'a sınırlamazsak onlar da handleTRStep tetikler).
+  document.querySelectorAll('#trStepButtons .tr-step-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const minutes = parseInt(btn.dataset.step);
       handleTRStep(minutes);
     });
+  });
+
+  // TR form katla/aç (başlığa tıkla)
+  $('trFormToggle')?.addEventListener('click', () => {
+    $('trForm')?.classList.toggle('collapsed');
+    $('trFormToggleIcon')?.classList.toggle('collapsed');
   });
 
   // TR tarih değişince buton durumunu güncelle
@@ -472,6 +501,20 @@ function setupEventListeners() {
 
   // PR hesapla
   elements.prCalculateBtn.addEventListener('click', handlePRCalculate);
+
+  // PR form katla/aç (başlığa tıkla)
+  $('prFormToggle')?.addEventListener('click', () => {
+    $('prForm')?.classList.toggle('collapsed');
+    $('prFormToggleIcon')?.classList.toggle('collapsed');
+  });
+
+  // PR yıl/ay ileri-geri
+  document.querySelectorAll('.pr-step-btn').forEach(btn => {
+    btn.addEventListener('click', () => handlePRStep({
+      years: parseInt(btn.dataset.years || '0'),
+      months: parseInt(btn.dataset.months || '0'),
+    }));
+  });
 
   // PR "Bugün" butonu
   elements.prTodayBtn.addEventListener('click', handlePRTodayClick);
@@ -1596,8 +1639,17 @@ function updateSRPeriodHint(year) {
   hint.classList.remove('hidden');
 }
 
+// Yıl ileri/geri — SR yılını değiştir ve yeniden hesapla (sayfayı zıplatma)
+function handleSRStep(deltaYears) {
+  const y = parseInt(elements.srYear.value);
+  if (Number.isNaN(y)) return;
+  elements.srYear.value = y + deltaYears;
+  updateSRButtonState();
+  handleSRCalculate({ scroll: false });
+}
+
 // SR Calculate
-async function handleSRCalculate() {
+async function handleSRCalculate({ scroll = true } = {}) {
   if (!currentChart) {
     alert('Önce natal harita hesaplayın.');
     return;
@@ -1628,9 +1680,12 @@ async function handleSRCalculate() {
     currentSolarReturn = await calculateSolarReturn(currentChart, year, location);
     renderSRResults(currentSolarReturn);
     elements.srResults.classList.remove('hidden');
-    
-    // Scroll to SR results
-    elements.srResults.scrollIntoView({ behavior: 'smooth' });
+    // Hesaplamadan sonra formu katla (harita yukarı kaysın)
+    $('srForm')?.classList.add('collapsed');
+    $('srFormToggleIcon')?.classList.add('collapsed');
+
+    // Scroll to SR results (yıl adımlarında zıplatma)
+    if (scroll) elements.srResults.scrollIntoView({ behavior: 'smooth' });
   } catch (error) {
     console.error('Solar Return hesaplama hatası:', error);
     alert('Solar Return hesaplama hatası: ' + error.message);
@@ -1859,7 +1914,7 @@ function renderSevens(chart) {
       drawChartWheel(canvas, chart, {
         title: '7\'ler Kanunu',
         subtitle: `Natal Chart\n${dateStr}\n${timeStr}  ${getUtcOffsetStr(bd)}\n${bd.timezone}\n${cityName}`,
-        showAspects: false,
+        showAspects: true,
         chartType: 'natal',
       });
       const showAges = elements.sevensAgeCheck ? elements.sevensAgeCheck.checked : true;
@@ -1931,12 +1986,24 @@ function renderSevensHTML(data, aspects) {
 
 function renderSRResults(sr) {
   renderSRTimingCard(sr);
+  renderSRStepPeriod();
   renderSRChart(sr);
   renderSRPlanets(sr);
   renderSRHouses(sr);
   renderSRAspects(sr);
   renderSRDebug(sr);
   renderSRDecans(sr);
+}
+
+/** Yıl adım satırındaki dönem tarihini yazar (form katlıyken görünsün). */
+function renderSRStepPeriod() {
+  const el = $('srStepPeriod');
+  if (!el || !currentChart) return;
+  const year = parseInt(elements.srYear.value);
+  if (Number.isNaN(year)) { el.textContent = ''; return; }
+  const p = solarPeriod(currentChart.birthData, year);
+  const dayStr = `${p.day} ${MONTH_NAMES[p.month]}`;
+  el.textContent = `${dayStr} ${p.startYear} – ${dayStr} ${p.endYear}`;
 }
 
 function renderSRChart(sr) {
@@ -2197,8 +2264,22 @@ function updateLRButtonState() {
   elements.lrCalculateBtn.disabled = !(hasDay && hasYear && hasLocation);
 }
 
+// Ay ileri/geri — mevcut dönüşten ±1 sideral ay kayıp komşu Lunar Return'e geç.
+// LR algoritması verilen tarihe EN YAKIN dönüşü bulduğu için ~27 gün kaydırmak yeterli.
+function handleLRStep(dir) {
+  if (!currentLunarReturn?.local) return;
+  const l = currentLunarReturn.local;
+  const d = new Date(l.year, l.month - 1, l.day, l.hour || 12, l.minute || 0);
+  d.setDate(d.getDate() + dir * 27);
+  elements.lrDay.value = d.getDate();
+  elements.lrMonth.value = d.getMonth() + 1;
+  elements.lrYear.value = d.getFullYear();
+  updateLRButtonState();
+  handleLRCalculate({ scroll: false });
+}
+
 // LR Calculate
-async function handleLRCalculate() {
+async function handleLRCalculate({ scroll = true } = {}) {
   if (!currentChart) {
     alert('Önce natal harita hesaplayın.');
     return;
@@ -2231,9 +2312,12 @@ async function handleLRCalculate() {
     currentLunarReturn = await calculateLunarReturn(currentChart, year, month, day, location);
     renderLRResults(currentLunarReturn);
     elements.lrResults.classList.remove('hidden');
+    // Hesaplamadan sonra formu katla (harita yukarı kaysın)
+    $('lrForm')?.classList.add('collapsed');
+    $('lrFormToggleIcon')?.classList.add('collapsed');
 
-    // Scroll to LR results
-    elements.lrResults.scrollIntoView({ behavior: 'smooth' });
+    // Scroll to LR results (ay adımlarında zıplatma)
+    if (scroll) elements.lrResults.scrollIntoView({ behavior: 'smooth' });
   } catch (error) {
     console.error('Lunar Return hesaplama hatası:', error);
     alert('Lunar Return hesaplama hatası: ' + error.message);
@@ -2249,12 +2333,21 @@ async function handleLRCalculate() {
 
 function renderLRResults(lr) {
   renderLRTimingCard(lr);
+  renderLRStepPeriod(lr);
   renderLRChart(lr);
   renderLRPlanets(lr);
   renderLRHouses(lr);
   renderLRAspects(lr);
   renderLRDebug(lr);
   renderLRDecans(lr);
+}
+
+/** Ay adım satırındaki dönüş tarihini yazar (form katlıyken görünsün). */
+function renderLRStepPeriod(lr) {
+  const el = $('lrStepPeriod');
+  if (!el || !lr?.local) return;
+  const l = lr.local;
+  el.textContent = `${l.day} ${MONTH_NAMES[l.month]} ${l.year}`;
 }
 
 function renderLRChart(lr) {
@@ -2576,6 +2669,9 @@ async function handleTRCalculate() {
     currentTransit = await calculateTransits(currentChart, date, location);
     renderTRResults(currentTransit);
     elements.trResults.classList.remove('hidden');
+    // Hesaplamadan sonra tarih formunu default olarak katla (harita yukarı kaysın)
+    $('trForm')?.classList.add('collapsed');
+    $('trFormToggleIcon')?.classList.add('collapsed');
   } catch (error) {
     console.error('Transit hesaplama hatası:', error);
     alert('Transit hesaplama hatası: ' + error.message);
@@ -2840,6 +2936,23 @@ function updatePRButtonState() {
   elements.prCalculateBtn.disabled = !hasDate;
 }
 
+// Yıl/Ay ileri-geri — progres hedef tarihini kaydırıp yeniden hesapla.
+// Progresyon "1 gün = 1 yıl" olduğundan hedef tarihi ilerletmek yaşı ilerletir.
+function handlePRStep({ years = 0, months = 0 }) {
+  const day = parseInt(elements.prDay.value);
+  const month = parseInt(elements.prMonth.value);
+  const year = parseInt(elements.prYear.value);
+  if ([day, month, year].some(Number.isNaN)) return;
+  const dt = new Date(year, month - 1, day);
+  if (years) dt.setFullYear(dt.getFullYear() + years);
+  if (months) dt.setMonth(dt.getMonth() + months);
+  elements.prDay.value = dt.getDate();
+  elements.prMonth.value = dt.getMonth() + 1;
+  elements.prYear.value = dt.getFullYear();
+  updatePRButtonState();
+  handlePRCalculate();
+}
+
 async function handlePRCalculate() {
   if (!currentChart) {
     alert('Lütfen önce natal haritayı hesaplayın.');
@@ -2861,6 +2974,9 @@ async function handlePRCalculate() {
     currentProgression = await calculateSecondaryProgression(currentChart, targetDate, { angleMethod });
     renderPRResults(currentProgression);
     elements.prResults.classList.remove('hidden');
+    // Hesaplamadan sonra tarih formunu default olarak katla (harita yukarı kaysın)
+    $('prForm')?.classList.add('collapsed');
+    $('prFormToggleIcon')?.classList.add('collapsed');
   } catch (error) {
     console.error('Progres hesaplama hatası:', error);
     alert('Progres hesaplama hatası: ' + error.message);
@@ -2872,6 +2988,7 @@ async function handlePRCalculate() {
 
 function renderPRResults(pr) {
   renderPRTimingCard(pr);
+  renderPRStepPeriod(pr);
   renderPRChart(pr);
   renderPRPlanets(pr);
   renderPRHouses(pr);
@@ -2879,6 +2996,15 @@ function renderPRResults(pr) {
   renderPRAspects(pr);
   renderPRDebug(pr);
   renderPRDecans(pr);
+}
+
+/** Adım satırında hedef tarih + yaş (form katlıyken görünsün). */
+function renderPRStepPeriod(pr) {
+  const el = $('prStepPeriod');
+  if (!el || !pr?.targetDate) return;
+  const t = pr.targetDate;
+  const age = Math.floor(pr.elapsedYears ?? 0);
+  el.textContent = `${t.day} ${MONTH_NAMES[t.month]} ${t.year} · ${age} yaş`;
 }
 
 function renderPRTimingCard(pr) {
