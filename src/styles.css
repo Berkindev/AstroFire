@@ -862,6 +862,12 @@ input::placeholder {
     padding: 0.75rem;
   }
 
+  /* Panellerin yan boşluğunu azalt — harita/tablolar daha geniş, okunur olsun.
+     (memory-panel padding:0 ve input-panel kendi kuralı sonra geldiği için korunur.) */
+  .panel {
+    padding: 1rem;
+  }
+
   /* Ana sekmeler mobilde tek satır + yatay kaydırma (kesme/kayma yerine).
      7 sekme dar ekrana sığmadığı için parmakla kaydırılır. */
   .main-tabs {
@@ -883,8 +889,53 @@ input::placeholder {
     flex-wrap: wrap;
   }
 
+  /* Alt sekmeler: mobilde tek satır + yatay kaydırma (ana sekmeler gibi),
+     metin sarmaz — okunur kalır. Az sekme varsa zaten sığar, kaydırma çıkmaz. */
   .tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .tabs::-webkit-scrollbar {
+    display: none;
+  }
+  .tab {
+    flex: 0 0 auto;
+    white-space: nowrap;
+    padding: 0.5rem 0.8rem;
+    font-size: 0.82rem;
+  }
+
+  /* Zaman/yıl/ay adım butonları — mobilde küçült, sarsın; tarih kendi satırında */
+  .tr-step-buttons {
+    gap: 0.3rem;
+  }
+  .tr-step-btn {
+    padding: 0.35rem 0.55rem;
+    font-size: 0.72rem;
+  }
+  .step-period {
+    flex-basis: 100%;
+    text-align: center;
+    margin-right: 0;
+    margin-bottom: 0.2rem;
+    font-size: 0.78rem;
+  }
+
+  /* Üst "Kayıtlı Haritalar" barı — dar ekranda kaydet butonu taşmasın */
+  .memory-header {
     flex-wrap: wrap;
+    gap: 0.4rem 0.5rem;
+  }
+  .btn-save {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8rem;
+  }
+
+  /* Sinastri swap butonu satırı zaten sarıyor; ipucu tam genişlik */
+  .sy-swap-hint {
+    flex-basis: 100%;
   }
 
   /* Tablolar dar ekrana sığmıyordu; son sütun (A/S, R) kesiliyor ve sayfa
