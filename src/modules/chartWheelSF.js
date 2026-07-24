@@ -303,8 +303,9 @@ function avoidCollisions(items, radius, minSpacing) {
 
 /** Tüm halka yarıçapları — overlay'ler de bunu kullanır ki hizalar tutsun. */
 export function wheelRadii(size) {
-  // SolarFire çarkı canvas'ın ~%80'ini kaplar (R/canvas ≈ 0.40, ölçüldü).
-  const R = size * 0.40;
+  // Çark canvas'ı doldursun (Kerem: natal da sinastri kadar büyük dursun).
+  // Bi-wheel 0.475 ile sığıyor; tekil çark daha az halka içerdiği için 0.47 rahat.
+  const R = size * 0.47;
   return {
     R,
     outerR:   R,
