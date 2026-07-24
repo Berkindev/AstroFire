@@ -396,6 +396,12 @@ function setupEventListeners() {
   // ============================================
 
   elements.syCalculateBtn.addEventListener('click', handleSYCalculate);
+
+  // SY form katla/aç (başlığa tıkla)
+  $('syFormToggle')?.addEventListener('click', () => {
+    $('syForm')?.classList.toggle('collapsed');
+    $('syFormToggleIcon')?.classList.toggle('collapsed');
+  });
   elements.sySwapBtn.addEventListener('click', handleSYSwap);
 
   ['syBirthDay', 'syBirthMonth', 'syBirthYear', 'syBirthHour', 'syBirthMinute'].forEach(id => {
@@ -1415,6 +1421,8 @@ const SECTION_TABS = [
   { attr: 'tr-tab', dataKey: 'trTab', contentClass: 'tr-tab-content' },
   { attr: 'pr-tab', dataKey: 'prTab', contentClass: 'pr-tab-content' },
   { attr: 'sy-tab', dataKey: 'syTab', contentClass: 'sy-tab-content' },
+  // Sinastri alt bilgi sekmeleri (Çapraz Aspektler/Grid/Ev) — harita geçişlerinden ayrı grup
+  { attr: 'sy2-tab', dataKey: 'sy2Tab', contentClass: 'sy2-tab-content' },
 ];
 
 function switchTab(tabName) {
@@ -3401,6 +3409,9 @@ async function handleSYCalculate() {
 
     renderSYResults();
     elements.syResults.classList.remove('hidden');
+    // Hesaplamadan sonra formu katla (harita yukarı kaysın)
+    $('syForm')?.classList.add('collapsed');
+    $('syFormToggleIcon')?.classList.add('collapsed');
   } catch (error) {
     console.error('Sinastri hesaplama hatası:', error);
     alert(`Hesaplama hatası: ${error.message}`);

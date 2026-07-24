@@ -139,27 +139,8 @@
       <!-- NATAL PANEL -->
       <section class="main-tab-content active" id="mainTab-natal">
         <section class="panel results-panel hidden" id="resultsPanel">
-          <!-- Natal Sub-Tabs -->
-          <div class="tabs">
-            <button class="tab active" data-tab="chart">🗺️ Harita</button>
-            <button class="tab" data-tab="planets">🪐 Gezegenler</button>
-            <button class="tab" data-tab="houses">🏠 Evler</button>
-            <button class="tab" data-tab="aspects">🔗 Aspektler</button>
-            <button class="tab" data-tab="debug">📊 Ham Veri</button>
-            <button class="tab" data-tab="chartinfo" id="chartInfoToggle">📋 Harita Bilgileri</button>
-          </div>
-
-          <!-- Chart Info Side Panel -->
-          <div id="chartInfoPanel" class="chart-info-panel chart-info-closed">
-            <div class="chart-info-header">
-              <h3>📋 Harita Bilgileri</h3>
-              <button id="chartInfoClose" class="chart-info-close">&times;</button>
-            </div>
-            <div id="chartInfoContent" class="chart-info-content"></div>
-          </div>
-
-          <!-- Tab Contents -->
-          <div id="tab-chart" class="tab-content na-tab-content active">
+          <!-- Harita EN ÜSTTE, kendi kutusunda -->
+          <div class="na-chart-box">
             <div class="chart-canvas-container">
               <canvas id="natalChartCanvas" width="1200" height="1200"></canvas>
             </div>
@@ -171,7 +152,26 @@
             <div class="planet-filter" id="natalPlanetFilter"></div>
           </div>
 
-          <div id="tab-planets" class="tab-content na-tab-content">
+          <!-- Chart Info Side Panel -->
+          <div id="chartInfoPanel" class="chart-info-panel chart-info-closed">
+            <div class="chart-info-header">
+              <h3>📋 Harita Bilgileri</h3>
+              <button id="chartInfoClose" class="chart-info-close">&times;</button>
+            </div>
+            <div id="chartInfoContent" class="chart-info-content"></div>
+          </div>
+
+          <!-- Sekmeler haritanın ALTINDA -->
+          <div class="tabs">
+            <button class="tab active" data-tab="planets">🪐 Gezegenler</button>
+            <button class="tab" data-tab="houses">🏠 Evler</button>
+            <button class="tab" data-tab="aspects">🔗 Aspektler</button>
+            <button class="tab" data-tab="debug">📊 Ham Veri</button>
+            <button class="tab" data-tab="chartinfo" id="chartInfoToggle">📋 Harita Bilgileri</button>
+          </div>
+
+          <!-- Tab Contents -->
+          <div id="tab-planets" class="tab-content na-tab-content active">
             <div id="planetsTable"></div>
           </div>
 
@@ -676,11 +676,13 @@
       <!-- SİNASTRİ PANEL (Sinastri + Kompozit + Davison) -->
       <section class="main-tab-content" id="mainTab-synastry">
         <section class="panel sy-panel" id="synastryPanel">
-          <h2 class="panel-title">
+          <h2 class="panel-title form-toggle-title" id="syFormToggle">
             <span class="panel-icon">💞</span>
             Sinastri
+            <span class="form-toggle-icon" id="syFormToggleIcon">▼</span>
           </h2>
 
+          <div class="sy-form-wrap" id="syForm">
           <!-- Kişi A özeti (üstteki natal formdan gelir) -->
           <div class="sy-person-a" id="syPersonA">
             <span class="sy-person-label">Kişi A</span>
@@ -766,16 +768,15 @@
               İlişki Haritalarını Hesapla
             </button>
           </div>
+          </div><!-- /sy-form-wrap -->
 
           <!-- Sonuçlar -->
           <div class="sy-results hidden" id="syResults">
             <div class="sy-summary-card" id="sySummaryCard"></div>
 
+            <!-- ÜST: harita geçiş sekmeleri (Sinastri / Kompozit / Davison) -->
             <div class="tabs sy-tabs">
               <button class="tab active" data-sy-tab="sy-chart">🗺️ Sinastri Haritası</button>
-              <button class="tab" data-sy-tab="sy-aspects">🔗 Çapraz Aspektler</button>
-              <button class="tab" data-sy-tab="sy-grid">▦ Aspekt Gridi</button>
-              <button class="tab" data-sy-tab="sy-houses">🏠 Ev Yerleşimleri</button>
               <button class="tab" data-sy-tab="sy-composite">⊕ Kompozit</button>
               <button class="tab" data-sy-tab="sy-davison">🕐 Davison</button>
             </div>
@@ -803,18 +804,6 @@
               </p>
             </div>
 
-            <div id="tab-sy-aspects" class="tab-content sy-tab-content">
-              <div id="syAspectsTable"></div>
-            </div>
-
-            <div id="tab-sy-grid" class="tab-content sy-tab-content">
-              <div id="syGridTable"></div>
-            </div>
-
-            <div id="tab-sy-houses" class="tab-content sy-tab-content">
-              <div id="syHousesTable"></div>
-            </div>
-
             <div id="tab-sy-composite" class="tab-content sy-tab-content">
               <div class="sy-subchart-card" id="syCompositeCard"></div>
               <div class="chart-canvas-container">
@@ -831,6 +820,25 @@
               </div>
               <div id="syDavisonPlanetsTable"></div>
               <div id="syDavisonAspectsTable"></div>
+            </div>
+
+            <!-- ALT: ek bilgi sekmeleri (Sinastri'ye özel tablolar) -->
+            <div class="tabs sy-info-tabs">
+              <button class="tab active" data-sy2-tab="sy-aspects">🔗 Çapraz Aspektler</button>
+              <button class="tab" data-sy2-tab="sy-grid">▦ Aspekt Gridi</button>
+              <button class="tab" data-sy2-tab="sy-houses">🏠 Ev Yerleşimleri</button>
+            </div>
+
+            <div id="tab-sy-aspects" class="tab-content sy2-tab-content active">
+              <div id="syAspectsTable"></div>
+            </div>
+
+            <div id="tab-sy-grid" class="tab-content sy2-tab-content">
+              <div id="syGridTable"></div>
+            </div>
+
+            <div id="tab-sy-houses" class="tab-content sy2-tab-content">
+              <div id="syHousesTable"></div>
             </div>
           </div>
         </section>

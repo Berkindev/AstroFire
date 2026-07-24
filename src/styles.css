@@ -1433,7 +1433,8 @@ input::placeholder {
 .tr-form.collapsed,
 .pr-form.collapsed,
 .sr-form.collapsed,
-.lr-form.collapsed {
+.lr-form.collapsed,
+.sy-form-wrap.collapsed {
   display: none;
 }
 
@@ -1458,7 +1459,8 @@ input::placeholder {
 .tr-chart-box,
 .pr-chart-box,
 .sr-chart-box,
-.lr-chart-box {
+.lr-chart-box,
+.na-chart-box {
   margin-bottom: 1.25rem;
 }
 
