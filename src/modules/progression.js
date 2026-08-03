@@ -60,6 +60,8 @@ export const DEFAULT_ANGLE_METHOD = 'solar_arc_long';
  * @param {Object} targetDate - Progres haritasının hedef tarihi { year, month, day }
  * @param {Object} [options]
  * @param {string} [options.angleMethod] - ANGLE_METHODS key'lerinden biri
+ * @param {Object} [options.location] - Relokasyon konumu { latitude, longitude, timezone, name? }.
+ *   Verilmezse (ya da doğum yeriyle aynıysa) harita doğum yerinde kurulur — eski davranış birebir korunur.
  * @returns {Promise<Object>} Progres harita verisi
  */
 export async function calculateSecondaryProgression(natalChart, targetDate, options = {}) {
@@ -71,6 +73,15 @@ export async function calculateSecondaryProgression(natalChart, targetDate, opti
   const natalJD = natalChart.julianDay;
   const natalLat = bd.latitude;
   const natalLon = bd.longitude;
+
+  // Relokasyon: yalnızca gerçekten farklı bir yer verildiyse devreye girer.
+  // Aynıysa null bırakırız ki natal açılar natalChart.houses'tan okunsun (bit-bit eski sonuç).
+  const loc = options.location;
+  const reloc = loc && (loc.latitude !== natalLat || loc.longitude !== natalLon) ? loc : null;
+
+  // Evlerin/açıların kurulacağı yer
+  const lat = reloc ? reloc.latitude : natalLat;
+  const lon = reloc ? reloc.longitude : natalLon;
 
   // Hedef anı, doğum saatini ve doğum yerinin saat dilimini koruyarak kur.
   // Böylece her doğum gününde geçen yıl tam sayı olur (yaş = tam yıl).
@@ -103,14 +114,18 @@ export async function calculateSecondaryProgression(natalChart, targetDate, opti
   // Solar arc (ileriye doğru boylam yayı)
   const solarArcLon = normalizeDegree(progSunLon - natalSunLon);
 
-  const natalMC = natalChart.houses.mc;
+  // Açı yöntemleri natal MC'den yay alır. Relokasyonda natal açılar yeni boylamda
+  // yeniden kurulmalı: aynı doğum ANI, farklı yer → farklı yerel yıldız zamanı.
+  const natalMC = reloc
+    ? calculateHouses(natalJD, lat, lon, 'P').mc
+    : natalChart.houses.mc;
   const natalARMC = rightAscensionFromEcliptic(natalMC, eps);
 
   let houses;
   let progMCLon;
   if (angleMethod === 'quotidian') {
-    // Günlük evler: progres anının JD'sinde natal konumda tam harita yeniden hesaplanır
-    houses = calculateHouses(progJD, natalLat, natalLon, 'P');
+    // Günlük evler: progres anının JD'sinde harita konumunda tam harita yeniden hesaplanır
+    houses = calculateHouses(progJD, lat, lon, 'P');
     progMCLon = houses.mc;
   } else {
     let armc;
@@ -132,7 +147,7 @@ export async function calculateSecondaryProgression(natalChart, targetDate, opti
       progMCLon = normalizeDegree(natalMC + solarArcLon);
       armc = rightAscensionFromEcliptic(progMCLon, eps);
     }
-    houses = calculateHousesARMC(armc, natalLat, eps, 'P');
+    houses = calculateHousesARMC(armc, lat, eps, 'P');
     progMCLon = houses.mc;
   }
 
@@ -177,10 +192,10 @@ export async function calculateSecondaryProgression(natalChart, targetDate, opti
     },
 
     location: {
-      latitude: natalLat,
-      longitude: natalLon,
-      timezone: bd.timezone,
-      name: bd.placeName || '',
+      latitude: lat,
+      longitude: lon,
+      timezone: reloc ? reloc.timezone : bd.timezone,
+      name: reloc ? (reloc.name || '') : (bd.placeName || ''),
     },
 
     solarArc: solarArcLon,

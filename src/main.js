@@ -53,17 +53,19 @@ const MONTH_SHORT = ['', 'Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz',
 let selectedCity = null;
 let currentChart = null;
 
+// Ortak relokasyon konumu ("Şu Anki Konum", doğum formunda).
+// Transit / Solar / Lunar / Progres hepsi bunu kullanır; natal her zaman doğum yerinde kalır.
+// null = "Doğum Yeri" seçili, yani selectedCity kullanılır.
+let relocCity = null;
+
 // Solar Return state
 let currentSolarReturn = null;
-let srSelectedCity = null;
 
 // Lunar Return state
 let currentLunarReturn = null;
-let lrSelectedCity = null;
 
 // Transit state
 let currentTransit = null;
-let trSelectedCity = null;
 
 // Progression state
 let currentProgression = null;
@@ -95,6 +97,18 @@ const elements = {
   coordDisplay: $('coordDisplay'),
   timezoneDisplay: $('timezoneDisplay'),
   utcOffsetDisplay: $('utcOffsetDisplay'),
+  // Ortak relokasyon konumu ("Şu Anki Konum")
+  relocBirth: $('relocBirth'),
+  relocCustom: $('relocCustom'),
+  relocBirthLabel: $('relocBirthLabel'),
+  relocCustomLabel: $('relocCustomLabel'),
+  relocBirthPlaceName: $('relocBirthPlaceName'),
+  relocCustomSection: $('relocCustomSection'),
+  relocCitySearch: $('relocCitySearch'),
+  relocCityDropdown: $('relocCityDropdown'),
+  relocLocationInfo: $('relocLocationInfo'),
+  relocCoordDisplay: $('relocCoordDisplay'),
+  relocTimezoneDisplay: $('relocTimezoneDisplay'),
   calculateBtn: $('calculateBtn'),
   clearFormBtn: $('clearFormBtn'),
   resultsPanel: $('resultsPanel'),
@@ -106,17 +120,6 @@ const elements = {
   solarReturnPanel: $('solarReturnPanel'),
   srYear: $('srYear'),
   srPeriodHint: $('srPeriodHint'),
-  srLocBirth: $('srLocBirth'),
-  srLocCustom: $('srLocCustom'),
-  srLocBirthLabel: $('srLocBirthLabel'),
-  srLocCustomLabel: $('srLocCustomLabel'),
-  srBirthPlaceName: $('srBirthPlaceName'),
-  srCustomLocationSection: $('srCustomLocationSection'),
-  srCitySearch: $('srCitySearch'),
-  srCityDropdown: $('srCityDropdown'),
-  srLocationInfo: $('srLocationInfo'),
-  srCoordDisplay: $('srCoordDisplay'),
-  srTimezoneDisplay: $('srTimezoneDisplay'),
   srCalculateBtn: $('srCalculateBtn'),
   srResults: $('srResults'),
   srTimingCard: $('srTimingCard'),
@@ -132,17 +135,6 @@ const elements = {
   lrDay: $('lrDay'),
   lrYear: $('lrYear'),
   lrMonth: $('lrMonth'),
-  lrLocBirth: $('lrLocBirth'),
-  lrLocCustom: $('lrLocCustom'),
-  lrLocBirthLabel: $('lrLocBirthLabel'),
-  lrLocCustomLabel: $('lrLocCustomLabel'),
-  lrBirthPlaceName: $('lrBirthPlaceName'),
-  lrCustomLocationSection: $('lrCustomLocationSection'),
-  lrCitySearch: $('lrCitySearch'),
-  lrCityDropdown: $('lrCityDropdown'),
-  lrLocationInfo: $('lrLocationInfo'),
-  lrCoordDisplay: $('lrCoordDisplay'),
-  lrTimezoneDisplay: $('lrTimezoneDisplay'),
   lrCalculateBtn: $('lrCalculateBtn'),
   lrResults: $('lrResults'),
   lrTimingCard: $('lrTimingCard'),
@@ -159,17 +151,6 @@ const elements = {
   trHour: $('trHour'),
   trMinute: $('trMinute'),
   trNowBtn: $('trNowBtn'),
-  trLocBirth: $('trLocBirth'),
-  trLocCustom: $('trLocCustom'),
-  trLocBirthLabel: $('trLocBirthLabel'),
-  trLocCustomLabel: $('trLocCustomLabel'),
-  trBirthPlaceName: $('trBirthPlaceName'),
-  trCustomLocationSection: $('trCustomLocationSection'),
-  trCitySearch: $('trCitySearch'),
-  trCityDropdown: $('trCityDropdown'),
-  trLocationInfo: $('trLocationInfo'),
-  trCoordDisplay: $('trCoordDisplay'),
-  trTimezoneDisplay: $('trTimezoneDisplay'),
   trCalculateBtn: $('trCalculateBtn'),
   trResults: $('trResults'),
   trTimingCard: $('trTimingCard'),
@@ -367,12 +348,14 @@ function setupEventListeners() {
   ]);
 
   // ============================================
+  // ORTAK RELOKASYON KONUMU ("Şu Anki Konum")
+  // ============================================
+  elements.relocBirth.addEventListener('change', handleRelocationChange);
+  elements.relocCustom.addEventListener('change', handleRelocationChange);
+
+  // ============================================
   // SOLAR RETURN EVENT LISTENERS
   // ============================================
-  
-  // SR konum seçimi radio
-  elements.srLocBirth.addEventListener('change', handleSRLocationChange);
-  elements.srLocCustom.addEventListener('change', handleSRLocationChange);
 
   // SR hesapla
   elements.srCalculateBtn.addEventListener('click', handleSRCalculate);
@@ -434,10 +417,6 @@ function setupEventListeners() {
   // LUNAR RETURN EVENT LISTENERS
   // ============================================
 
-  // LR konum seçimi radio
-  elements.lrLocBirth.addEventListener('change', handleLRLocationChange);
-  elements.lrLocCustom.addEventListener('change', handleLRLocationChange);
-
   // LR hesapla
   elements.lrCalculateBtn.addEventListener('click', handleLRCalculate);
 
@@ -460,10 +439,6 @@ function setupEventListeners() {
   // ============================================
   // TRANSIT EVENT LISTENERS
   // ============================================
-
-  // TR konum seçimi radio
-  elements.trLocBirth.addEventListener('change', handleTRLocationChange);
-  elements.trLocCustom.addEventListener('change', handleTRLocationChange);
 
   // TR hesapla
   elements.trCalculateBtn.addEventListener('click', handleTRCalculate);
@@ -780,42 +755,22 @@ const natalCitySearch = createCitySearch({
     selectedCity = city;
     updateTimezoneDisplay();
     elements.calculateBtn.disabled = false;
+    updateRelocBirthName();
+    // "Doğum Yeri" seçiliyken doğum şehri değişirse relokasyon konumu da değişmiş olur
+    if (elements.relocBirth?.checked) refreshLocationDependentCharts();
   },
 });
 
+// Ortak relokasyon konumu — Transit/Solar/Lunar/Progres hepsi bunu kullanır.
 createCitySearch({
-  input: elements.srCitySearch,
-  dropdown: elements.srCityDropdown,
-  info: elements.srLocationInfo,
-  coord: elements.srCoordDisplay,
-  timezone: elements.srTimezoneDisplay,
+  input: elements.relocCitySearch,
+  dropdown: elements.relocCityDropdown,
+  info: elements.relocLocationInfo,
+  coord: elements.relocCoordDisplay,
+  timezone: elements.relocTimezoneDisplay,
   onSelect: (city) => {
-    srSelectedCity = city;
-    updateSRButtonState();
-  },
-});
-
-createCitySearch({
-  input: elements.lrCitySearch,
-  dropdown: elements.lrCityDropdown,
-  info: elements.lrLocationInfo,
-  coord: elements.lrCoordDisplay,
-  timezone: elements.lrTimezoneDisplay,
-  onSelect: (city) => {
-    lrSelectedCity = city;
-    updateLRButtonState();
-  },
-});
-
-createCitySearch({
-  input: elements.trCitySearch,
-  dropdown: elements.trCityDropdown,
-  info: elements.trLocationInfo,
-  coord: elements.trCoordDisplay,
-  timezone: elements.trTimezoneDisplay,
-  onSelect: (city) => {
-    trSelectedCity = city;
-    updateTRButtonState();
+    relocCity = city;
+    refreshLocationDependentCharts();
   },
 });
 
@@ -835,6 +790,82 @@ const syCitySearch = createCitySearch({
 /** Hızlı şehir butonları natal formun arama kutusunu besler. */
 function selectCity(city) {
   natalCitySearch.select(city);
+}
+
+// ============================================
+// ORTAK RELOKASYON KONUMU ("Şu Anki Konum")
+// ============================================
+// Tek bir konum seçici doğum formunda durur; Transit / Solar / Lunar / Progres
+// haritalarının tamamı bunu kullanır. Natal harita HER ZAMAN doğum yerinde kalır.
+// Panel başına ayrı seçici yok — "Almanya doğumlu, 2026 solar yılına İstanbul'da
+// girmiş" senaryosu tek yerden yönetilir.
+
+/** Şu an geçerli olan konum şehri: "Başka Yer" seçiliyse o, değilse doğum yeri. */
+function activeLocationCity() {
+  return elements.relocBirth?.checked === false ? relocCity : selectedCity;
+}
+
+/** Hesaplama modüllerinin beklediği { latitude, longitude, timezone, name } nesnesi. */
+function activeLocation() {
+  const city = activeLocationCity();
+  if (!city) return null;
+  return {
+    latitude: city.lat,
+    longitude: city.lng,
+    timezone: city.timezone,
+    name: formatCityName(city),
+  };
+}
+
+/** Hesapla butonlarının konum koşulu — dördü de aynı kuralı kullanır. */
+function hasActiveLocation() {
+  return !!activeLocationCity();
+}
+
+/** "Doğum Yeri" seçeneğinin yanındaki şehir adını tazele. */
+function updateRelocBirthName() {
+  if (selectedCity && elements.relocBirthPlaceName) {
+    elements.relocBirthPlaceName.textContent = `(${formatCityName(selectedCity)})`;
+  }
+}
+
+function handleRelocationChange() {
+  const useBirth = elements.relocBirth.checked;
+
+  elements.relocBirthLabel.classList.toggle('active', useBirth);
+  elements.relocCustomLabel.classList.toggle('active', !useBirth);
+
+  if (useBirth) {
+    elements.relocCustomSection.classList.add('hidden');
+  } else {
+    elements.relocCustomSection.classList.remove('hidden');
+  }
+
+  refreshLocationDependentCharts();
+}
+
+/**
+ * Konum değişti: buton durumlarını tazele, ekranda duran haritaları yeniden hesapla.
+ * Sonucu görünmeyen paneli tetiklemeyiz — handle*Calculate aksi halde alert atar.
+ * Natal harita bilinçli olarak yeniden hesaplanmaz; o doğum yerine bağlıdır.
+ */
+function refreshLocationDependentCharts() {
+  updateSRButtonState();
+  updateLRButtonState();
+  updateTRButtonState();
+  updatePRButtonState();
+
+  if (!currentChart || !hasActiveLocation()) return;
+
+  const open = (id) => {
+    const el = $(id);
+    return el && !el.classList.contains('hidden');
+  };
+
+  if (open('srResults')) handleSRCalculate({ scroll: false });
+  if (open('lrResults')) handleLRCalculate({ scroll: false });
+  if (open('trResults')) handleTRCalculate();
+  if (open('prResults')) handlePRCalculate();
 }
 
 // ============================================
@@ -1025,6 +1056,7 @@ function loadChartEntry(entry) {
   elements.coordDisplay.textContent = formatCoordinates(entry.lat, entry.lng);
   elements.timezoneDisplay.textContent = entry.timezone;
   updateTimezoneDisplay();
+  updateRelocBirthName();
 
   elements.calculateBtn.disabled = false;
   handleCalculate();
@@ -1148,6 +1180,9 @@ async function handleCalculate(e) {
     currentChart = await calculateNatalChart(birthData);
     renderResults(currentChart);
     elements.resultsPanel.classList.remove('hidden');
+
+    // Ortak konum bloğundaki doğum yeri adını tazele
+    updateRelocBirthName();
 
     // Solar Return'ü hazırla
     showSolarReturnPanel();
@@ -1585,29 +1620,7 @@ function showSolarReturnPanel() {
   const currentYear = new Date().getFullYear();
   elements.srYear.value = currentYear;
   
-  // Doğum yeri adını göster
-  if (selectedCity) {
-    elements.srBirthPlaceName.textContent = `(${formatCityName(selectedCity)})`;
-  }
-  
   // SR butonunu aktif et
-  updateSRButtonState();
-}
-
-function handleSRLocationChange() {
-  const isBirth = elements.srLocBirth.checked;
-  
-  // Radio label styling
-  elements.srLocBirthLabel.classList.toggle('active', isBirth);
-  elements.srLocCustomLabel.classList.toggle('active', !isBirth);
-  
-  // Custom location section
-  if (isBirth) {
-    elements.srCustomLocationSection.classList.add('hidden');
-  } else {
-    elements.srCustomLocationSection.classList.remove('hidden');
-  }
-  
   updateSRButtonState();
 }
 
@@ -1615,10 +1628,7 @@ function updateSRButtonState() {
   const yearVal = parseInt(elements.srYear.value);
   const hasYear = !isNaN(yearVal) && yearVal >= 1900 && yearVal <= 2100;
 
-  const isBirth = elements.srLocBirth.checked;
-  const hasLocation = isBirth ? !!selectedCity : !!srSelectedCity;
-
-  elements.srCalculateBtn.disabled = !(hasYear && hasLocation);
+  elements.srCalculateBtn.disabled = !(hasYear && hasActiveLocation());
 
   updateSRPeriodHint(hasYear ? yearVal : null);
 }
@@ -1664,22 +1674,15 @@ async function handleSRCalculate({ scroll = true } = {}) {
   }
   
   const year = parseInt(elements.srYear.value);
-  const isBirth = elements.srLocBirth.checked;
-  
-  // Konum belirle
-  const locationCity = isBirth ? selectedCity : srSelectedCity;
-  if (!locationCity) {
+
+  // Ortak "Şu Anki Konum" (doğum formunda)
+  const location = activeLocation();
+  if (!location) {
     alert('Lütfen bir konum seçin.');
     return;
   }
-  
-  const location = {
-    latitude: locationCity.lat,
-    longitude: locationCity.lng,
-    timezone: locationCity.timezone,
-    name: formatCityName(locationCity),
-  };
-  
+
+
   // Loading state
   elements.srCalculateBtn.disabled = true;
   elements.srCalculateBtn.innerHTML = '<span class="btn-icon">⏳</span> Hesaplanıyor...';
@@ -2233,29 +2236,7 @@ function showLunarReturnPanel() {
   elements.lrYear.value = now.getFullYear();
   elements.lrMonth.value = now.getMonth() + 1;
 
-  // Doğum yeri adını göster
-  if (selectedCity) {
-    elements.lrBirthPlaceName.textContent = `(${formatCityName(selectedCity)})`;
-  }
-
   // LR butonunu aktif et
-  updateLRButtonState();
-}
-
-function handleLRLocationChange() {
-  const isBirth = elements.lrLocBirth.checked;
-
-  // Radio label styling
-  elements.lrLocBirthLabel.classList.toggle('active', isBirth);
-  elements.lrLocCustomLabel.classList.toggle('active', !isBirth);
-
-  // Custom location section
-  if (isBirth) {
-    elements.lrCustomLocationSection.classList.add('hidden');
-  } else {
-    elements.lrCustomLocationSection.classList.remove('hidden');
-  }
-
   updateLRButtonState();
 }
 
@@ -2266,10 +2247,7 @@ function updateLRButtonState() {
   const yearVal = parseInt(elements.lrYear.value);
   const hasYear = !isNaN(yearVal) && yearVal >= 1900 && yearVal <= 2100;
 
-  const isBirth = elements.lrLocBirth.checked;
-  const hasLocation = isBirth ? !!selectedCity : !!lrSelectedCity;
-
-  elements.lrCalculateBtn.disabled = !(hasDay && hasYear && hasLocation);
+  elements.lrCalculateBtn.disabled = !(hasDay && hasYear && hasActiveLocation());
 }
 
 // Ay ileri/geri — mevcut dönüşten ±1 sideral ay kayıp komşu Lunar Return'e geç.
@@ -2296,21 +2274,13 @@ async function handleLRCalculate({ scroll = true } = {}) {
   const day = parseInt(elements.lrDay.value);
   const year = parseInt(elements.lrYear.value);
   const month = parseInt(elements.lrMonth.value);
-  const isBirth = elements.lrLocBirth.checked;
 
-  // Konum belirle
-  const locationCity = isBirth ? selectedCity : lrSelectedCity;
-  if (!locationCity) {
+  // Ortak "Şu Anki Konum" (doğum formunda)
+  const location = activeLocation();
+  if (!location) {
     alert('Lütfen bir konum seçin.');
     return;
   }
-
-  const location = {
-    latitude: locationCity.lat,
-    longitude: locationCity.lng,
-    timezone: locationCity.timezone,
-    name: formatCityName(locationCity),
-  };
 
   // Loading state
   elements.lrCalculateBtn.disabled = true;
@@ -2579,11 +2549,6 @@ function renderLRDecans(lr) {
 function showTransitPanel() {
   if (!currentChart) return;
 
-  // Doğum yeri bilgisini göster
-  if (selectedCity) {
-    elements.trBirthPlaceName.textContent = formatCityName(selectedCity);
-  }
-
   // Bugünün tarih/saatini set et
   handleTRNowClick();
 
@@ -2601,20 +2566,6 @@ function handleTRNowClick() {
   updateTRButtonState();
 }
 
-function handleTRLocationChange() {
-  const useBirth = elements.trLocBirth.checked;
-
-  elements.trLocBirthLabel.classList.toggle('active', useBirth);
-  elements.trLocCustomLabel.classList.toggle('active', !useBirth);
-
-  if (useBirth) {
-    elements.trCustomLocationSection.classList.add('hidden');
-  } else {
-    elements.trCustomLocationSection.classList.remove('hidden');
-  }
-  updateTRButtonState();
-}
-
 function updateTRButtonState() {
   if (!currentChart) {
     elements.trCalculateBtn.disabled = true;
@@ -2629,11 +2580,7 @@ function updateTRButtonState() {
 
   const hasDate = !isNaN(day) && !isNaN(month) && !isNaN(year) && !isNaN(hour) && !isNaN(minute);
 
-  if (elements.trLocBirth.checked) {
-    elements.trCalculateBtn.disabled = !hasDate;
-  } else {
-    elements.trCalculateBtn.disabled = !hasDate || !trSelectedCity;
-  }
+  elements.trCalculateBtn.disabled = !(hasDate && hasActiveLocation());
 }
 
 async function handleTRCalculate() {
@@ -2650,22 +2597,9 @@ async function handleTRCalculate() {
     minute: parseInt(elements.trMinute.value),
   };
 
-  let location;
-  if (elements.trLocBirth.checked && selectedCity) {
-    location = {
-      latitude: selectedCity.lat,
-      longitude: selectedCity.lng,
-      timezone: selectedCity.timezone,
-      name: formatCityName(selectedCity),
-    };
-  } else if (trSelectedCity) {
-    location = {
-      latitude: trSelectedCity.lat,
-      longitude: trSelectedCity.lng,
-      timezone: trSelectedCity.timezone,
-      name: formatCityName(trSelectedCity),
-    };
-  } else {
+  // Ortak "Şu Anki Konum" (doğum formunda)
+  const location = activeLocation();
+  if (!location) {
     alert('Lütfen bir konum seçin.');
     return;
   }
@@ -2921,6 +2855,7 @@ function showProgressionPanel() {
   if (!currentChart) return;
   // Varsayılan hedef: bugün
   handlePRTodayClick();
+
   updatePRButtonState();
 }
 
@@ -2941,7 +2876,8 @@ function updatePRButtonState() {
   const month = parseInt(elements.prMonth.value);
   const year = parseInt(elements.prYear.value);
   const hasDate = !isNaN(day) && !isNaN(month) && !isNaN(year);
-  elements.prCalculateBtn.disabled = !hasDate;
+
+  elements.prCalculateBtn.disabled = !(hasDate && hasActiveLocation());
 }
 
 // Yıl/Ay ileri-geri — progres hedef tarihini kaydırıp yeniden hesapla.
@@ -2975,11 +2911,19 @@ async function handlePRCalculate() {
 
   const angleMethod = elements.prAngleMethod ? elements.prAngleMethod.value : DEFAULT_ANGLE_METHOD;
 
+  // Relokasyon: "Başka Yer" seçiliyse progres açıları/evleri o konumda kurulur.
+  // Doğum yeri seçiliyse location verilmez → modül eski davranışını birebir korur.
+  const location = elements.relocBirth.checked ? null : activeLocation();
+  if (!elements.relocBirth.checked && !location) {
+    alert('Lütfen bir konum seçin.');
+    return;
+  }
+
   elements.prCalculateBtn.disabled = true;
   elements.prCalculateBtn.innerHTML = '<span class="btn-icon">⏳</span> Hesaplanıyor...';
 
   try {
-    currentProgression = await calculateSecondaryProgression(currentChart, targetDate, { angleMethod });
+    currentProgression = await calculateSecondaryProgression(currentChart, targetDate, { angleMethod, location });
     renderPRResults(currentProgression);
     elements.prResults.classList.remove('hidden');
     // Hesaplamadan sonra tarih formunu default olarak katla (harita yukarı kaysın)
@@ -3037,6 +2981,10 @@ function renderPRTimingCard(pr) {
         <div class="tr-timing-place">
           <span class="tr-timing-label">Yöntem:</span>
           <span class="tr-timing-value">${methodName}</span>
+        </div>
+        <div class="tr-timing-place">
+          <span class="tr-timing-label">Konum:</span>
+          <span class="tr-timing-value">${pr.location?.name || (selectedCity ? formatCityName(selectedCity) : 'Doğum yeri')}</span>
         </div>
       </div>
       <div class="tr-timing-points">

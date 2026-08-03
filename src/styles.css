@@ -427,6 +427,92 @@ input::placeholder {
   font-size: 1.1rem;
 }
 
+/* --- Ortak relokasyon konumu ("Şu Anki Konum") ---
+   Doğum formunun içinde, "Harita Hesapla"nın hemen üstünde durur.
+   Transit / Solar / Lunar / Progres hepsi bu konumu kullanır; natal etkilenmez. */
+.reloc-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.reloc-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.reloc-hint {
+  margin: -0.25rem 0 0.25rem;
+  font-size: 0.75rem;
+  line-height: 1.45;
+  color: var(--text-secondary);
+}
+
+.reloc-options {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.reloc-radio-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1rem;
+  background: var(--bg-input);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: var(--transition);
+  flex: 1;
+}
+
+.reloc-radio-option:hover {
+  border-color: var(--border-accent);
+  background: var(--bg-hover);
+}
+
+.reloc-radio-option.active {
+  border-color: rgba(99, 102, 241, 0.5);
+  background: rgba(99, 102, 241, 0.08);
+}
+
+.reloc-radio-option input[type="radio"] {
+  display: none;
+}
+
+.reloc-radio-option.active .radio-custom {
+  border-color: var(--accent-primary);
+}
+
+.reloc-radio-option.active .radio-custom::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 6px;
+  height: 6px;
+  background: var(--accent-primary);
+  border-radius: 50%;
+}
+
+.reloc-custom {
+  padding-left: 0.5rem;
+  border-left: 2px solid var(--border-color);
+  margin-left: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .reloc-options {
+    flex-direction: column;
+  }
+}
+
 /* Form Actions */
 .form-actions {
   display: flex;
@@ -1031,53 +1117,6 @@ input::placeholder {
   margin: 0 0.2rem;
 }
 
-/* Location selector */
-.sr-location-section {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.sr-location-label {
-  font-size: 0.8rem;
-  font-weight: 500;
-  color: var(--text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.sr-location-options {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.sr-radio-option {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.6rem 1rem;
-  background: var(--bg-input);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  transition: var(--transition);
-  flex: 1;
-}
-
-.sr-radio-option:hover {
-  border-color: var(--border-accent);
-  background: var(--bg-hover);
-}
-
-.sr-radio-option.active {
-  border-color: rgba(245, 158, 11, 0.5);
-  background: rgba(245, 158, 11, 0.08);
-}
-
-.sr-radio-option input[type="radio"] {
-  display: none;
-}
-
 .radio-custom {
   width: 16px;
   height: 16px;
@@ -1086,21 +1125,6 @@ input::placeholder {
   position: relative;
   flex-shrink: 0;
   transition: var(--transition);
-}
-
-.sr-radio-option.active .radio-custom {
-  border-color: var(--warning);
-}
-
-.sr-radio-option.active .radio-custom::after {
-  content: '';
-  position: absolute;
-  top: 3px;
-  left: 3px;
-  width: 6px;
-  height: 6px;
-  background: var(--warning);
-  border-radius: 50%;
 }
 
 .radio-text {
@@ -1113,12 +1137,6 @@ input::placeholder {
   font-size: 0.75rem;
   color: var(--text-muted);
   margin-left: auto;
-}
-
-.sr-custom-location {
-  padding-left: 0.5rem;
-  border-left: 2px solid var(--border-color);
-  margin-left: 0.5rem;
 }
 
 .sr-btn {
@@ -1224,10 +1242,6 @@ input::placeholder {
 
 /* Responsive */
 @media (max-width: 768px) {
-  .sr-location-options {
-    flex-direction: column;
-  }
-
   .sr-timing-grid {
     grid-template-columns: 1fr;
   }
@@ -1267,73 +1281,6 @@ input::placeholder {
 
 .lr-input-row {
   max-width: 320px;
-}
-
-.lr-location-section {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.lr-location-label {
-  font-size: 0.8rem;
-  font-weight: 500;
-  color: var(--text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.lr-location-options {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.lr-radio-option {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.6rem 1rem;
-  background: var(--bg-input);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  transition: var(--transition);
-  flex: 1;
-}
-
-.lr-radio-option:hover {
-  border-color: var(--border-accent);
-  background: var(--bg-hover);
-}
-
-.lr-radio-option.active {
-  border-color: rgba(148, 163, 184, 0.5);
-  background: rgba(148, 163, 184, 0.08);
-}
-
-.lr-radio-option input[type="radio"] {
-  display: none;
-}
-
-.lr-radio-option.active .radio-custom {
-  border-color: #94a3b8;
-}
-
-.lr-radio-option.active .radio-custom::after {
-  content: '';
-  position: absolute;
-  top: 3px;
-  left: 3px;
-  width: 6px;
-  height: 6px;
-  background: #94a3b8;
-  border-radius: 50%;
-}
-
-.lr-custom-location {
-  padding-left: 0.5rem;
-  border-left: 2px solid var(--border-color);
-  margin-left: 0.5rem;
 }
 
 .lr-btn {
@@ -1439,10 +1386,6 @@ input::placeholder {
 
 /* LR Responsive */
 @media (max-width: 768px) {
-  .lr-location-options {
-    flex-direction: column;
-  }
-
   .lr-timing-grid {
     grid-template-columns: 1fr;
   }
@@ -1527,73 +1470,6 @@ input::placeholder {
 
 .tr-input-row {
   flex-wrap: wrap;
-}
-
-.tr-location-section {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.tr-location-label {
-  font-size: 0.8rem;
-  font-weight: 500;
-  color: var(--text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.tr-location-options {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.tr-radio-option {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.6rem 1rem;
-  background: var(--bg-input);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  transition: var(--transition);
-  flex: 1;
-}
-
-.tr-radio-option:hover {
-  border-color: var(--border-accent);
-  background: var(--bg-hover);
-}
-
-.tr-radio-option.active {
-  border-color: rgba(20, 184, 166, 0.5);
-  background: rgba(20, 184, 166, 0.08);
-}
-
-.tr-radio-option input[type="radio"] {
-  display: none;
-}
-
-.tr-radio-option.active .radio-custom {
-  border-color: #14b8a6;
-}
-
-.tr-radio-option.active .radio-custom::after {
-  content: '';
-  position: absolute;
-  top: 3px;
-  left: 3px;
-  width: 6px;
-  height: 6px;
-  background: #14b8a6;
-  border-radius: 50%;
-}
-
-.tr-custom-location {
-  padding-left: 0.5rem;
-  border-left: 2px solid var(--border-color);
-  margin-left: 0.5rem;
 }
 
 .tr-btn {
@@ -1745,10 +1621,6 @@ input::placeholder {
 
 /* TR Responsive */
 @media (max-width: 768px) {
-  .tr-location-options {
-    flex-direction: column;
-  }
-
   .tr-timing-grid {
     grid-template-columns: 1fr;
   }
@@ -2182,7 +2054,6 @@ input::placeholder {
   color: var(--text-muted);
   font-size: 1rem;
 }
-
 
 /* Analysis Cards (Accordion) */
 .analysis-sections {
