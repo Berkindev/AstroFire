@@ -100,8 +100,9 @@ await page.click('#calculateBtn');
 await page.waitForTimeout(2500);
 
 // Natal alt sekmeleri
+// NOT: "chart" artık alt sekme değil — çark kendi kutusunda (.na-chart-box) hep görünür.
+// Çizim kontrolü aşağıdaki natalChartCanvas doğrulamasında yapılıyor.
 for (const [tab, check] of [
-  ['chart', null],
   ['planets', '#planetsTable table tbody tr'],
   ['houses', '#housesTable table tbody tr'],
   ['aspects', '#aspectsTable table tbody tr'],
@@ -267,11 +268,9 @@ else fail('Sinastri hesapla butonu disabled kaldı');
 await page.click('#syCalculateBtn');
 await page.waitForTimeout(3000);
 
+// Sekme arkasındaki bölümler
 for (const [tab, sel, label] of [
   ['sy-chart', null, 'Sinastri haritası'],
-  ['sy-aspects', '#syAspectsTable table tbody tr', 'Çapraz aspektler'],
-  ['sy-grid', '#syGridTable table tbody tr', 'Aspekt gridi'],
-  ['sy-houses', '#syHousesTable table tbody tr', 'Ev yerleşimleri'],
   ['sy-composite', '#syCompositePlanetsTable table tbody tr', 'Kompozit gezegenler'],
   ['sy-davison', '#syDavisonPlanetsTable table tbody tr', 'Davison gezegenler'],
 ]) {
@@ -283,6 +282,17 @@ for (const [tab, sel, label] of [
     if (rows > 0) pass(`${label}: ${rows} satır`);
     else fail(`${label}: BOŞ`);
   }
+}
+
+// Aspekt/grid/ev tabloları artık sekme arkasında değil — sonuçların altında hep görünür.
+for (const [sel, label] of [
+  ['#syAspectsTable table tbody tr', 'Çapraz aspektler'],
+  ['#syGridTable table tbody tr', 'Aspekt gridi'],
+  ['#syHousesTable table tbody tr', 'Ev yerleşimleri'],
+]) {
+  const rows = await page.locator(sel).count();
+  if (rows > 0) pass(`${label}: ${rows} satır`);
+  else fail(`${label}: BOŞ`);
 }
 
 // Üç canvas da çizilmiş olmalı
@@ -338,6 +348,9 @@ else fail(`takas geri alınamadı: "${legendBack}"`);
 
 // Kompozit çapa değişimi haritayı yeniden hesaplamalı
 await page.click('.tab[data-sy-tab="sy-composite"]');
+await page.waitForTimeout(300);
+// #syAnchor, hesaplamadan sonra katlanan #syForm'un içinde — seçim için formu aç.
+await page.click('#syFormToggle');
 await page.waitForTimeout(300);
 await page.selectOption('#syAnchor', 'mc');
 await page.waitForTimeout(600);
