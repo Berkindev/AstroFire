@@ -301,6 +301,36 @@ function avoidCollisions(items, radius, minSpacing) {
   return arr;
 }
 
+/**
+ * Kılavuz çizginin çizilmesi için gereken en küçük kayma (radyan ≈ 0.4°).
+ * Bunun altında glif zaten gerçek derecesinin üstünde; çizgi sadece kirlilik olur.
+ */
+const LEADER_MIN_DRIFT = 0.007;
+
+/**
+ * avoidCollisions glifi gerçek derecesinden ittiyse, glif yığınının ucundan
+ * gerçek boylam çentiğine ince bir kılavuz çizgi çeker. Böylece sıkışık
+ * kümelerde (ör. 7 gezegen 28°'ye yığılınca) hangi glifin hangi dereceye ait
+ * olduğu okunur — yoksa göz glifin durduğu yeri gerçek konum sanıyor.
+ * SolarFire ve astro.com da aynısını yapar.
+ */
+function drawTrueLeader(ctx, from, to, displayAngle, trueAngle, color) {
+  let d = (displayAngle - trueAngle) % (Math.PI * 2);
+  if (d > Math.PI) d -= Math.PI * 2;
+  if (d < -Math.PI) d += Math.PI * 2;
+  if (Math.abs(d) < LEADER_MIN_DRIFT) return;
+
+  ctx.save();
+  ctx.strokeStyle = color;
+  ctx.globalAlpha = 0.55;      // yarı saydam: aspekt çizgilerini bastırmasın
+  ctx.lineWidth = 1.2;
+  ctx.beginPath();
+  ctx.moveTo(from.x, from.y);
+  ctx.lineTo(to.x, to.y);
+  ctx.stroke();
+  ctx.restore();
+}
+
 /** Tüm halka yarıçapları — overlay'ler de bunu kullanır ki hizalar tutsun. */
 export function wheelRadii(size) {
   // Çark canvas'ı doldursun (Kerem: natal da sinastri kadar büyük dursun).
@@ -531,8 +561,9 @@ function drawPlanets(ctx, cx, cy, planets, R, ascLon, partOfFortune) {
     // Gerçek boylamdaki işaret (aspekt çemberi üzerinde). Etiket kaydırılmışsa,
     // gliften gerçek konuma ince bir kılavuz çizgi çeker (SolarFire de yapar).
     const trueA = lonToAngle(p.longitude, ascLon);
+    const tipR = R.innerR + R.R * 0.022;
     const t1 = polarToXY(cx, cy, R.innerR, trueA);
-    const t2 = polarToXY(cx, cy, R.innerR + R.R * 0.022, trueA);
+    const t2 = polarToXY(cx, cy, tipR, trueA);
     ctx.save();
     ctx.strokeStyle = color;
     ctx.lineWidth = 2.2;
@@ -541,6 +572,12 @@ function drawPlanets(ctx, cx, cy, planets, R, ascLon, partOfFortune) {
     ctx.lineTo(t2.x, t2.y);
     ctx.stroke();
     ctx.restore();
+
+    // Yığın (glif → derece → burç → dakika → Rx) içeri doğru iner; kılavuz
+    // çizgi yığının ALTINDAN başlar ki yazıların üstünden geçmesin.
+    const stackBottom = glyphR - (p.isRetrograde ? 4 : 3) * rowGap;
+    const leaderFromR = Math.max(stackBottom - rowGap * 0.45, tipR + R.R * 0.006);
+    drawTrueLeader(ctx, polarToXY(cx, cy, leaderFromR, a), t2, a, trueA, color);
 
     const pos = formatDegMin(p.longitude);
     const signIdx = Math.floor(((p.longitude % 360) + 360) % 360 / 30);
@@ -969,6 +1006,13 @@ function drawOuterPlanets(ctx, cx, cy, planets, R, ascLon, partOfFortune) {
     ctx.stroke();
     ctx.restore();
 
+    // Kılavuz çizgi — burada yığın DIŞA gidiyor, çentik glifin içinde kalıyor.
+    // Çizgi glifin hemen altından çentiğin UCUNA uzanır: çentik ucu glif
+    // yarıçapında ama gerçek açıda, yani glif oradan kaydığı için boş alanda.
+    // (t1'e = burç halkasının dış çemberine çekilirse çizgi o çemberle
+    // çakışıp görünmez oluyordu.)
+    drawTrueLeader(ctx, polarToXY(cx, cy, glyphR - glyphSize * 0.5, a), t2, a, trueA, color);
+
     const pos = formatDegMin(p.longitude);
     const signIdx = Math.floor(((p.longitude % 360) + 360) % 360 / 30);
 
@@ -1028,8 +1072,9 @@ function drawInnerPlanets(ctx, cx, cy, planets, R, ascLon, partOfFortune) {
     const color = PLANET_COLOR[p.name] || '#000000';
 
     const trueA = lonToAngle(p.longitude, ascLon);
+    const tipR = R.innerR + R.R * 0.020;
     const t1 = polarToXY(cx, cy, R.innerR, trueA);
-    const t2 = polarToXY(cx, cy, R.innerR + R.R * 0.020, trueA);
+    const t2 = polarToXY(cx, cy, tipR, trueA);
     ctx.save();
     ctx.strokeStyle = color;
     ctx.lineWidth = 2;
@@ -1038,6 +1083,11 @@ function drawInnerPlanets(ctx, cx, cy, planets, R, ascLon, partOfFortune) {
     ctx.lineTo(t2.x, t2.y);
     ctx.stroke();
     ctx.restore();
+
+    // Kılavuz çizgi — yığının altından gerçek konum çentiğine
+    const stackBottom = glyphR - (p.isRetrograde ? 4 : 3) * rowGap;
+    const leaderFromR = Math.max(stackBottom - rowGap * 0.45, tipR + R.R * 0.005);
+    drawTrueLeader(ctx, polarToXY(cx, cy, leaderFromR, a), t2, a, trueA, color);
 
     const pos = formatDegMin(p.longitude);
     const signIdx = Math.floor(((p.longitude % 360) + 360) % 360 / 30);
