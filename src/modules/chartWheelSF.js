@@ -848,7 +848,9 @@ function drawOuterAngles(ctx, cx, cy, houses, R, ascLon) {
     ctx.stroke();
     ctx.restore();
 
-    // Etiket — dış çemberin hemen ötesinde.
+    // Etiket — dış çemberin hemen ötesinde. İsim + derece tek teğet satırda;
+    // dışarıda ikinci satıra yer yok (outerR zaten canvas kenarına yakın).
+    const { deg, min } = formatDegMin(lon);
     const p = polarToXY(cx, cy, labelR, a);
     ctx.save();
     ctx.font = `bold ${fontSize}px Arial, sans-serif`;
@@ -857,7 +859,7 @@ function drawOuterAngles(ctx, cx, cy, houses, R, ascLon) {
     ctx.textBaseline = 'middle';
     ctx.translate(p.x, p.y);
     ctx.rotate(textRotation(a));
-    ctx.fillText(name, 0, 0);
+    ctx.fillText(`${name} ${deg}°${min}'`, 0, 0);
     ctx.restore();
   }
 }
@@ -1224,10 +1226,13 @@ function drawInnerAngles(ctx, cx, cy, houses, R, ascLon) {
     if (lon == null) continue;
     const a = lonToAngle(lon, ascLon);
     const p = polarToXY(cx, cy, labelR, a);
+    // İsim + derece TEK teğet satırda. Ayrı yarıçapa koymak yok: ev bandı
+    // (houseInR→signInR) sadece 0.055R kalınlığında, ikinci satır sığmıyor.
+    const { deg, min } = formatDegMin(lon);
     ctx.save();
     ctx.translate(p.x, p.y);
     ctx.rotate(textRotation(a));
-    ctx.fillText(name, 0, 0);
+    ctx.fillText(`${name} ${deg}°${min}'`, 0, 0);
     ctx.restore();
   }
   ctx.restore();
@@ -1240,6 +1245,9 @@ function drawInnerAngles(ctx, cx, cy, houses, R, ascLon) {
 function drawOuterHouseCusps(ctx, cx, cy, houses, R, ascLon) {
   if (!houses?.cusps) return;
 
+  const angleHouses = new Set([1, 4, 7, 10]);
+  const degFont = Math.max(8, R.R * 0.028);
+
   ctx.save();
   ctx.strokeStyle = LINE_COLOR;
   ctx.lineWidth = 0.7;
@@ -1251,6 +1259,26 @@ function drawOuterHouseCusps(ctx, cx, cy, houses, R, ascLon) {
     ctx.moveTo(p1.x, p1.y);
     ctx.lineTo(p2.x, p2.y);
     ctx.stroke();
+  }
+  ctx.restore();
+
+  // Cusp dereceleri — dış çemberin hemen içinde, halkaya teğet.
+  // 1/4/7/10 atlanır: onların derecesini drawOuterAngles "ASC 19°12'" olarak yazıyor.
+  ctx.save();
+  ctx.fillStyle = LINE_COLOR;
+  ctx.font = `${degFont}px Arial, sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  for (const cusp of houses.cusps) {
+    if (angleHouses.has(cusp.house)) continue;
+    const a = lonToAngle(cusp.longitude, ascLon);
+    const { deg, min } = formatDegMin(cusp.longitude);
+    const lp = polarToXY(cx, cy, R.outerR - R.R * 0.020, a);
+    ctx.save();
+    ctx.translate(lp.x, lp.y);
+    ctx.rotate(textRotation(a));
+    ctx.fillText(`${deg}°${min}'`, 0, 0);
+    ctx.restore();
   }
   ctx.restore();
 }
