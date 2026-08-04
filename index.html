@@ -122,45 +122,6 @@
             </div>
           </div>
 
-          <!-- Ortak relokasyon konumu — Transit / Solar / Lunar / Progres hepsi bunu kullanır.
-               Natal harita her zaman doğum yerinde kalır, buradan etkilenmez. -->
-          <div class="reloc-section">
-            <label class="reloc-label">📍 Şu Anki Konum</label>
-            <p class="reloc-hint">Transit, Solar, Lunar ve Progres haritaları bu konumda kurulur (ev/ASC/MC). Natal harita her zaman doğum yerinde kalır.</p>
-            <div class="reloc-options">
-              <label class="reloc-radio-option active" id="relocBirthLabel">
-                <input type="radio" name="relocation" value="birth" id="relocBirth" checked>
-                <span class="radio-custom"></span>
-                <span class="radio-text">Doğum Yeri</span>
-                <span class="radio-detail" id="relocBirthPlaceName"></span>
-              </label>
-              <label class="reloc-radio-option" id="relocCustomLabel">
-                <input type="radio" name="relocation" value="custom" id="relocCustom">
-                <span class="radio-custom"></span>
-                <span class="radio-text">Başka Yer</span>
-              </label>
-            </div>
-
-            <div class="reloc-custom hidden" id="relocCustomSection">
-              <div class="form-group full-width">
-                <div class="city-search-wrapper">
-                  <input type="text" id="relocCitySearch" placeholder="Şehir ara..." autocomplete="off">
-                  <div id="relocCityDropdown" class="city-dropdown hidden"></div>
-                </div>
-              </div>
-              <div id="relocLocationInfo" class="location-info hidden">
-                <div class="location-detail">
-                  <span class="detail-label">Koordinat:</span>
-                  <span id="relocCoordDisplay" class="detail-value"></span>
-                </div>
-                <div class="location-detail">
-                  <span class="detail-label">Timezone:</span>
-                  <span id="relocTimezoneDisplay" class="detail-value"></span>
-                </div>
-              </div>
-            </div>
-          </div>
-
           <div class="form-actions">
             <button type="submit" id="calculateBtn" class="btn-calculate" disabled>
               <span class="btn-icon">✨</span>
@@ -290,6 +251,49 @@
             </button>
           </div>
 
+          <!-- Konum — YALNIZCA bu panele ait, form katlansa da görünür kalır -->
+          <div class="chart-loc" id="lrLocBar">
+            <div class="chart-loc-summary">
+              <span class="chart-loc-icon">📍</span>
+              <span class="chart-loc-label">Konum</span>
+              <span class="chart-loc-name" id="lrLocBarName">—</span>
+              <button type="button" class="chart-loc-toggle" id="lrLocBarToggle">Değiştir</button>
+            </div>
+            <div class="chart-loc-editor collapsed" id="lrLocEditor">
+              <div class="loc-options">
+                <label class="loc-radio-option active" id="lrLocBirthLabel">
+                  <input type="radio" name="lrLocation" value="birth" id="lrLocBirth" checked>
+                  <span class="radio-custom"></span>
+                  <span class="radio-text">Doğum Yeri</span>
+                  <span class="radio-detail" id="lrBirthPlaceName"></span>
+                </label>
+                <label class="loc-radio-option" id="lrLocCustomLabel">
+                  <input type="radio" name="lrLocation" value="custom" id="lrLocCustom">
+                  <span class="radio-custom"></span>
+                  <span class="radio-text">Başka Yer</span>
+                </label>
+              </div>
+              <div class="loc-custom hidden" id="lrCustomLocationSection">
+                <div class="form-group full-width">
+                  <div class="city-search-wrapper">
+                    <input type="text" id="lrCitySearch" placeholder="Şehir ara..." autocomplete="off">
+                    <div id="lrCityDropdown" class="city-dropdown hidden"></div>
+                  </div>
+                </div>
+                <div id="lrLocationInfo" class="location-info hidden">
+                  <div class="location-detail">
+                    <span class="detail-label">Koordinat:</span>
+                    <span id="lrCoordDisplay" class="detail-value"></span>
+                  </div>
+                  <div class="location-detail">
+                    <span class="detail-label">Timezone:</span>
+                    <span id="lrTimezoneDisplay" class="detail-value"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <!-- LR Results -->
           <div class="lr-results hidden" id="lrResults">
             <!-- Harita en üstte, kendi kutusunda -->
@@ -379,6 +383,49 @@
               <span class="btn-icon">🔄</span>
               Transitleri Hesapla
             </button>
+          </div>
+
+          <!-- Konum — YALNIZCA bu panele ait, form katlansa da görünür kalır -->
+          <div class="chart-loc" id="trLocBar">
+            <div class="chart-loc-summary">
+              <span class="chart-loc-icon">📍</span>
+              <span class="chart-loc-label">Konum</span>
+              <span class="chart-loc-name" id="trLocBarName">—</span>
+              <button type="button" class="chart-loc-toggle" id="trLocBarToggle">Değiştir</button>
+            </div>
+            <div class="chart-loc-editor collapsed" id="trLocEditor">
+              <div class="loc-options">
+                <label class="loc-radio-option active" id="trLocBirthLabel">
+                  <input type="radio" name="trLocation" value="birth" id="trLocBirth" checked>
+                  <span class="radio-custom"></span>
+                  <span class="radio-text">Doğum Yeri</span>
+                  <span class="radio-detail" id="trBirthPlaceName"></span>
+                </label>
+                <label class="loc-radio-option" id="trLocCustomLabel">
+                  <input type="radio" name="trLocation" value="custom" id="trLocCustom">
+                  <span class="radio-custom"></span>
+                  <span class="radio-text">Başka Yer</span>
+                </label>
+              </div>
+              <div class="loc-custom hidden" id="trCustomLocationSection">
+                <div class="form-group full-width">
+                  <div class="city-search-wrapper">
+                    <input type="text" id="trCitySearch" placeholder="Şehir ara..." autocomplete="off">
+                    <div id="trCityDropdown" class="city-dropdown hidden"></div>
+                  </div>
+                </div>
+                <div id="trLocationInfo" class="location-info hidden">
+                  <div class="location-detail">
+                    <span class="detail-label">Koordinat:</span>
+                    <span id="trCoordDisplay" class="detail-value"></span>
+                  </div>
+                  <div class="location-detail">
+                    <span class="detail-label">Timezone:</span>
+                    <span id="trTimezoneDisplay" class="detail-value"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
           <!-- TR Results -->
@@ -476,6 +523,49 @@
             </button>
           </div>
 
+          <!-- Konum — YALNIZCA bu panele ait, form katlansa da görünür kalır -->
+          <div class="chart-loc" id="prLocBar">
+            <div class="chart-loc-summary">
+              <span class="chart-loc-icon">📍</span>
+              <span class="chart-loc-label">Konum</span>
+              <span class="chart-loc-name" id="prLocBarName">—</span>
+              <button type="button" class="chart-loc-toggle" id="prLocBarToggle">Değiştir</button>
+            </div>
+            <div class="chart-loc-editor collapsed" id="prLocEditor">
+              <div class="loc-options">
+                <label class="loc-radio-option active" id="prLocBirthLabel">
+                  <input type="radio" name="prLocation" value="birth" id="prLocBirth" checked>
+                  <span class="radio-custom"></span>
+                  <span class="radio-text">Doğum Yeri</span>
+                  <span class="radio-detail" id="prBirthPlaceName"></span>
+                </label>
+                <label class="loc-radio-option" id="prLocCustomLabel">
+                  <input type="radio" name="prLocation" value="custom" id="prLocCustom">
+                  <span class="radio-custom"></span>
+                  <span class="radio-text">Başka Yer</span>
+                </label>
+              </div>
+              <div class="loc-custom hidden" id="prCustomLocationSection">
+                <div class="form-group full-width">
+                  <div class="city-search-wrapper">
+                    <input type="text" id="prCitySearch" placeholder="Şehir ara..." autocomplete="off">
+                    <div id="prCityDropdown" class="city-dropdown hidden"></div>
+                  </div>
+                </div>
+                <div id="prLocationInfo" class="location-info hidden">
+                  <div class="location-detail">
+                    <span class="detail-label">Koordinat:</span>
+                    <span id="prCoordDisplay" class="detail-value"></span>
+                  </div>
+                  <div class="location-detail">
+                    <span class="detail-label">Timezone:</span>
+                    <span id="prTimezoneDisplay" class="detail-value"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <!-- PR Results -->
           <div class="pr-results hidden" id="prResults">
             <!-- Harita her zaman EN ÜSTTE, kendi kutusunda -->
@@ -551,6 +641,49 @@
               <span class="btn-icon">☀️</span>
               Solar Return Hesapla
             </button>
+          </div>
+
+          <!-- Konum — YALNIZCA bu panele ait, form katlansa da görünür kalır -->
+          <div class="chart-loc" id="srLocBar">
+            <div class="chart-loc-summary">
+              <span class="chart-loc-icon">📍</span>
+              <span class="chart-loc-label">Konum</span>
+              <span class="chart-loc-name" id="srLocBarName">—</span>
+              <button type="button" class="chart-loc-toggle" id="srLocBarToggle">Değiştir</button>
+            </div>
+            <div class="chart-loc-editor collapsed" id="srLocEditor">
+              <div class="loc-options">
+                <label class="loc-radio-option active" id="srLocBirthLabel">
+                  <input type="radio" name="srLocation" value="birth" id="srLocBirth" checked>
+                  <span class="radio-custom"></span>
+                  <span class="radio-text">Doğum Yeri</span>
+                  <span class="radio-detail" id="srBirthPlaceName"></span>
+                </label>
+                <label class="loc-radio-option" id="srLocCustomLabel">
+                  <input type="radio" name="srLocation" value="custom" id="srLocCustom">
+                  <span class="radio-custom"></span>
+                  <span class="radio-text">Başka Yer</span>
+                </label>
+              </div>
+              <div class="loc-custom hidden" id="srCustomLocationSection">
+                <div class="form-group full-width">
+                  <div class="city-search-wrapper">
+                    <input type="text" id="srCitySearch" placeholder="Şehir ara..." autocomplete="off">
+                    <div id="srCityDropdown" class="city-dropdown hidden"></div>
+                  </div>
+                </div>
+                <div id="srLocationInfo" class="location-info hidden">
+                  <div class="location-detail">
+                    <span class="detail-label">Koordinat:</span>
+                    <span id="srCoordDisplay" class="detail-value"></span>
+                  </div>
+                  <div class="location-detail">
+                    <span class="detail-label">Timezone:</span>
+                    <span id="srTimezoneDisplay" class="detail-value"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
           <!-- SR Results -->

@@ -427,44 +427,78 @@ input::placeholder {
   font-size: 1.1rem;
 }
 
-/* --- Ortak relokasyon konumu ("Şu Anki Konum") ---
-   Doğum formunun içinde, "Harita Hesapla"nın hemen üstünde durur.
-   Transit / Solar / Lunar / Progres hepsi bu konumu kullanır; natal etkilenmez. */
-.reloc-section {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  margin-top: 1rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--border-color);
+/* --- Panel konum çubuğu (relokasyon) ---
+   Her panelin KENDİ konumu. *-form'un dışında durur: form "Hesapla"dan sonra
+   katlanıyor (harita yukarı kaysın) ama konum her zaman görünür kalmalı. */
+.chart-loc {
+  margin-bottom: 1rem;
+  padding: 0.6rem 0.85rem;
+  background: var(--bg-input);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
 }
 
-.reloc-label {
+.chart-loc-summary {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.chart-loc-icon { line-height: 1; }
+
+.chart-loc-label {
   font-size: 0.8rem;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
-.reloc-hint {
-  margin: -0.25rem 0 0.25rem;
-  font-size: 0.75rem;
-  line-height: 1.45;
-  color: var(--text-secondary);
+.chart-loc-name {
+  font-weight: 600;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
-.reloc-options {
+.chart-loc-toggle {
+  margin-left: auto;
+  padding: 0.3rem 0.7rem;
+  font: inherit;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  background: transparent;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.chart-loc-toggle:hover {
+  color: var(--text-primary);
+  border-color: var(--border-accent);
+  background: var(--bg-hover);
+}
+
+.chart-loc-editor {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.chart-loc-editor.collapsed { display: none; }
+
+.loc-options {
   display: flex;
   gap: 0.5rem;
 }
 
-.reloc-radio-option {
+.loc-radio-option {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   padding: 0.6rem 1rem;
-  background: var(--bg-input);
+  background: var(--bg-card, var(--bg-input));
   border: 1px solid var(--border-color);
   border-radius: var(--radius-sm);
   cursor: pointer;
@@ -472,25 +506,21 @@ input::placeholder {
   flex: 1;
 }
 
-.reloc-radio-option:hover {
+.loc-radio-option:hover {
   border-color: var(--border-accent);
   background: var(--bg-hover);
 }
 
-.reloc-radio-option.active {
+.loc-radio-option.active {
   border-color: rgba(99, 102, 241, 0.5);
   background: rgba(99, 102, 241, 0.08);
 }
 
-.reloc-radio-option input[type="radio"] {
-  display: none;
-}
+.loc-radio-option input[type="radio"] { display: none; }
 
-.reloc-radio-option.active .radio-custom {
-  border-color: var(--accent-primary);
-}
+.loc-radio-option.active .radio-custom { border-color: var(--accent-primary); }
 
-.reloc-radio-option.active .radio-custom::after {
+.loc-radio-option.active .radio-custom::after {
   content: '';
   position: absolute;
   top: 3px;
@@ -501,16 +531,16 @@ input::placeholder {
   border-radius: 50%;
 }
 
-.reloc-custom {
+.loc-custom {
+  margin-top: 0.5rem;
   padding-left: 0.5rem;
   border-left: 2px solid var(--border-color);
   margin-left: 0.5rem;
 }
 
 @media (max-width: 768px) {
-  .reloc-options {
-    flex-direction: column;
-  }
+  .loc-options { flex-direction: column; }
+  .chart-loc-toggle { margin-left: 0; }
 }
 
 /* Form Actions */
