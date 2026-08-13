@@ -25,7 +25,7 @@ import {
   normalizeDegree,
 } from './ephemeris.js';
 import { localToUTC, toDecimalHour } from './datetime.js';
-import { calcAspects, calcCrossAspects } from './aspects.js';
+import { calcAspects, calcCrossAspects, anglePoints } from './aspects.js';
 import {
   jdToUTC,
   addSouthNode,
@@ -164,10 +164,11 @@ export async function calculateSecondaryProgression(natalChart, targetDate, opti
     ? { ...pofBase, house: findHouseOfPlanet(pofBase.longitude, houses.cusps) }
     : null;
 
-  // Çapraz aspektler: progres gezegen × natal gezegen (natal taraf sabit)
-  const progNatalAspects = calcCrossAspects(planetsWithHouses, natalChart.planets);
-  // Progres gezegenlerin kendi arası aspektleri
-  const progAspects = calcAspects(planetsWithHouses);
+  // Çapraz aspektler: progres gezegen × natal gezegen + natal ASC/MC (natal taraf sabit)
+  const progNatalAspects = calcCrossAspects(planetsWithHouses,
+    [...natalChart.planets, ...anglePoints(natalChart.houses)]);
+  // Progres gezegenlerin kendi arası aspektleri + progres ASC/MC
+  const progAspects = calcAspects([...planetsWithHouses, ...anglePoints(houses)]);
 
   // Progres anının takvim karşılığı — geriye dönük uyumluluk için saniyesiz
   const progUTC = jdToUTC(progJD);

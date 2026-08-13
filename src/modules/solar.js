@@ -16,7 +16,7 @@ import {
   normalizeDegree,
 } from './ephemeris.js';
 import { findBodyAtLongitude } from './returns.js';
-import { calcAspects } from './aspects.js';
+import { calcAspects, anglePoints } from './aspects.js';
 import {
   jdToUTC,
   jdToLocal,
@@ -172,7 +172,7 @@ export async function calculateSolarReturn(natalChart, year, location) {
 
     interceptedSigns: findInterceptedSigns(houses.cusps),
 
-    aspects: calcAspects([...planetsWithHouses, ...pofForAspects]),
+    aspects: calcAspects([...planetsWithHouses, ...pofForAspects, ...anglePoints(houses)]),
   };
 }
 

@@ -10,6 +10,38 @@ import { MAJOR_ASPECTS } from './constants.js';
 import { normalizeDegree } from './ephemeris.js';
 import { angularSeparation } from './chartUtils.js';
 
+// ============================================
+// AÇI NOKTALARI (ASC/MC)
+// ============================================
+
+export const ASC_POINT_ID = -101;
+export const MC_POINT_ID = -102;
+const ANGLE_IDS = new Set([ASC_POINT_ID, MC_POINT_ID]);
+
+/** Aspekt kaydındaki uç ASC/MC mi? (planetRef veya nokta objesi alır) */
+export function isAnglePoint(ref) {
+  return ref ? ANGLE_IDS.has(ref.id) : false;
+}
+
+/**
+ * Ev objesinden ASC/MC'yi aspekt motorunun beklediği nokta şekline çevirir.
+ * speed: 0 → applying/separating yalnız gezegenin hareketinden okunur.
+ *
+ * @param {Object} houses - {ascendant, mc} (harita `houses` objesi)
+ * @returns {Array} calcAspects/calcCrossAspects'e eklenebilir noktalar
+ */
+export function anglePoints(houses) {
+  if (!houses) return [];
+  const pts = [];
+  if (houses.ascendant != null) {
+    pts.push({ id: ASC_POINT_ID, name: 'ASC', symbol: 'Asc', longitude: houses.ascendant, speed: 0 });
+  }
+  if (houses.mc != null) {
+    pts.push({ id: MC_POINT_ID, name: 'MC', symbol: 'Mc', longitude: houses.mc, speed: 0 });
+  }
+  return pts;
+}
+
 /**
  * Aspekt yaklaşıyor mu (applying) uzaklaşıyor mu (separating)?
  *
@@ -89,6 +121,10 @@ export function calcAspects(planets) {
       const p1 = planets[i];
       const p2 = planets[j];
 
+      // ASC×MC gibi açı-açı çiftleri anlamsız (aralıkları ev sisteminin
+      // geometrisi, gökyüzü değil) — atla.
+      if (isAnglePoint(p1) && isAnglePoint(p2)) continue;
+
       const match = matchAspect(p1.longitude, p2.longitude);
       if (!match) continue;
 
@@ -127,6 +163,8 @@ export function calcCrossAspects(setA, setB, options = {}) {
 
   for (const a of setA) {
     for (const b of setB) {
+      if (isAnglePoint(a) && isAnglePoint(b)) continue;
+
       const match = matchAspect(a.longitude, b.longitude);
       if (!match) continue;
 

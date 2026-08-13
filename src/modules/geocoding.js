@@ -22,6 +22,7 @@ const TURKEY_CITIES = [
   { name: 'Kayseri', admin: 'Kayseri', country: 'Türkiye', countryCode: 'TR', lat: 38.7312, lng: 35.4787, timezone: 'Europe/Istanbul', population: 1407409 },
   { name: 'Eskişehir', admin: 'Eskişehir', country: 'Türkiye', countryCode: 'TR', lat: 39.7767, lng: 30.5206, timezone: 'Europe/Istanbul', population: 887475 },
   { name: 'Samsun', admin: 'Samsun', country: 'Türkiye', countryCode: 'TR', lat: 41.2867, lng: 36.3300, timezone: 'Europe/Istanbul', population: 1356079 },
+  { name: 'Tokat', admin: 'Tokat', country: 'Türkiye', countryCode: 'TR', lat: 40.3139, lng: 36.5544, timezone: 'Europe/Istanbul', population: 236000 },
   { name: 'Trabzon', admin: 'Trabzon', country: 'Türkiye', countryCode: 'TR', lat: 41.0027, lng: 39.7168, timezone: 'Europe/Istanbul', population: 807903 },
   { name: 'Erzurum', admin: 'Erzurum', country: 'Türkiye', countryCode: 'TR', lat: 39.9043, lng: 41.2679, timezone: 'Europe/Istanbul', population: 767848 },
   { name: 'Malatya', admin: 'Malatya', country: 'Türkiye', countryCode: 'TR', lat: 38.3552, lng: 38.3095, timezone: 'Europe/Istanbul', population: 797036 },

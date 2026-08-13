@@ -232,6 +232,30 @@ async function init() {
     () => { if (currentProgression) renderPRChart(currentProgression); });
   synastryPlanetFilter = createPlanetFilter($('synastryPlanetFilter'),
     () => { if (currentSynastry) renderSYChart(); });
+
+  // ASC/MC açı tikleri — işaretlenince/kaldırılınca ilgili çark yeniden çizilir.
+  // Sinastri tiki üç çarkı birden (sinastri + kompozit + davison) yönetir.
+  const angleToggleRedraws = {
+    natalAngleAspects: () => { if (currentChart) renderNatalChart(currentChart); },
+    srAngleAspects: () => { if (currentSolarReturn) renderSRChart(currentSolarReturn); },
+    lrAngleAspects: () => { if (currentLunarReturn) renderLRChart(currentLunarReturn); },
+    trAngleAspects: () => { if (currentTransit) renderTRChart(currentTransit); },
+    prAngleAspects: () => { if (currentProgression) renderPRChart(currentProgression); },
+    syAngleAspects: () => {
+      if (currentSynastry) renderSYChart();
+      if (currentComposite) renderSYComposite();
+      if (currentDavison) renderSYDavison();
+    },
+  };
+  for (const [id, redraw] of Object.entries(angleToggleRedraws)) {
+    $(id)?.addEventListener('change', redraw);
+  }
+}
+
+/** "ASC/MC açıları" tiki — yoksa/işaretliyse true (default açık). */
+function angleAspectsOn(id) {
+  const el = $(id);
+  return el ? el.checked : true;
 }
 
 // ============================================
@@ -575,6 +599,7 @@ const QUICK_CITIES = {
   izmir: { name: 'Izmir', admin: 'Izmir', country: 'Turkey', lat: 38.4237, lng: 27.1428, timezone: 'Europe/Istanbul' },
   antalya: { name: 'Antalya', admin: 'Antalya', country: 'Turkey', lat: 36.8969, lng: 30.7133, timezone: 'Europe/Istanbul' },
   eskisehir: { name: 'Eskisehir', admin: 'Eskisehir', country: 'Turkey', lat: 39.7767, lng: 30.5206, timezone: 'Europe/Istanbul' },
+  tokat: { name: 'Tokat', admin: 'Tokat', country: 'Turkey', lat: 40.3139, lng: 36.5544, timezone: 'Europe/Istanbul' },
 };
 
 function handleQuickCitySelect(cityKey) {
@@ -1243,6 +1268,7 @@ function renderNatalChart(chart) {
     showAspects: true,
     chartType: 'natal',
     activePlanets: natalPlanetFilter?.getActiveSet(),
+    showAngleAspects: angleAspectsOn('natalAngleAspects'),
     // Dekanlar drawChartWheel'in İÇİNDE, gezegenlerden önce çizilir (çakışma önlenir)
     decans: (elements.decanOverlayCheck && elements.decanOverlayCheck.checked)
       ? calculateHouseDecans(chart.houses, getAllPlanets(chart))
@@ -2021,6 +2047,7 @@ function renderSRChart(sr) {
     showAspects: true,
     chartType: 'solar',
     activePlanets: srPlanetFilter?.getActiveSet(),
+    showAngleAspects: angleAspectsOn('srAngleAspects'),
   });
 }
 
@@ -2331,6 +2358,7 @@ function renderLRChart(lr) {
     showAspects: true,
     chartType: 'lunar',
     activePlanets: lrPlanetFilter?.getActiveSet(),
+    showAngleAspects: angleAspectsOn('lrAngleAspects'),
   });
 }
 
@@ -2691,6 +2719,7 @@ function renderTRChart(tr) {
     title: 'Transit Bi-Wheel',
     subtitle: `Natal: ${natalDate}\nTransit: ${dateStr} ${timeStr}\n${tr.location.name || tr.location.timezone}`,
     activePlanets: transitPlanetFilter?.getActiveSet(),
+    showAngleAspects: angleAspectsOn('trAngleAspects'),
   });
 }
 
@@ -3003,6 +3032,7 @@ function renderPRChart(pr) {
     title: 'Progres Bi-Wheel',
     subtitle: `Natal: ${natalDate}\nProgres: ${targetStr} (${Math.floor(pr.elapsedYears)} yaş)\n${methodName}`,
     activePlanets: progressionPlanetFilter?.getActiveSet(),
+    showAngleAspects: angleAspectsOn('prAngleAspects'),
   });
 }
 
@@ -3424,6 +3454,7 @@ function renderSYChart() {
       + `Dış — ${outerName}: ${syShortDate(outer.birthData)}\n`
       + `${wheel.crossAspects.length} çapraz aspekt`,
     activePlanets: synastryPlanetFilter?.getActiveSet(),
+    showAngleAspects: angleAspectsOn('syAngleAspects'),
   });
 
   elements.syLegendInner.textContent = `İç halka: ${innerName}`;
@@ -3657,6 +3688,7 @@ function renderSYComposite() {
     subtitle: `Composite (Midpoint)\nKişi A × Kişi B\nÇapa: ${anchorName}`,
     showAspects: true,
     chartType: 'composite',
+    showAngleAspects: angleAspectsOn('syAngleAspects'),
   });
 
   renderSYPlanetTable(comp, elements.syCompositePlanetsTable);
@@ -3687,6 +3719,7 @@ function renderSYDavison() {
     subtitle: `Davison (Time/Space Midpoint)\n${dateStr}\n${loc}`,
     showAspects: true,
     chartType: 'davison',
+    showAngleAspects: angleAspectsOn('syAngleAspects'),
   });
 
   renderSYPlanetTable(dav, elements.syDavisonPlanetsTable);

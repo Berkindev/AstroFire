@@ -27,6 +27,7 @@
 
 import { SIGNS } from './constants.js';
 import { PLANET_SYMBOLS, SYMBOL_BOX, SYMBOL_STROKE } from './symbols.js';
+import { isAnglePoint } from './aspects.js';
 
 // Burç sembolleri — repoda zaten duran temiz SVG'ler (tablolarda da bunlar kullanılıyor)
 import ariesSvg from '../../public/Symbols/aries-symbol-icon.svg?raw';
@@ -679,16 +680,27 @@ function drawAspectGlyph(ctx, x, y, kind, color, size) {
  * @param {Set<string>|null} activeSet - Görünür gezegen adları. null → hepsi.
  *   Bir aspekt çizilir eğer EN AZ BİR ucu bu sette (ders modu: tek gezegen
  *   seçip onun bütün açılarını görmek için).
+ * @param {Object|null} houses - ASC/MC uçlu aspektlerin boylam kaynağı
+ *   (gezegen dizisinde ASC/MC yok, isim→boylam haritasına buradan eklenir).
+ * @param {boolean} showAngleAspects - false → ASC/MC uçlu aspektler çizilmez.
  */
-function drawAspects(ctx, cx, cy, planets, aspects, R, ascLon, partOfFortune, activeSet = null) {
+function drawAspects(ctx, cx, cy, planets, aspects, R, ascLon, partOfFortune,
+  activeSet = null, houses = null, showAngleAspects = true) {
   if (!aspects?.length) return;
 
   const lonOf = {};
   for (const p of planets) lonOf[p.name] = p.longitude;
   if (partOfFortune) lonOf[partOfFortune.name] = partOfFortune.longitude;
+  if (houses) {
+    if (houses.ascendant != null) lonOf['ASC'] = houses.ascendant;
+    if (houses.mc != null) lonOf['MC'] = houses.mc;
+  }
 
-  const visible = (asp) => !activeSet
-    || activeSet.has(asp.planet1?.name) || activeSet.has(asp.planet2?.name);
+  const visible = (asp) => {
+    if (!showAngleAspects && (isAnglePoint(asp.planet1) || isAnglePoint(asp.planet2))) return false;
+    return !activeSet
+      || activeSet.has(asp.planet1?.name) || activeSet.has(asp.planet2?.name);
+  };
 
   const glyphSize = R.R * 0.026;
 
@@ -893,7 +905,8 @@ export function drawChartWheel(canvas, chartData, options = {}) {
   }
 
   if (options.showAspects !== false && chartData.aspects) {
-    drawAspects(ctx, cx, cy, chartData.planets, chartData.aspects, R, ascLon, chartData.partOfFortune, options.activePlanets || null);
+    drawAspects(ctx, cx, cy, chartData.planets, chartData.aspects, R, ascLon, chartData.partOfFortune,
+      options.activePlanets || null, chartData.houses, options.showAngleAspects !== false);
   }
 
   drawPlanets(ctx, cx, cy, chartData.planets, R, ascLon, chartData.partOfFortune);
@@ -1145,17 +1158,27 @@ function drawOuterFrame(ctx, cx, cy, houses, R, ascLon) {
   ctx.restore();
 }
 
-function drawBiWheelAspects(ctx, cx, cy, outerPlanets, innerPlanets, aspects, R, ascLon, activeSet = null) {
+function drawBiWheelAspects(ctx, cx, cy, outerPlanets, innerPlanets, aspects, R, ascLon,
+  activeSet = null, innerHouses = null, showAngleAspects = true) {
   if (!aspects?.length) return;
 
   const outerLon = {};
   for (const p of outerPlanets) outerLon[p.name] = p.longitude;
   const innerLon = {};
   for (const p of innerPlanets) innerLon[p.name] = p.longitude;
+  // Çapraz aspektlerde ASC/MC hedefi İÇ (natal/Kişi A) haritanındır.
+  if (innerHouses) {
+    if (innerHouses.ascendant != null) innerLon['ASC'] = innerHouses.ascendant;
+    if (innerHouses.mc != null) innerLon['MC'] = innerHouses.mc;
+  }
 
-  const visible = (aspect) => !activeSet
-    || activeSet.has(aspect.transitPlanet?.name)
-    || activeSet.has(aspect.natalPlanet?.name);
+  const visible = (aspect) => {
+    if (!showAngleAspects
+      && (isAnglePoint(aspect.transitPlanet) || isAnglePoint(aspect.natalPlanet))) return false;
+    return !activeSet
+      || activeSet.has(aspect.transitPlanet?.name)
+      || activeSet.has(aspect.natalPlanet?.name);
+  };
 
   const endpoints = (aspect) => {
     const style = ASPECT_STYLE[aspect.angle];
@@ -1317,7 +1340,8 @@ export function drawBiWheel(canvas, natalData, transitData, options = {}) {
 
   if (transitData.transitNatalAspects) {
     drawBiWheelAspects(ctx, cx, cy, transitData.planets, natalData.planets,
-      transitData.transitNatalAspects, R, ascLon, options.activePlanets || null);
+      transitData.transitNatalAspects, R, ascLon, options.activePlanets || null,
+      natalData.houses, options.showAngleAspects !== false);
   }
 
   drawInnerPlanets(ctx, cx, cy, natalData.planets, R, ascLon, natalData.partOfFortune);

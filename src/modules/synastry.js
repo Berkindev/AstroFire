@@ -20,7 +20,7 @@ import {
   findInterceptedSigns,
   normalizeDegree,
 } from './ephemeris.js';
-import { calcAspects, calcCrossAspects } from './aspects.js';
+import { calcAspects, calcCrossAspects, anglePoints } from './aspects.js';
 import {
   jdToUTC,
   midpointShort,
@@ -56,7 +56,13 @@ export function calculateSynastry(chartA, chartB) {
   // staticB:false → her iki gezegenin de hızı hesaba katılır. Sinastride iki
   // harita da "donuk" olduğu için applying/separating zayıf bir kavramdır;
   // yine de iki cismin göreli hareketi anlamlı bir okuma verir.
-  const crossAspects = calcCrossAspects(chartB.planets, chartA.planets, { staticB: false });
+  // Kişi A'nın (iç halka) ASC/MC'si de hedef: B'nin gezegenleri A'nın açılarına
+  // değiyor mu — sinastrinin klasik sorusu.
+  const crossAspects = calcCrossAspects(
+    chartB.planets,
+    [...chartA.planets, ...anglePoints(chartA.houses)],
+    { staticB: false },
+  );
 
   // Karşılıklı ev yerleşimleri — sinastrinin asıl anlatısı burada
   const bPlanetsInAHouses = chartB.planets.map(p => ({
@@ -252,7 +258,7 @@ export function calculateComposite(chartA, chartB, options = {}) {
 
     interceptedSigns: findInterceptedSigns(rawCusps),
 
-    aspects: calcAspects([...planetsWithHouses, ...pofForAspects]),
+    aspects: calcAspects([...planetsWithHouses, ...pofForAspects, ...anglePoints({ ascendant, mc })]),
   };
 }
 
@@ -368,6 +374,6 @@ export async function calculateDavison(chartA, chartB) {
 
     interceptedSigns: findInterceptedSigns(houses.cusps),
 
-    aspects: calcAspects([...planetsWithHouses, ...pofForAspects]),
+    aspects: calcAspects([...planetsWithHouses, ...pofForAspects, ...anglePoints(houses)]),
   };
 }

@@ -14,7 +14,7 @@ import {
   normalizeDegree,
 } from './ephemeris.js';
 import { localToUTC, toDecimalHour } from './datetime.js';
-import { calcAspects, calcCrossAspects } from './aspects.js';
+import { calcAspects, calcCrossAspects, anglePoints } from './aspects.js';
 import { addSouthNode, cuspsToArray, buildHouseCusps, calcPartOfFortune } from './chartUtils.js';
 
 /**
@@ -109,8 +109,10 @@ export async function calculateTransits(natalChart, date, location) {
       birthData: natalChart.birthData,
     },
 
-    // Çapraz aspektler: natal taraf sabit (yalnızca transit gezegen hareket eder)
-    transitNatalAspects: calcCrossAspects(planetsWithHouses, natalChart.planets),
-    transitAspects: calcAspects(planetsWithHouses),
+    // Çapraz aspektler: natal taraf sabit (yalnızca transit gezegen hareket eder).
+    // Natal ASC/MC de hedef — transit gezegenlerin açılara teması ders için kritik.
+    transitNatalAspects: calcCrossAspects(planetsWithHouses,
+      [...natalChart.planets, ...anglePoints(natalChart.houses)]),
+    transitAspects: calcAspects([...planetsWithHouses, ...anglePoints(transitHouses)]),
   };
 }

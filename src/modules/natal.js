@@ -14,7 +14,7 @@ import {
   normalizeDegree,
 } from './ephemeris.js';
 import { prepareBirthData } from './datetime.js';
-import { calcAspects } from './aspects.js';
+import { calcAspects, anglePoints } from './aspects.js';
 import {
   addSouthNode,
   buildHouseCusps,
@@ -92,6 +92,6 @@ export async function calculateNatalChart(birthData) {
       house: findHouseOfPlanet(partOfFortune.longitude, houses.cusps),
     } : null,
 
-    aspects: calcAspects([...planetsWithHouses, ...pofForAspects]),
+    aspects: calcAspects([...planetsWithHouses, ...pofForAspects, ...anglePoints(houses)]),
   };
 }
