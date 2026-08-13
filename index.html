@@ -32,6 +32,7 @@
         <button class="main-tab" data-main-tab="lunar">🌙 Lunar</button>
         <button class="main-tab" data-main-tab="transit">🔄 Transitler</button>
         <button class="main-tab" data-main-tab="progression">📈 Progres</button>
+        <button class="main-tab" data-main-tab="layers">🪆 Katmanlar</button>
         <button class="main-tab" data-main-tab="synastry">💞 Sinastri</button>
         <button class="main-tab" data-main-tab="analysis" style="display:none;">📊 Analiz</button>
       </div>
@@ -738,6 +739,126 @@
       </section>
 
       <!-- SİNASTRİ PANEL (Sinastri + Kompozit + Davison) -->
+      <!-- KATMANLAR (BiWheel/TriWheel) PANEL -->
+      <section class="main-tab-content" id="mainTab-layers">
+        <section class="panel ly-panel" id="layersPanel">
+          <h2 class="panel-title">
+            <span class="panel-icon">🪆</span>
+            Katmanlar (BiWheel / TriWheel)
+          </h2>
+          <p class="ly-hint">
+            Aynı kişinin haritalarını halkalar hâlinde üst üste koy: içe natal, dışa transit —
+            ya da natal + progres + transit. Tarihi ilerlettikçe zamana bağlı <strong>tüm</strong> halkalar birlikte oynar.
+            Evler ve ASC iç haritadan okunur; çizilen açılar dış → iç halkanın açılarıdır.
+          </p>
+
+          <div class="ly-form" id="lyForm">
+            <div class="form-row ly-ring-row">
+              <div class="form-group">
+                <label for="lyInner">İç Halka</label>
+                <select id="lyInner">
+                  <option value="natal" selected>Natal</option>
+                  <option value="progression">Progres</option>
+                  <option value="solar">Solar Return</option>
+                  <option value="lunar">Lunar Return</option>
+                  <option value="transit">Transit</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="lyMiddle">Orta Halka</label>
+                <select id="lyMiddle">
+                  <option value="" selected>— yok (BiWheel) —</option>
+                  <option value="natal">Natal</option>
+                  <option value="progression">Progres</option>
+                  <option value="solar">Solar Return</option>
+                  <option value="lunar">Lunar Return</option>
+                  <option value="transit">Transit</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="lyOuter">Dış Halka</label>
+                <select id="lyOuter">
+                  <option value="natal">Natal</option>
+                  <option value="progression">Progres</option>
+                  <option value="solar">Solar Return</option>
+                  <option value="lunar">Lunar Return</option>
+                  <option value="transit" selected>Transit</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row ly-input-row">
+              <div class="form-group">
+                <label for="lyDay">Gün</label>
+                <input type="number" id="lyDay" min="1" max="31" required>
+              </div>
+              <div class="form-group">
+                <label for="lyMonth">Ay</label>
+                <input type="number" id="lyMonth" min="1" max="12" required>
+              </div>
+              <div class="form-group">
+                <label for="lyYear">Yıl</label>
+                <input type="number" id="lyYear" min="1900" max="2100" required>
+              </div>
+              <div class="form-group">
+                <label for="lyHour">Saat</label>
+                <input type="number" id="lyHour" min="0" max="23" required>
+              </div>
+              <div class="form-group">
+                <label for="lyMinute">Dakika</label>
+                <input type="number" id="lyMinute" min="0" max="59" required>
+              </div>
+              <div class="form-group" style="align-self: flex-end;">
+                <button type="button" id="lyNowBtn" class="btn-calculate tr-now-btn">
+                  <span class="btn-icon">⏱️</span>
+                  Şu An
+                </button>
+              </div>
+            </div>
+
+            <button type="button" id="lyCalculateBtn" class="btn-calculate tr-btn" disabled>
+              <span class="btn-icon">🪆</span>
+              Katmanları Çiz
+            </button>
+          </div>
+
+          <!-- LY Results -->
+          <div class="tr-results hidden" id="lyResults">
+            <div class="tr-chart-box">
+              <!-- Zaman Adım Butonları: 1 gün / 1 hafta / 1 ay / 1 yıl -->
+              <div class="tr-step-buttons" id="lyStepButtons">
+                <button type="button" class="tr-step-btn tr-step-back" data-years="-1">◀◀ 1 yıl</button>
+                <button type="button" class="tr-step-btn tr-step-back" data-months="-1">◀ 1 ay</button>
+                <button type="button" class="tr-step-btn tr-step-back" data-days="-7">◀ 1 hafta</button>
+                <button type="button" class="tr-step-btn tr-step-back" data-days="-1">◀ 1 gün</button>
+                <button type="button" class="tr-step-btn tr-step-fwd" data-days="1">1 gün ▶</button>
+                <button type="button" class="tr-step-btn tr-step-fwd" data-days="7">1 hafta ▶</button>
+                <button type="button" class="tr-step-btn tr-step-fwd" data-months="1">1 ay ▶</button>
+                <button type="button" class="tr-step-btn tr-step-fwd" data-years="1">1 yıl ▶▶</button>
+              </div>
+              <div class="step-period" id="lyStepPeriod"></div>
+              <div class="chart-canvas-container">
+                <canvas id="lyChartCanvas" width="1800" height="1800"></canvas>
+              </div>
+              <label class="chart-overlay-toggle"><input type="checkbox" id="lyAngleAspects" checked> <span>ASC/MC açıları</span></label>
+              <div class="planet-filter" id="layersPlanetFilter"></div>
+            </div>
+
+            <div class="tabs ly-tabs">
+              <button class="tab active" data-ly-tab="ly-outer-aspects">🔗 Dış → İç Aspektler</button>
+              <button class="tab" data-ly-tab="ly-middle-aspects">🔗 Orta → İç Aspektler</button>
+            </div>
+
+            <div id="tab-ly-outer-aspects" class="tab-content ly-tab-content active">
+              <div id="lyOuterAspectsTable"></div>
+            </div>
+            <div id="tab-ly-middle-aspects" class="tab-content ly-tab-content">
+              <div id="lyMiddleAspectsTable"></div>
+            </div>
+          </div>
+        </section>
+      </section>
+
       <section class="main-tab-content" id="mainTab-synastry">
         <section class="panel sy-panel" id="synastryPanel">
           <h2 class="panel-title form-toggle-title" id="syFormToggle">

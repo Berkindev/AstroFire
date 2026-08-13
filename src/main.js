@@ -11,7 +11,8 @@ import { calculateSolarReturn, calculateSRHouseTiming, solarPeriod } from './mod
 import { calculateLunarReturn } from './modules/lunar.js';
 import { formatLongitude, formatNatalChartText, formatSolarReturnText, formatLunarReturnText, formatTransitText, formatProgressionText } from './modules/formatting.js';
 import { SIGNS } from './modules/constants.js';
-import { drawChartWheel, drawSevenYearOverlay, drawDecanOverlay, drawBiWheel } from './modules/chartWheelSF.js';
+import { drawChartWheel, drawSevenYearOverlay, drawDecanOverlay, drawBiWheel, drawTriWheel } from './modules/chartWheelSF.js';
+import { calcCrossAspects, anglePoints } from './modules/aspects.js';
 import { calculateTransits } from './modules/transit.js';
 import { calculateSecondaryProgression, ANGLE_METHODS, DEFAULT_ANGLE_METHOD } from './modules/progression.js';
 import { calculateHouseDecans } from './modules/decans.js';
@@ -163,6 +164,23 @@ const elements = {
   prAspectsTable: $('prAspectsTable'),
   prDebugOutput: $('prDebugOutput'),
   prDecansDisplay: $('prDecansDisplay'),
+  // Katmanlar (BiWheel/TriWheel) elements
+  layersPanel: $('layersPanel'),
+  lyInner: $('lyInner'),
+  lyMiddle: $('lyMiddle'),
+  lyOuter: $('lyOuter'),
+  lyDay: $('lyDay'),
+  lyMonth: $('lyMonth'),
+  lyYear: $('lyYear'),
+  lyHour: $('lyHour'),
+  lyMinute: $('lyMinute'),
+  lyNowBtn: $('lyNowBtn'),
+  lyCalculateBtn: $('lyCalculateBtn'),
+  lyResults: $('lyResults'),
+  lyStepPeriod: $('lyStepPeriod'),
+  lyChartCanvas: $('lyChartCanvas'),
+  lyOuterAspectsTable: $('lyOuterAspectsTable'),
+  lyMiddleAspectsTable: $('lyMiddleAspectsTable'),
   mainTabs: $('mainTabs'),
   sevensDisplay: $('sevensDisplay'),
   sevensAgeCheck: $('sevensAgeCheck'),
@@ -232,6 +250,8 @@ async function init() {
     () => { if (currentProgression) renderPRChart(currentProgression); });
   synastryPlanetFilter = createPlanetFilter($('synastryPlanetFilter'),
     () => { if (currentSynastry) renderSYChart(); });
+  layersPlanetFilter = createPlanetFilter($('layersPlanetFilter'),
+    () => { if (currentLayers) renderLYChart(); });
 
   // ASC/MC açı tikleri — işaretlenince/kaldırılınca ilgili çark yeniden çizilir.
   // Sinastri tiki üç çarkı birden (sinastri + kompozit + davison) yönetir.
@@ -241,6 +261,7 @@ async function init() {
     lrAngleAspects: () => { if (currentLunarReturn) renderLRChart(currentLunarReturn); },
     trAngleAspects: () => { if (currentTransit) renderTRChart(currentTransit); },
     prAngleAspects: () => { if (currentProgression) renderPRChart(currentProgression); },
+    lyAngleAspects: () => { if (currentLayers) renderLYChart(); },
     syAngleAspects: () => {
       if (currentSynastry) renderSYChart();
       if (currentComposite) renderSYComposite();
@@ -479,6 +500,33 @@ function setupEventListeners() {
   ['trDay', 'trMonth', 'trYear', 'trHour', 'trMinute'].forEach(id => {
     $(id).addEventListener('input', updateTRButtonState);
   });
+
+  // ============================================
+  // KATMANLAR (BiWheel/TriWheel) EVENT LISTENERS
+  // ============================================
+
+  if (elements.lyCalculateBtn) {
+    elements.lyCalculateBtn.addEventListener('click', handleLYCalculate);
+    elements.lyNowBtn.addEventListener('click', handleLYNowClick);
+
+    // Halka seçimi değişince (sonuç açıksa) anında yeniden hesapla
+    [elements.lyInner, elements.lyMiddle, elements.lyOuter].forEach(sel => {
+      sel.addEventListener('change', handleLYRingChange);
+    });
+
+    ['lyDay', 'lyMonth', 'lyYear', 'lyHour', 'lyMinute'].forEach(id => {
+      $(id).addEventListener('input', updateLYButtonState);
+    });
+
+    // Zaman adımları: gün/hafta/ay/yıl — TÜM zamana bağlı halkalar birlikte oynar
+    document.querySelectorAll('#lyStepButtons .tr-step-btn').forEach(btn => {
+      btn.addEventListener('click', () => handleLYStep({
+        days: parseInt(btn.dataset.days || '0', 10),
+        months: parseInt(btn.dataset.months || '0', 10),
+        years: parseInt(btn.dataset.years || '0', 10),
+      }));
+    });
+  }
 
   // ============================================
   // PROGRESYON EVENT LISTENERS
@@ -971,6 +1019,7 @@ let lrPlanetFilter = null;
 let transitPlanetFilter = null;
 let progressionPlanetFilter = null;
 let synastryPlanetFilter = null;
+let layersPlanetFilter = null;
 
 // ============================================
 // HARİTA HAFIZASI (localStorage)
@@ -1209,6 +1258,8 @@ async function handleCalculate(e) {
     showProgressionPanel();
     // Sinastri'yi hazırla (Kişi A = bu harita)
     showSynastryPanel();
+    // Katmanlar'ı hazırla
+    showLayersPanel();
 
     // Hafıza: son bakılanlara ekle + Kaydet butonunu aç (panel de görünür olur)
     addRecentChart();
@@ -1472,6 +1523,7 @@ const SECTION_TABS = [
   { attr: 'tr-tab', dataKey: 'trTab', contentClass: 'tr-tab-content' },
   { attr: 'pr-tab', dataKey: 'prTab', contentClass: 'pr-tab-content' },
   { attr: 'sy-tab', dataKey: 'syTab', contentClass: 'sy-tab-content' },
+  { attr: 'ly-tab', dataKey: 'lyTab', contentClass: 'ly-tab-content' },
   // Sinastri alt bilgi sekmeleri (Çapraz Aspektler/Grid/Ev) — harita geçişlerinden ayrı grup
   { attr: 'sy2-tab', dataKey: 'sy2Tab', contentClass: 'sy2-tab-content' },
 ];
@@ -3313,6 +3365,277 @@ function formatAnalysisContent(text) {
 
 function setupAnalysisEvents() {
   // No additional setup needed for rule-based only mode
+}
+
+// ============================================
+// KATMANLAR (BiWheel / TriWheel) — aynı kişinin haritaları halkalar hâlinde
+// ============================================
+
+const LAYER_LABELS = {
+  natal: 'Natal',
+  transit: 'Transit',
+  progression: 'Progres',
+  solar: 'Solar Return',
+  lunar: 'Lunar Return',
+};
+
+let currentLayers = null;
+
+function showLayersPanel() {
+  if (!currentChart) return;
+  handleLYNowClick();
+}
+
+function handleLYNowClick() {
+  const now = new Date();
+  elements.lyDay.value = now.getDate();
+  elements.lyMonth.value = now.getMonth() + 1;
+  elements.lyYear.value = now.getFullYear();
+  elements.lyHour.value = now.getHours();
+  elements.lyMinute.value = now.getMinutes();
+  updateLYButtonState();
+}
+
+function lyDate() {
+  return {
+    year: parseInt(elements.lyYear.value),
+    month: parseInt(elements.lyMonth.value),
+    day: parseInt(elements.lyDay.value),
+    hour: parseInt(elements.lyHour.value),
+    minute: parseInt(elements.lyMinute.value),
+  };
+}
+
+function updateLYButtonState() {
+  const d = lyDate();
+  const hasDate = ![d.year, d.month, d.day, d.hour, d.minute].some(isNaN);
+  elements.lyCalculateBtn.disabled = !(hasDate && currentChart);
+}
+
+function handleLYRingChange() {
+  updateLYButtonState();
+  // Sonuç ekrandaysa halka değişimi anında yansısın
+  if (currentLayers && !elements.lyResults.classList.contains('hidden')) handleLYCalculate();
+}
+
+function handleLYStep({ days = 0, months = 0, years = 0 }) {
+  const d = lyDate();
+  if ([d.year, d.month, d.day].some(isNaN)) return;
+  const dt = new Date(d.year, d.month - 1, d.day, d.hour || 0, d.minute || 0);
+  if (years) dt.setFullYear(dt.getFullYear() + years);
+  if (months) dt.setMonth(dt.getMonth() + months);
+  if (days) dt.setDate(dt.getDate() + days);
+  elements.lyDay.value = dt.getDate();
+  elements.lyMonth.value = dt.getMonth() + 1;
+  elements.lyYear.value = dt.getFullYear();
+  elements.lyHour.value = dt.getHours();
+  elements.lyMinute.value = dt.getMinutes();
+  handleLYCalculate();
+}
+
+/**
+ * Katman tarihi anında "yürürlükte olan" haritayı hesaplar.
+ * Natal sabittir; transit/progres o ana, solar/lunar o anı KAPSAYAN dönüşe
+ * göre hesaplanır. Konum: doğum yeri (natal asla relokasyon görmez;
+ * katmanlarda da tek referans o).
+ */
+async function computeLayerChart(kind, date) {
+  const bd = currentChart.birthData;
+  const loc = {
+    latitude: bd.latitude,
+    longitude: bd.longitude,
+    timezone: bd.timezone,
+    name: selectedCity ? selectedCity.name : '',
+  };
+
+  switch (kind) {
+    case 'natal':
+      return currentChart;
+
+    case 'transit':
+      return calculateTransits(currentChart, date, loc);
+
+    case 'progression': {
+      const angleMethod = elements.prAngleMethod ? elements.prAngleMethod.value : DEFAULT_ANGLE_METHOD;
+      return calculateSecondaryProgression(currentChart,
+        { year: date.year, month: date.month, day: date.day }, { angleMethod });
+    }
+
+    case 'solar': {
+      // Tarihte yürürlükte olan SR: aday yılları hesapla, dönüş anı tarihe
+      // eşit/önce olan en YENİ dönüşü seç. (solarEventYear konvansiyonuna
+      // bulaşmadan gerçek dönüş anına bakar.)
+      const targetMs = Date.UTC(date.year, date.month - 1, date.day, date.hour || 0, date.minute || 0);
+      let best = null;
+      for (const y of [date.year - 1, date.year, date.year + 1]) {
+        const sr = await calculateSolarReturn(currentChart, y, loc);
+        const ms = Date.UTC(sr.utc.year, sr.utc.month - 1, sr.utc.day, sr.utc.hour, sr.utc.minute);
+        if (ms <= targetMs && (!best || ms > best.ms)) best = { sr, ms };
+      }
+      return best ? best.sr : calculateSolarReturn(currentChart, date.year, loc);
+    }
+
+    case 'lunar': {
+      // Tarihe en yakın LR; dönüş tarihten SONRAYA düşerse bir döngü geri git
+      // ("yürürlükteki" dönüş = tarihten önceki son dönüş).
+      const targetMs = Date.UTC(date.year, date.month - 1, date.day, date.hour || 0, date.minute || 0);
+      const lr = await calculateLunarReturn(currentChart, date.year, date.month, date.day, loc);
+      const ms = Date.UTC(lr.utc.year, lr.utc.month - 1, lr.utc.day, lr.utc.hour, lr.utc.minute);
+      if (ms <= targetMs) return lr;
+      const prev = new Date(targetMs - 27 * 86400000);
+      return calculateLunarReturn(currentChart,
+        prev.getUTCFullYear(), prev.getUTCMonth() + 1, prev.getUTCDate(), loc);
+    }
+  }
+  throw new Error(`Bilinmeyen katman tipi: ${kind}`);
+}
+
+async function handleLYCalculate() {
+  if (!currentChart) {
+    alert('Lütfen önce natal haritayı hesaplayın.');
+    return;
+  }
+
+  const innerKind = elements.lyInner.value;
+  const middleKind = elements.lyMiddle.value; // '' → BiWheel
+  const outerKind = elements.lyOuter.value;
+
+  const kinds = [innerKind, middleKind, outerKind].filter(Boolean);
+  if (new Set(kinds).size !== kinds.length) {
+    alert('Aynı harita tipi iki halkaya konamaz — halkaları farklı seçin.');
+    return;
+  }
+
+  const date = lyDate();
+  if ([date.year, date.month, date.day, date.hour, date.minute].some(isNaN)) {
+    alert('Lütfen geçerli bir tarih ve saat girin.');
+    return;
+  }
+
+  elements.lyCalculateBtn.disabled = true;
+  elements.lyCalculateBtn.innerHTML = '<span class="btn-icon">⏳</span> Hesaplanıyor...';
+
+  try {
+    const innerChart = await computeLayerChart(innerKind, date);
+    const middleChart = middleKind ? await computeLayerChart(middleKind, date) : null;
+    const outerChart = await computeLayerChart(outerKind, date);
+
+    // Çapraz aspektler İÇ halkaya göre; iç natal ise natal taraf sabit sayılır.
+    const staticInner = innerKind === 'natal';
+    const innerTargets = [...innerChart.planets, ...anglePoints(innerChart.houses)];
+    const crossOuter = calcCrossAspects(outerChart.planets, innerTargets, { staticB: staticInner });
+    const crossMiddle = middleChart
+      ? calcCrossAspects(middleChart.planets, innerTargets, { staticB: staticInner })
+      : null;
+
+    currentLayers = {
+      innerKind, middleKind, outerKind,
+      innerChart, middleChart, outerChart,
+      crossOuter, crossMiddle, date,
+    };
+
+    renderLYResults();
+  } catch (error) {
+    console.error('Katman hesaplama hatası:', error);
+    alert('Katman hesaplama hatası: ' + error.message);
+  } finally {
+    elements.lyCalculateBtn.innerHTML = '<span class="btn-icon">🪆</span> Katmanları Çiz';
+    updateLYButtonState();
+  }
+}
+
+function lyDateStr() {
+  const d = currentLayers.date;
+  return `${String(d.day).padStart(2, '0')}.${String(d.month).padStart(2, '0')}.${d.year} `
+    + `${String(d.hour).padStart(2, '0')}:${String(d.minute).padStart(2, '0')}`;
+}
+
+function renderLYResults() {
+  elements.lyResults.classList.remove('hidden');
+  elements.lyStepPeriod.textContent = `📅 ${lyDateStr()}`;
+  renderLYChart();
+  renderLYAspectTables();
+}
+
+function renderLYChart() {
+  const L = currentLayers;
+  if (!L) return;
+
+  const label = (k) => LAYER_LABELS[k] || k;
+  const opts = {
+    title: L.middleKind ? 'Tri-Wheel' : 'Bi-Wheel',
+    subtitle: (L.middleKind
+      ? `İç: ${label(L.innerKind)}\nOrta: ${label(L.middleKind)}\nDış: ${label(L.outerKind)}`
+      : `İç: ${label(L.innerKind)}\nDış: ${label(L.outerKind)}`)
+      + `\n${lyDateStr()}`,
+    activePlanets: layersPlanetFilter?.getActiveSet(),
+    showAngleAspects: angleAspectsOn('lyAngleAspects'),
+  };
+
+  if (L.middleKind) {
+    drawTriWheel(elements.lyChartCanvas, L.innerChart, L.middleChart, L.outerChart,
+      { ...opts, aspects: L.crossOuter });
+  } else {
+    // drawBiWheel dış obje sözleşmesi: planets + houses + partOfFortune + transitNatalAspects
+    drawBiWheel(elements.lyChartCanvas, L.innerChart, {
+      planets: L.outerChart.planets,
+      houses: L.outerChart.houses,
+      partOfFortune: L.outerChart.partOfFortune,
+      transitNatalAspects: L.crossOuter,
+    }, opts);
+  }
+}
+
+function renderLYCrossTable(target, aspects, fromLabel, toLabel) {
+  if (!aspects || aspects.length === 0) {
+    target.innerHTML = '<p class="no-data">Aspekt bulunamadı</p>';
+    return;
+  }
+
+  const sorted = [...aspects].sort((a, b) => a.orb - b.orb);
+  const rows = sorted.map(asp => {
+    const orbDeg = Math.floor(asp.orb);
+    const orbMin = Math.floor((asp.orb - orbDeg) * 60);
+    const applying = asp.isApplying ? '<span class="applying">A</span>' : '<span class="separating">S</span>';
+    return `
+      <tr>
+        <td>${asp.transitPlanet.symbol} ${asp.transitPlanet.name}</td>
+        <td class="aspect-symbol">${asp.aspectSymbol}</td>
+        <td>${asp.natalPlanet.symbol} ${asp.natalPlanet.name}</td>
+        <td>${asp.aspect}</td>
+        <td>${orbDeg}°${String(orbMin).padStart(2, '0')}'</td>
+        <td>${applying}</td>
+      </tr>
+    `;
+  });
+
+  target.innerHTML = `
+    <table class="data-table aspects-table">
+      <thead>
+        <tr>
+          <th>${fromLabel}</th>
+          <th></th>
+          <th>${toLabel}</th>
+          <th>Aspekt</th>
+          <th>Orb</th>
+          <th>A/S</th>
+        </tr>
+      </thead>
+      <tbody>${rows.join('')}</tbody>
+    </table>
+  `;
+}
+
+function renderLYAspectTables() {
+  const L = currentLayers;
+  renderLYCrossTable(elements.lyOuterAspectsTable, L.crossOuter,
+    LAYER_LABELS[L.outerKind], LAYER_LABELS[L.innerKind]);
+  if (L.middleKind) {
+    renderLYCrossTable(elements.lyMiddleAspectsTable, L.crossMiddle,
+      LAYER_LABELS[L.middleKind], LAYER_LABELS[L.innerKind]);
+  } else {
+    elements.lyMiddleAspectsTable.innerHTML = '<p class="no-data">Orta halka seçilmedi (BiWheel)</p>';
+  }
 }
 
 // ============================================

@@ -1351,6 +1351,141 @@ export function drawBiWheel(canvas, natalData, transitData, options = {}) {
 }
 
 // ============================================
+// TRI-WHEEL — içte natal/baz, ortada + dışta iki hareketli halka
+// (SolarFire TriWheel düzeni: en yavaş içte, en hızlı dışta)
+// ============================================
+
+export function wheelRadiiTri(size) {
+  const R = size * 0.475;
+  return {
+    R,
+    outerR:   R,                 // en dış çember — dış halka çerçevesi
+    midOutR:  R * 0.880,         // dış/orta halka ayracı
+    signOutR: R * 0.760,         // zodyak dış = orta halkanın içi
+    signInR:  R * 0.690,         // zodyak iç
+    houseInR: R * 0.640,         // iç (baz) ev bandı iç
+    innerR:   R * 0.385,         // aspekt çemberi
+    signGlyphR:   R * 0.725,
+    tickOutR:     R * 0.705,
+    tickLongOutR: R * 0.718,
+    labelR:       R * 0.605,     // iç ev numaraları + cusp dereceleri
+    innerGlyphR:  R * 0.540,     // iç gezegen glifi
+    midGlyphR:    R * 0.800,     // orta halka gezegen glifi
+    outerGlyphR:  R * 0.920,     // dış halka gezegen glifi
+  };
+}
+
+/**
+ * Tri-wheel'in orta/dış halka gezegenleri — KOMPAKT yığın: bant bi-wheel'in
+ * yarısı kadar dar, bu yüzden derece+dakika TEK satırda ve burç glifi yok
+ * (burç zaten zodyak bandından okunuyor).
+ *
+ * @param {number} ringInR - halkanın iç sınırı (gerçek-derece çentiği burada)
+ * @param {number} glyphR - gezegen glifinin yarıçapı
+ */
+function drawRingPlanets(ctx, cx, cy, planets, R, ascLon, partOfFortune, ringInR, glyphR) {
+  if (!planets?.length) return;
+
+  const list = [...planets];
+  if (partOfFortune) list.push({ ...partOfFortune, isRetrograde: false, id: -99 });
+
+  const items = list.map(p => ({ planet: p, angle: lonToAngle(p.longitude, ascLon) }));
+
+  const glyphSize = R.R * 0.040;
+  const font = Math.max(8, R.R * 0.024);
+  const rowGap = R.R * 0.032;
+
+  const placed = avoidCollisions(items, glyphR, glyphSize * 1.08);
+
+  for (const item of placed) {
+    const p = item.planet;
+    const a = item.displayAngle;
+    const color = PLANET_COLOR[p.name] || '#000000';
+
+    // Gerçek boylam çentiği — halkanın iç sınırında
+    const trueA = lonToAngle(p.longitude, ascLon);
+    const t1 = polarToXY(cx, cy, ringInR, trueA);
+    const t2 = polarToXY(cx, cy, ringInR + R.R * 0.022, trueA);
+    ctx.save();
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(t1.x, t1.y);
+    ctx.lineTo(t2.x, t2.y);
+    ctx.stroke();
+    ctx.restore();
+
+    drawTrueLeader(ctx, polarToXY(cx, cy, glyphR - glyphSize * 0.5, a), t2, a, trueA, color);
+
+    const pos = formatDegMin(p.longitude);
+
+    const gp = polarToXY(cx, cy, glyphR, a);
+    drawPlanet(ctx, p.name, gp.x, gp.y, glyphSize, color);
+
+    ctx.save();
+    ctx.font = `${font}px Arial, sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = LINE_COLOR;
+    const dp = polarToXY(cx, cy, glyphR + rowGap, a);
+    ctx.fillText(`${pos.deg}°${pos.min}'`, dp.x, dp.y);
+    ctx.restore();
+
+    if (p.isRetrograde) {
+      const rp = polarToXY(cx, cy, glyphR + rowGap * 2, a);
+      drawRx(ctx, rp.x, rp.y, font * 0.78);
+    }
+  }
+}
+
+/**
+ * Üç halkalı çark: iç (baz, evleri/ASC'yi o kurar) + orta + dış.
+ *
+ * @param {Object} options
+ *   - aspects: DIŞ→İÇ çapraz aspekt kayıtları (transitPlanet/natalPlanet şekli).
+ *     Orta halkanın açıları çizilmez (okunabilirlik) — tabloda gösterilir.
+ *   - activePlanets / showAngleAspects: tekil/bi-wheel ile aynı anlam.
+ */
+export function drawTriWheel(canvas, innerData, middleData, outerData, options = {}) {
+  if (!canvas || !innerData || !middleData || !outerData) return;
+
+  const ctx = canvas.getContext('2d');
+  const size = Math.min(canvas.width, canvas.height);
+  const cx = canvas.width / 2;
+  const cy = canvas.height / 2;
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = '#FFFFFF';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  const R = wheelRadiiTri(size);
+  // Çerçeveyi İÇ (baz) harita kurar
+  const ascLon = innerData.houses?.ascendant ?? 0;
+
+  drawBiSignRing(ctx, cx, cy, R, ascLon);
+  drawHouseBand(ctx, cx, cy, innerData.houses, R, ascLon, { angleOutR: R.signInR, skipAngleDeg: true });
+  circle(ctx, cx, cy, R.innerR, 1.4);
+  circle(ctx, cx, cy, R.midOutR, 1.4);  // orta/dış ayracı
+  circle(ctx, cx, cy, R.outerR, 1.4);   // en dış çerçeve
+
+  drawInnerAngles(ctx, cx, cy, innerData.houses, R, ascLon);
+
+  if (options.aspects?.length) {
+    drawBiWheelAspects(ctx, cx, cy, outerData.planets, innerData.planets,
+      options.aspects, R, ascLon, options.activePlanets || null,
+      innerData.houses, options.showAngleAspects !== false);
+  }
+
+  drawInnerPlanets(ctx, cx, cy, innerData.planets, R, ascLon, innerData.partOfFortune);
+  drawRingPlanets(ctx, cx, cy, middleData.planets, R, ascLon, middleData.partOfFortune,
+    R.signOutR, R.midGlyphR);
+  drawRingPlanets(ctx, cx, cy, outerData.planets, R, ascLon, outerData.partOfFortune,
+    R.midOutR, R.outerGlyphR);
+
+  if (options.title) drawInfoBlock(ctx, options, R);
+}
+
+// ============================================
 // OVERLAY'LER (dekan / 7'ler) — mevcut çarkın ÜSTÜNE çizer
 // ============================================
 

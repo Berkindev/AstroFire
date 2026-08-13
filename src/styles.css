@@ -2974,3 +2974,41 @@ input::placeholder {
     mask-image: linear-gradient(to right, #000 88%, transparent 100%);
   }
 }
+
+/* ============================================
+   KATMANLAR (BiWheel / TriWheel)
+   ============================================ */
+.ly-panel {
+  border-color: rgba(168, 85, 247, 0.3);
+}
+
+.ly-panel:hover {
+  border-color: rgba(168, 85, 247, 0.5);
+}
+
+.ly-hint {
+  margin: -0.25rem 0 1rem;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.ly-ring-row {
+  margin-bottom: 0.75rem;
+}
+
+.ly-ring-row select {
+  width: 100%;
+  padding: 0.55rem 0.7rem;
+  background: var(--bg-input, #1a1d2e);
+  color: var(--text-primary, #e2e8f0);
+  border: 1px solid var(--border-color, #2d3348);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.ly-ring-row select:focus {
+  outline: none;
+  border-color: var(--accent-purple, #8b5cf6);
+}
