@@ -643,6 +643,77 @@
             <div id="srDecansDisplay" class="decans-section"></div>
           </div>
         </section>
+
+        <!-- GELİŞMİŞ DÖNÜŞLER (SolarFire "Advanced Returns") -->
+        <section class="panel ar-panel" id="advancedReturnsPanel">
+          <h2 class="panel-title form-toggle-title" id="arFormToggle">
+            <span class="panel-icon">🔁</span>
+            Gelişmiş Dönüşler
+            <span class="form-toggle-icon" id="arFormToggleIcon">▼</span>
+          </h2>
+
+          <div class="ar-form" id="arForm">
+            <p class="ly-hint">
+              Seçilen gezegenin natal pozisyonuna dönüşü (<strong>Tam</strong>), karşısına gelişi
+              (<strong>Demi</strong>, 6 ay/yarım döngü) ya da karesine gelişi (<strong>Quarti</strong>, çeyrek döngü)
+              için referans tarihe <strong>en yakın</strong> an bulunur ve o anın haritası kurulur.
+              Konum: yukarıdaki "Şu Anki Konum".
+            </p>
+            <div class="form-row ar-input-row">
+              <div class="form-group">
+                <label for="arPlanet">Gezegen</label>
+                <select id="arPlanet"></select>
+              </div>
+              <div class="form-group">
+                <label for="arType">Dönüş Tipi</label>
+                <select id="arType"></select>
+              </div>
+              <div class="form-group">
+                <label for="arDay">Gün</label>
+                <input type="number" id="arDay" min="1" max="31">
+              </div>
+              <div class="form-group">
+                <label for="arMonth">Ay</label>
+                <input type="number" id="arMonth" min="1" max="12">
+              </div>
+              <div class="form-group">
+                <label for="arYear">Yıl</label>
+                <input type="number" id="arYear" min="1900" max="2100">
+              </div>
+              <div class="form-group" style="align-self: flex-end;">
+                <button type="button" id="arTodayBtn" class="btn-calculate tr-now-btn">
+                  <span class="btn-icon">⏱️</span>
+                  Bugün
+                </button>
+              </div>
+            </div>
+            <button type="button" id="arCalculateBtn" class="btn-calculate tr-btn" disabled>
+              <span class="btn-icon">🔁</span>
+              Dönüşü Hesapla
+            </button>
+          </div>
+
+          <div class="tr-results hidden" id="arResults">
+            <div class="tr-timing-card" id="arInfoCard"></div>
+            <div class="tr-chart-box">
+              <div class="chart-canvas-container">
+                <canvas id="arChartCanvas" width="1200" height="1200"></canvas>
+              </div>
+              <label class="chart-overlay-toggle"><input type="checkbox" id="arAngleAspects" checked> <span>ASC/MC açıları</span></label>
+              <div class="planet-filter" id="arPlanetFilter"></div>
+            </div>
+            <div class="tabs ar-tabs">
+              <button class="tab active" data-ar-tab="ar-planets">🪐 Gezegenler</button>
+              <button class="tab" data-ar-tab="ar-aspects">🔗 Aspektler</button>
+            </div>
+            <div id="tab-ar-planets" class="tab-content ar-tab-content active">
+              <div id="arPlanetsTable"></div>
+            </div>
+            <div id="tab-ar-aspects" class="tab-content ar-tab-content">
+              <div id="arAspectsTable"></div>
+            </div>
+          </div>
+        </section>
       </section>
 
       <!-- SİNASTRİ PANEL (Sinastri + Kompozit + Davison) -->

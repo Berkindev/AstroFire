@@ -3,7 +3,7 @@
  * UI event handling ve modüllerin bağlanması
  */
 
-import { initEphemeris } from './modules/ephemeris.js';
+import { initEphemeris, calculateJulianDay } from './modules/ephemeris.js';
 import { searchCity, formatCityName, formatCoordinates } from './modules/geocoding.js';
 import { getUTCOffsetMinutes, formatUTCOffset } from './modules/datetime.js';
 import { calculateNatalChart } from './modules/natal.js';
@@ -12,6 +12,7 @@ import { calculateLunarReturn } from './modules/lunar.js';
 import { formatLongitude, formatNatalChartText, formatSolarReturnText, formatLunarReturnText, formatTransitText, formatProgressionText } from './modules/formatting.js';
 import { SIGNS, NATAL_PLANETS } from './modules/constants.js';
 import { calculateTransitReport } from './modules/transitReport.js';
+import { calculatePlanetReturn, RETURN_PLANETS, RETURN_TYPES } from './modules/planetReturns.js';
 import { drawChartWheel, drawSevenYearOverlay, drawDecanOverlay, drawBiWheel, drawTriWheel } from './modules/chartWheelSF.js';
 import { calcCrossAspects, anglePoints } from './modules/aspects.js';
 import { calculateTransits } from './modules/transit.js';
@@ -169,6 +170,19 @@ const elements = {
   trrPlanets: $('trrPlanets'),
   trrGenerateBtn: $('trrGenerateBtn'),
   trrOutput: $('trrOutput'),
+  // Gelişmiş Dönüşler
+  arPlanet: $('arPlanet'),
+  arType: $('arType'),
+  arDay: $('arDay'),
+  arMonth: $('arMonth'),
+  arYear: $('arYear'),
+  arTodayBtn: $('arTodayBtn'),
+  arCalculateBtn: $('arCalculateBtn'),
+  arResults: $('arResults'),
+  arInfoCard: $('arInfoCard'),
+  arChartCanvas: $('arChartCanvas'),
+  arPlanetsTable: $('arPlanetsTable'),
+  arAspectsTable: $('arAspectsTable'),
   // Progression elements
   progressionPanel: $('progressionPanel'),
   prDay: $('prDay'),
@@ -273,6 +287,8 @@ async function init() {
     () => { if (currentSynastry) renderSYChart(); });
   layersPlanetFilter = createPlanetFilter($('layersPlanetFilter'),
     () => { if (currentLayers) renderLYChart(); });
+  arPlanetFilter = createPlanetFilter($('arPlanetFilter'),
+    () => { if (currentAdvReturn) renderARChart(); });
 
   // ASC/MC açı tikleri — işaretlenince/kaldırılınca ilgili çark yeniden çizilir.
   // Sinastri tiki üç çarkı birden (sinastri + kompozit + davison) yönetir.
@@ -283,6 +299,7 @@ async function init() {
     trAngleAspects: () => { if (currentTransit) renderTRChart(currentTransit); },
     prAngleAspects: () => { if (currentProgression) renderPRChart(currentProgression); },
     lyAngleAspects: () => { if (currentLayers) renderLYChart(); },
+    arAngleAspects: () => { if (currentAdvReturn) renderARChart(); },
     syAngleAspects: () => {
       if (currentSynastry) renderSYChart();
       if (currentComposite) renderSYComposite();
@@ -466,6 +483,37 @@ function setupEventListeners() {
     renderSYSummary();
     renderSYComposite();
   });
+
+  // ============================================
+  // GELİŞMİŞ DÖNÜŞLER EVENT LISTENERS
+  // ============================================
+
+  if (elements.arCalculateBtn) {
+    elements.arPlanet.innerHTML = RETURN_PLANETS.map(p =>
+      `<option value="${p.id}">${p.symbol} ${p.name}</option>`).join('');
+    elements.arType.innerHTML = RETURN_TYPES.map(t =>
+      `<option value="${t.key}">${t.name}</option>`).join('');
+
+    elements.arCalculateBtn.addEventListener('click', handleARCalculate);
+    elements.arTodayBtn.addEventListener('click', handleARTodayClick);
+
+    // Gezegen/tip değişince sonuç açıksa anında yeniden hesapla
+    [elements.arPlanet, elements.arType].forEach(sel => {
+      sel.addEventListener('change', () => {
+        updateARButtonState();
+        if (currentAdvReturn && !elements.arResults.classList.contains('hidden')) handleARCalculate();
+      });
+    });
+
+    ['arDay', 'arMonth', 'arYear'].forEach(id => {
+      $(id).addEventListener('input', updateARButtonState);
+    });
+
+    $('arFormToggle')?.addEventListener('click', () => {
+      $('arForm')?.classList.toggle('collapsed');
+      $('arFormToggleIcon')?.classList.toggle('collapsed');
+    });
+  }
 
   // ============================================
   // LUNAR RETURN EVENT LISTENERS
@@ -953,6 +1001,7 @@ function refreshLocationDependentCharts() {
   updateLRButtonState();
   updateTRButtonState();
   updatePRButtonState();
+  updateARButtonState();
 
   if (!currentChart || !hasActiveLocation()) return;
 
@@ -966,6 +1015,7 @@ function refreshLocationDependentCharts() {
   if (open('trResults')) handleTRCalculate();
   if (open('prResults')) handlePRCalculate();
   if (open('lyResults')) handleLYCalculate();
+  if (open('arResults')) handleARCalculate();
 }
 
 // ============================================
@@ -1057,6 +1107,7 @@ let transitPlanetFilter = null;
 let progressionPlanetFilter = null;
 let synastryPlanetFilter = null;
 let layersPlanetFilter = null;
+let arPlanetFilter = null;
 
 // ============================================
 // HARİTA HAFIZASI (localStorage)
@@ -1561,6 +1612,7 @@ const SECTION_TABS = [
   { attr: 'pr-tab', dataKey: 'prTab', contentClass: 'pr-tab-content' },
   { attr: 'sy-tab', dataKey: 'syTab', contentClass: 'sy-tab-content' },
   { attr: 'ly-tab', dataKey: 'lyTab', contentClass: 'ly-tab-content' },
+  { attr: 'ar-tab', dataKey: 'arTab', contentClass: 'ar-tab-content' },
   // Sinastri alt bilgi sekmeleri (Çapraz Aspektler/Grid/Ev) — harita geçişlerinden ayrı grup
   { attr: 'sy2-tab', dataKey: 'sy2Tab', contentClass: 'sy2-tab-content' },
 ];
@@ -1720,13 +1772,128 @@ let lastNatalChart = null;
 // ============================================
 
 function showSolarReturnPanel() {
-  
+
   // Mevcut yılı default olarak ayarla
   const currentYear = new Date().getFullYear();
   elements.srYear.value = currentYear;
-  
+
   // SR butonunu aktif et
   updateSRButtonState();
+
+  // Gelişmiş Dönüşler referans tarihi: bugün (boşsa)
+  if (elements.arDay && !elements.arDay.value) handleARTodayClick();
+  updateARButtonState();
+}
+
+// ============================================
+// GELİŞMİŞ DÖNÜŞLER (SolarFire "Advanced Returns")
+// ============================================
+
+let currentAdvReturn = null;
+
+function handleARTodayClick() {
+  const now = new Date();
+  elements.arDay.value = now.getDate();
+  elements.arMonth.value = now.getMonth() + 1;
+  elements.arYear.value = now.getFullYear();
+  updateARButtonState();
+}
+
+function updateARButtonState() {
+  if (!elements.arCalculateBtn) return;
+  const hasDate = !['arDay', 'arMonth', 'arYear'].some(id => isNaN(parseInt($(id).value)));
+  elements.arCalculateBtn.disabled = !(hasDate && currentChart && hasActiveLocation());
+}
+
+async function handleARCalculate() {
+  if (!currentChart) {
+    alert('Lütfen önce natal haritayı hesaplayın.');
+    return;
+  }
+
+  const day = parseInt(elements.arDay.value);
+  const month = parseInt(elements.arMonth.value);
+  const year = parseInt(elements.arYear.value);
+  if ([day, month, year].some(isNaN)) {
+    alert('Lütfen geçerli bir referans tarihi girin.');
+    return;
+  }
+
+  const location = activeLocation();
+  if (!location) {
+    alert('Lütfen bir konum seçin.');
+    return;
+  }
+
+  const planetId = parseInt(elements.arPlanet.value, 10);
+  const typeKey = elements.arType.value;
+  // Referans an: günün öğleni — "en yakın dönüş" seçimi için yeterli hassasiyet
+  const refJD = calculateJulianDay(year, month, day, 12);
+
+  elements.arCalculateBtn.disabled = true;
+  elements.arCalculateBtn.innerHTML = '<span class="btn-icon">⏳</span> Hesaplanıyor...';
+
+  try {
+    currentAdvReturn = await calculatePlanetReturn(currentChart, planetId, typeKey, refJD, location);
+    renderARResults();
+  } catch (error) {
+    console.error('Gelişmiş dönüş hatası:', error);
+    alert('Gelişmiş dönüş hatası: ' + error.message);
+  } finally {
+    elements.arCalculateBtn.innerHTML = '<span class="btn-icon">🔁</span> Dönüşü Hesapla';
+    updateARButtonState();
+  }
+}
+
+function renderARResults() {
+  const r = currentAdvReturn;
+  elements.arResults.classList.remove('hidden');
+
+  const l = r.local;
+  const pad = (n) => String(n).padStart(2, '0');
+  const natalPos = formatLongitude(r.natalLon);
+  const targetPos = formatLongitude(r.targetLon);
+
+  elements.arInfoCard.innerHTML = `
+    <div class="tr-timing-grid">
+      <div class="tr-timing-item">
+        <span class="tr-timing-label">Dönüş Anı</span>
+        <span class="tr-timing-value">${pad(l.day)}.${pad(l.month)}.${l.year} ${pad(l.hour)}:${pad(l.minute)}</span>
+      </div>
+      <div class="tr-timing-item">
+        <span class="tr-timing-label">Konum</span>
+        <span class="tr-timing-value">${r.location.name || `${r.location.latitude.toFixed(2)}°, ${r.location.longitude.toFixed(2)}°`}</span>
+      </div>
+      <div class="tr-timing-item">
+        <span class="tr-timing-label">Natal ${r.returnPlanet.name}</span>
+        <span class="tr-timing-value">${natalPos.formatted}</span>
+      </div>
+      <div class="tr-timing-item">
+        <span class="tr-timing-label">Hedef (${r.returnType.name})</span>
+        <span class="tr-timing-value">${targetPos.formatted}</span>
+      </div>
+    </div>
+  `;
+
+  renderARChart();
+  renderSYPlanetTable(r, elements.arPlanetsTable);
+  renderSYAspectTable(r, elements.arAspectsTable);
+}
+
+function renderARChart() {
+  const r = currentAdvReturn;
+  if (!r) return;
+  const l = r.local;
+  const pad = (n) => String(n).padStart(2, '0');
+
+  drawChartWheel(elements.arChartCanvas, r, {
+    title: `${r.returnPlanet.name} ${r.returnType.name}`,
+    subtitle: `${pad(l.day)}.${pad(l.month)}.${l.year} ${pad(l.hour)}:${pad(l.minute)} ${l.utcOffsetFormatted || ''}\n${r.location.name || ''}\n${formatCoordinates(r.location.latitude, r.location.longitude)}`,
+    showAspects: true,
+    chartType: 'planet_return',
+    activePlanets: arPlanetFilter?.getActiveSet(),
+    showAngleAspects: angleAspectsOn('arAngleAspects'),
+  });
 }
 
 function updateSRButtonState() {

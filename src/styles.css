@@ -3128,3 +3128,41 @@ body.sf-theme .main-tab {
 body.sf-theme .main-tab.active {
   color: #ffffff;
 }
+
+/* ============================================
+   GELİŞMİŞ DÖNÜŞLER
+   ============================================ */
+.ar-panel {
+  margin-top: 1.25rem;
+  border-color: rgba(245, 158, 11, 0.25);
+}
+
+.ar-panel:hover {
+  border-color: rgba(245, 158, 11, 0.45);
+}
+
+.ar-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.ar-form.collapsed {
+  display: none;
+}
+
+.ar-input-row select {
+  width: 100%;
+  padding: 0.55rem 0.7rem;
+  background: var(--bg-input);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.ar-input-row select:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+}
