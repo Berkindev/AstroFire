@@ -1386,7 +1386,7 @@ export function wheelRadiiTri(size) {
  *   ASC/MC, SolarFire multiwheel'deki gibi mini kırmızı "As"/"Mc" işareti
  *   olarak gezegenlerle birlikte (çakışma önlemeli) çizilir.
  */
-function drawRingPlanets(ctx, cx, cy, planets, R, ascLon, partOfFortune, ringInR, glyphR, houses = null) {
+function drawRingPlanets(ctx, cx, cy, planets, R, ascLon, partOfFortune, ringInR, glyphR, houses = null, ringOutR = null) {
   if (!planets?.length) return;
 
   const list = [...planets];
@@ -1432,6 +1432,20 @@ function drawRingPlanets(ctx, cx, cy, planets, R, ascLon, partOfFortune, ringInR
 
     const gp = polarToXY(cx, cy, glyphR, a);
     if (p.angleLabel) {
+      // Açı ekseni: bandı boydan boya kesen kırmızı çizgi — işaret kalabalıkta
+      // kaybolmasın, göz SolarFire'daki gibi anında yakalasın.
+      if (ringOutR) {
+        const l1 = polarToXY(cx, cy, ringInR, trueA);
+        const l2 = polarToXY(cx, cy, ringOutR, trueA);
+        ctx.save();
+        ctx.strokeStyle = ANGLE_COLOR;
+        ctx.lineWidth = 2.4;
+        ctx.beginPath();
+        ctx.moveTo(l1.x, l1.y);
+        ctx.lineTo(l2.x, l2.y);
+        ctx.stroke();
+        ctx.restore();
+      }
       // Mini açı işareti: glif yerine kırmızı kalın "As"/"Mc"
       ctx.save();
       ctx.font = `bold ${Math.max(9, R.R * 0.032)}px Arial, sans-serif`;
@@ -1501,9 +1515,9 @@ export function drawTriWheel(canvas, innerData, middleData, outerData, options =
   drawInnerPlanets(ctx, cx, cy, innerData.planets, R, ascLon, innerData.partOfFortune);
   // Orta/dış halkalar kendi ASC/MC'lerini mini "As"/"Mc" işareti olarak taşır
   drawRingPlanets(ctx, cx, cy, middleData.planets, R, ascLon, middleData.partOfFortune,
-    R.signOutR, R.midGlyphR, middleData.houses);
+    R.signOutR, R.midGlyphR, middleData.houses, R.midOutR);
   drawRingPlanets(ctx, cx, cy, outerData.planets, R, ascLon, outerData.partOfFortune,
-    R.midOutR, R.outerGlyphR, outerData.houses);
+    R.midOutR, R.outerGlyphR, outerData.houses, R.outerR);
 
   if (options.title) drawInfoBlock(ctx, options, R);
 }
