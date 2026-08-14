@@ -1382,12 +1382,23 @@ export function wheelRadiiTri(size) {
  *
  * @param {number} ringInR - halkanın iç sınırı (gerçek-derece çentiği burada)
  * @param {number} glyphR - gezegen glifinin yarıçapı
+ * @param {Object|null} houses - halkanın KENDİ haritasının evleri; verilirse
+ *   ASC/MC, SolarFire multiwheel'deki gibi mini kırmızı "As"/"Mc" işareti
+ *   olarak gezegenlerle birlikte (çakışma önlemeli) çizilir.
  */
-function drawRingPlanets(ctx, cx, cy, planets, R, ascLon, partOfFortune, ringInR, glyphR) {
+function drawRingPlanets(ctx, cx, cy, planets, R, ascLon, partOfFortune, ringInR, glyphR, houses = null) {
   if (!planets?.length) return;
 
   const list = [...planets];
   if (partOfFortune) list.push({ ...partOfFortune, isRetrograde: false, id: -99 });
+  if (houses) {
+    if (houses.ascendant != null) {
+      list.push({ id: -101, name: 'ASC', angleLabel: 'As', longitude: houses.ascendant, isRetrograde: false });
+    }
+    if (houses.mc != null) {
+      list.push({ id: -102, name: 'MC', angleLabel: 'Mc', longitude: houses.mc, isRetrograde: false });
+    }
+  }
 
   const items = list.map(p => ({ planet: p, angle: lonToAngle(p.longitude, ascLon) }));
 
@@ -1400,7 +1411,7 @@ function drawRingPlanets(ctx, cx, cy, planets, R, ascLon, partOfFortune, ringInR
   for (const item of placed) {
     const p = item.planet;
     const a = item.displayAngle;
-    const color = PLANET_COLOR[p.name] || '#000000';
+    const color = p.angleLabel ? ANGLE_COLOR : (PLANET_COLOR[p.name] || '#000000');
 
     // Gerçek boylam çentiği — halkanın iç sınırında
     const trueA = lonToAngle(p.longitude, ascLon);
@@ -1420,7 +1431,18 @@ function drawRingPlanets(ctx, cx, cy, planets, R, ascLon, partOfFortune, ringInR
     const pos = formatDegMin(p.longitude);
 
     const gp = polarToXY(cx, cy, glyphR, a);
-    drawPlanet(ctx, p.name, gp.x, gp.y, glyphSize, color);
+    if (p.angleLabel) {
+      // Mini açı işareti: glif yerine kırmızı kalın "As"/"Mc"
+      ctx.save();
+      ctx.font = `bold ${Math.max(9, R.R * 0.032)}px Arial, sans-serif`;
+      ctx.fillStyle = ANGLE_COLOR;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(p.angleLabel, gp.x, gp.y);
+      ctx.restore();
+    } else {
+      drawPlanet(ctx, p.name, gp.x, gp.y, glyphSize, color);
+    }
 
     ctx.save();
     ctx.font = `${font}px Arial, sans-serif`;
@@ -1477,10 +1499,11 @@ export function drawTriWheel(canvas, innerData, middleData, outerData, options =
   }
 
   drawInnerPlanets(ctx, cx, cy, innerData.planets, R, ascLon, innerData.partOfFortune);
+  // Orta/dış halkalar kendi ASC/MC'lerini mini "As"/"Mc" işareti olarak taşır
   drawRingPlanets(ctx, cx, cy, middleData.planets, R, ascLon, middleData.partOfFortune,
-    R.signOutR, R.midGlyphR);
+    R.signOutR, R.midGlyphR, middleData.houses);
   drawRingPlanets(ctx, cx, cy, outerData.planets, R, ascLon, outerData.partOfFortune,
-    R.midOutR, R.outerGlyphR);
+    R.midOutR, R.outerGlyphR, outerData.houses);
 
   if (options.title) drawInfoBlock(ctx, options, R);
 }
