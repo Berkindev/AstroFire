@@ -2982,3 +2982,149 @@ input::placeholder {
   outline: none;
   border-color: var(--accent-purple, #8b5cf6);
 }
+
+/* ============================================
+   DÖNEM RAPORU (Dinamik Transit Raporu)
+   ============================================ */
+.trr-hint {
+  margin: 0.25rem 0 1rem;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.trr-input-row {
+  margin-bottom: 0.75rem;
+}
+
+.trr-input-row select {
+  width: 100%;
+  padding: 0.55rem 0.7rem;
+  background: var(--bg-input);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.trr-input-row select:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+}
+
+.trr-planets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.9rem;
+}
+
+.trr-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.6rem;
+  background: var(--bg-input);
+  border: 1px solid var(--border-color);
+  border-radius: 999px;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  user-select: none;
+}
+
+.trr-chip:hover {
+  border-color: var(--border-accent);
+}
+
+.trr-chip:has(input:checked) {
+  border-color: var(--accent-primary);
+  background: var(--accent-glow);
+  color: var(--text-primary);
+}
+
+.trr-chip input {
+  accent-color: var(--accent-primary);
+  cursor: pointer;
+}
+
+.trr-output {
+  margin-top: 1rem;
+}
+
+.trr-summary {
+  margin-bottom: 0.6rem;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.trr-table td {
+  white-space: nowrap;
+}
+
+.trr-month-row td {
+  background: var(--bg-hover);
+  color: var(--text-accent);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
+.trr-rx {
+  color: var(--error);
+  font-weight: 700;
+}
+
+/* ============================================
+   TEMA: SolarFire görünümü (ikincil, açık tema)
+   Çark canvas'ı zaten SolarFire paleti (beyaz zemin) — tema yalnızca
+   çevresindeki UI'ı klasik açık görünüme çevirir. Bileşenlerin tamamı
+   CSS değişkeni kullandığı için override bu blokla sınırlı kalır.
+   ============================================ */
+.theme-toggle {
+  padding: 0.45rem 0.8rem;
+  background: var(--bg-input);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.theme-toggle:hover {
+  color: var(--text-primary);
+  border-color: var(--border-accent);
+}
+
+body.sf-theme {
+  --bg-primary: #cdc9c1;
+  --bg-secondary: #dedad2;
+  --bg-panel: #f4f1e9;
+  --bg-input: #ffffff;
+  --bg-hover: #e6e2d8;
+  --text-primary: #16161c;
+  --text-secondary: #3d4149;
+  --text-muted: #6b6f77;
+  --text-accent: #00218a;
+  --accent-primary: #1f3a93;
+  --accent-secondary: #3a56b0;
+  --accent-glow: rgba(31, 58, 147, 0.12);
+  --border-color: #aaa69c;
+  --border-accent: #7e7a70;
+}
+
+/* Koyu temaya özel yarı saydam beyaz vurgular açık zeminde kaybolur/parlar —
+   en görünür ikisini düzelt: header ve ana sekme çubuğu. */
+body.sf-theme .header {
+  background: linear-gradient(135deg, var(--bg-secondary), var(--bg-panel));
+}
+
+body.sf-theme .main-tab {
+  color: var(--text-secondary);
+}
+
+body.sf-theme .main-tab.active {
+  color: #ffffff;
+}

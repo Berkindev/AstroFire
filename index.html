@@ -20,6 +20,7 @@
         <h1 class="brand-title">AstroFire</h1>
         <span class="brand-subtitle">Astroharmony Astroloji Hesaplama Aracı</span>
       </div>
+      <button type="button" id="themeToggle" class="theme-toggle" title="SolarFire görünümüne geç">🖥️ SF Görünümü</button>
     </header>
 
     <!-- Main Content -->
@@ -414,6 +415,7 @@
               <button class="tab active" data-tr-tab="tr-planets">🪐 Transit Gezegenler</button>
               <button class="tab" data-tr-tab="tr-natal-aspects">🔗 Transit-Natal Aspektler</button>
               <button class="tab" data-tr-tab="tr-aspects">🔗 Transit Aspektler</button>
+              <button class="tab" data-tr-tab="tr-report">📅 Dönem Raporu</button>
               <button class="tab" data-tr-tab="tr-debug">📊 Ham Veri</button>
             </div>
 
@@ -425,6 +427,44 @@
             </div>
             <div id="tab-tr-aspects" class="tab-content tr-tab-content">
               <div id="trAspectsTable"></div>
+            </div>
+            <div id="tab-tr-report" class="tab-content tr-tab-content">
+              <!-- Dinamik Transit Raporu (SolarFire "Dynamic Report"):
+                   dönemdeki tüm transit→natal aspektlerin KESİN tarihleri -->
+              <p class="trr-hint">
+                Seçilen dönemde transit gezegenlerin natal noktalara (gezegenler + ASC/MC + Şans Noktası)
+                yaptığı tüm majör aspektlerin <strong>kesin tarih ve saatleri</strong>. Retro geçişlerde aynı
+                aspekt 3 kez listelenir (ileri • geri <span class="trr-rx">Rx</span> • ileri).
+              </p>
+              <div class="form-row trr-input-row">
+                <div class="form-group">
+                  <label for="trrDay">Gün</label>
+                  <input type="number" id="trrDay" min="1" max="31">
+                </div>
+                <div class="form-group">
+                  <label for="trrMonth">Ay</label>
+                  <input type="number" id="trrMonth" min="1" max="12">
+                </div>
+                <div class="form-group">
+                  <label for="trrYear">Yıl</label>
+                  <input type="number" id="trrYear" min="1900" max="2100">
+                </div>
+                <div class="form-group">
+                  <label for="trrSpan">Süre</label>
+                  <select id="trrSpan">
+                    <option value="30">1 ay</option>
+                    <option value="91">3 ay</option>
+                    <option value="182" selected>6 ay</option>
+                    <option value="365">1 yıl</option>
+                  </select>
+                </div>
+              </div>
+              <div class="trr-planets" id="trrPlanets"></div>
+              <button type="button" id="trrGenerateBtn" class="btn-calculate tr-btn">
+                <span class="btn-icon">📅</span>
+                Rapor Oluştur
+              </button>
+              <div id="trrOutput" class="trr-output"></div>
             </div>
             <div id="tab-tr-debug" class="tab-content tr-tab-content">
               <pre id="trDebugOutput" class="debug-output"></pre>

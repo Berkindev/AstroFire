@@ -10,7 +10,8 @@ import { calculateNatalChart } from './modules/natal.js';
 import { calculateSolarReturn, calculateSRHouseTiming, solarPeriod } from './modules/solar.js';
 import { calculateLunarReturn } from './modules/lunar.js';
 import { formatLongitude, formatNatalChartText, formatSolarReturnText, formatLunarReturnText, formatTransitText, formatProgressionText } from './modules/formatting.js';
-import { SIGNS } from './modules/constants.js';
+import { SIGNS, NATAL_PLANETS } from './modules/constants.js';
+import { calculateTransitReport } from './modules/transitReport.js';
 import { drawChartWheel, drawSevenYearOverlay, drawDecanOverlay, drawBiWheel, drawTriWheel } from './modules/chartWheelSF.js';
 import { calcCrossAspects, anglePoints } from './modules/aspects.js';
 import { calculateTransits } from './modules/transit.js';
@@ -160,6 +161,14 @@ const elements = {
   trAspectsTable: $('trAspectsTable'),
   trDebugOutput: $('trDebugOutput'),
   trDecansDisplay: $('trDecansDisplay'),
+  // Dönem Raporu (dinamik transit raporu)
+  trrDay: $('trrDay'),
+  trrMonth: $('trrMonth'),
+  trrYear: $('trrYear'),
+  trrSpan: $('trrSpan'),
+  trrPlanets: $('trrPlanets'),
+  trrGenerateBtn: $('trrGenerateBtn'),
+  trrOutput: $('trrOutput'),
   // Progression elements
   progressionPanel: $('progressionPanel'),
   prDay: $('prDay'),
@@ -509,6 +518,23 @@ function setupEventListeners() {
   // TR tarih değişince buton durumunu güncelle
   ['trDay', 'trMonth', 'trYear', 'trHour', 'trMinute'].forEach(id => {
     $(id).addEventListener('input', updateTRButtonState);
+  });
+
+  // Dönem Raporu (dinamik transit raporu)
+  if (elements.trrGenerateBtn) {
+    buildTRRPlanetChips();
+    elements.trrGenerateBtn.addEventListener('click', handleTRRGenerate);
+  }
+
+  // Tema: SolarFire görünümü aç/kapa (localStorage'da kalıcı)
+  if (localStorage.getItem('astrofire_theme') === 'sf') {
+    document.body.classList.add('sf-theme');
+    updateThemeToggleLabel();
+  }
+  $('themeToggle')?.addEventListener('click', () => {
+    const sf = document.body.classList.toggle('sf-theme');
+    localStorage.setItem('astrofire_theme', sf ? 'sf' : 'dark');
+    updateThemeToggleLabel();
   });
 
   // ============================================
@@ -2633,6 +2659,14 @@ function showTransitPanel() {
   // Bugünün tarih/saatini set et
   handleTRNowClick();
 
+  // Dönem Raporu başlangıcı: bugün (kullanıcı doldurmadıysa)
+  if (elements.trrDay && !elements.trrDay.value) {
+    const now = new Date();
+    elements.trrDay.value = now.getDate();
+    elements.trrMonth.value = now.getMonth() + 1;
+    elements.trrYear.value = now.getFullYear();
+  }
+
   // Buton durumu
   updateTRButtonState();
 }
@@ -2929,6 +2963,127 @@ function renderTRDecans(tr) {
 }
 
 // TR Tab Switching
+
+// ============================================
+// DÖNEM RAPORU (Dinamik Transit Raporu)
+// ============================================
+
+/** Rapora girecek transit gezegen chip'leri. Ay default KAPALI (aylık dönemde
+ *  bile yüzlerce satır üretir); diğer hepsi açık. */
+function buildTRRPlanetChips() {
+  elements.trrPlanets.innerHTML = NATAL_PLANETS.map(p => `
+    <label class="trr-chip">
+      <input type="checkbox" data-planet-id="${p.id}" ${p.id === 1 ? '' : 'checked'}>
+      <span>${p.symbol} ${p.name}</span>
+    </label>
+  `).join('');
+}
+
+function trrSelectedPlanets() {
+  const ids = new Set();
+  elements.trrPlanets.querySelectorAll('input:checked').forEach(cb => {
+    ids.add(parseInt(cb.dataset.planetId, 10));
+  });
+  return NATAL_PLANETS.filter(p => ids.has(p.id));
+}
+
+async function handleTRRGenerate() {
+  if (!currentChart) {
+    alert('Lütfen önce natal haritayı hesaplayın.');
+    return;
+  }
+
+  const start = {
+    year: parseInt(elements.trrYear.value),
+    month: parseInt(elements.trrMonth.value),
+    day: parseInt(elements.trrDay.value),
+  };
+  if ([start.year, start.month, start.day].some(isNaN)) {
+    alert('Lütfen geçerli bir başlangıç tarihi girin.');
+    return;
+  }
+
+  const transitPlanets = trrSelectedPlanets();
+  if (transitPlanets.length === 0) {
+    alert('En az bir transit gezegen seçin.');
+    return;
+  }
+
+  const days = parseInt(elements.trrSpan.value, 10);
+  const timezone = activeLocation()?.timezone || currentChart.birthData.timezone;
+
+  elements.trrGenerateBtn.disabled = true;
+  elements.trrGenerateBtn.innerHTML = '<span class="btn-icon">⏳</span> Hesaplanıyor...';
+
+  try {
+    const events = await calculateTransitReport(currentChart, {
+      start, days, transitPlanets, timezone,
+    });
+    renderTRRReport(events, start, days, timezone);
+  } catch (error) {
+    console.error('Dönem raporu hatası:', error);
+    alert('Dönem raporu hatası: ' + error.message);
+  } finally {
+    elements.trrGenerateBtn.disabled = false;
+    elements.trrGenerateBtn.innerHTML = '<span class="btn-icon">📅</span> Rapor Oluştur';
+  }
+}
+
+function renderTRRReport(events, start, days, timezone) {
+  if (events.length === 0) {
+    elements.trrOutput.innerHTML = '<p class="no-data">Bu dönemde aspekt bulunamadı</p>';
+    return;
+  }
+
+  const pad = (n) => String(n).padStart(2, '0');
+  const rows = [];
+  let lastMonthKey = '';
+
+  for (const e of events) {
+    const l = e.local;
+    const monthKey = `${l.year}-${l.month}`;
+    if (monthKey !== lastMonthKey) {
+      lastMonthKey = monthKey;
+      rows.push(`<tr class="trr-month-row"><td colspan="6">${MONTH_NAMES[l.month]} ${l.year}</td></tr>`);
+    }
+    rows.push(`
+      <tr>
+        <td>${pad(l.day)}.${pad(l.month)}.${l.year}</td>
+        <td>${pad(l.hour)}:${pad(l.minute)}</td>
+        <td>${e.transit.symbol} ${e.transit.name}</td>
+        <td class="aspect-symbol">${e.aspect.symbol} ${e.aspect.name}</td>
+        <td>${`${e.natal.symbol} ${e.natal.name}`.trim()}</td>
+        <td>${e.retrograde ? '<span class="trr-rx">Rx</span>' : ''}</td>
+      </tr>
+    `);
+  }
+
+  elements.trrOutput.innerHTML = `
+    <p class="trr-summary">${events.length} olay • ${pad(start.day)}.${pad(start.month)}.${start.year} + ${days} gün • ${timezone}</p>
+    <table class="data-table aspects-table trr-table">
+      <thead>
+        <tr>
+          <th>Tarih</th>
+          <th>Saat</th>
+          <th>Transit</th>
+          <th>Aspekt</th>
+          <th>Natal</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>${rows.join('')}</tbody>
+    </table>
+  `;
+}
+
+/** Tema butonu etiketi: hangi görünüme GEÇİLECEĞİNİ söyler. */
+function updateThemeToggleLabel() {
+  const btn = $('themeToggle');
+  if (!btn) return;
+  const sf = document.body.classList.contains('sf-theme');
+  btn.textContent = sf ? '🌙 Gece Görünümü' : '🖥️ SF Görünümü';
+  btn.title = sf ? 'Koyu görünüme dön' : 'SolarFire görünümüne geç';
+}
 
 // ============================================
 // PROGRESYON (Secondary Progressions)
