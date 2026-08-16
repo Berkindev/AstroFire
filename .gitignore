@@ -10,3 +10,6 @@ sr-verification.html
 # Doğrulama araçlarının ürettiği geçici çıktılar
 snapshots/
 scratch-shots/
+
+# Ekol ders notları — ÖZEL, repoya girmez
+notlar/
