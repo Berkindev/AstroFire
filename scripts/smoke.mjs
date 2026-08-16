@@ -128,6 +128,21 @@ else fail(`natal harita çizilmedi: ${natalCanvas.why}`);
 
 await page.screenshot({ path: `${SHOTS}/1-natal.png` });
 
+// Ekol yorumu — bilgi tabanı fetch'i sekme açılınca yapılır
+await page.click('.tab[data-tab="yorum"]');
+await page.waitForTimeout(1500);
+const yorum = await page.evaluate(() => ({
+  ev: document.querySelectorAll('.yr-house').length,
+  dekan: document.querySelectorAll('.yr-decan').length,
+  matris: document.querySelector('.yr-matrix .yr-total-row td:last-child')?.textContent,
+}));
+if (yorum.ev === 12 && yorum.dekan === 36) pass(`ekol yorumu: ${yorum.ev} ev / ${yorum.dekan} dekan`);
+else fail(`ekol yorumu eksik: ${yorum.ev} ev, ${yorum.dekan} dekan`);
+if (yorum.matris === '15') pass('ekol element puanlaması 15');
+else fail(`ekol element puanlaması beklenen 15, gelen ${yorum.matris}`);
+await page.click('.tab[data-tab="planets"]');
+await page.waitForTimeout(200);
+
 // ============================================
 // 2. DİĞER BÖLÜMLER
 // ============================================

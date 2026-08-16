@@ -3166,3 +3166,177 @@ body.sf-theme .main-tab.active {
   outline: none;
   border-color: var(--accent-primary);
 }
+
+/* ============================================
+   EKOL YORUMU (natal alt sekmesi)
+   ============================================ */
+.yorum-report { font-size: 0.92rem; }
+
+.yr-intro {
+  background: var(--accent-glow);
+  border: 1px solid var(--border-accent);
+  border-radius: 10px;
+  padding: 0.85rem 1rem;
+  margin-bottom: 1.1rem;
+  line-height: 1.55;
+  color: var(--text-secondary);
+}
+
+.yr-missing-count {
+  display: inline-block;
+  margin-left: 0.5rem;
+  padding: 0.1rem 0.55rem;
+  border-radius: 999px;
+  background: rgba(245, 158, 11, 0.15);
+  color: var(--warning);
+  font-size: 0.78rem;
+}
+
+.yr-card {
+  background: var(--bg-input);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 1rem 1.1rem;
+  margin-bottom: 1.1rem;
+}
+
+.yr-card-title {
+  font-weight: 600;
+  color: var(--text-accent);
+  margin-bottom: 0.7rem;
+}
+
+.yr-card-title.yr-section {
+  margin: 1.6rem 0 0.8rem;
+  font-size: 1.02rem;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 0.4rem;
+}
+
+.yr-sub { font-weight: 400; font-size: 0.8rem; color: var(--text-muted); }
+
+.yr-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 0.6rem 1.2rem;
+}
+
+.yr-label {
+  display: block;
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+
+.yr-value { font-family: 'JetBrains Mono', monospace; font-size: 0.86rem; }
+
+.yr-hint { margin-top: 0.7rem; color: var(--text-secondary); line-height: 1.5; }
+.yr-small { font-size: 0.78rem; color: var(--text-muted); }
+
+.yr-matrix { font-size: 0.85rem; }
+.yr-matrix th { font-weight: 600; }
+.yr-matrix td { text-align: center; }
+.yr-zero { text-align: center; color: var(--text-muted); }
+.yr-total { font-weight: 700; color: var(--text-accent); text-align: center; }
+.yr-total-row th { color: var(--text-accent); }
+
+/* --- Ev ve dekan blokları --- */
+.yr-house {
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  margin-bottom: 0.9rem;
+  overflow: hidden;
+}
+
+.yr-house-head {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+  padding: 0.6rem 0.9rem;
+  background: var(--bg-hover);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.yr-house-no {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: var(--accent-primary);
+  color: #fff;
+  font-size: 0.82rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.yr-house-sign { font-weight: 600; }
+.yr-house-nat { font-size: 0.76rem; color: var(--text-muted); margin-left: auto; }
+.yr-house-genel { padding: 0.7rem 0.9rem 0; color: var(--text-secondary); line-height: 1.55; }
+
+.yr-decan {
+  padding: 0.75rem 0.9rem;
+  border-top: 1px solid var(--border-color);
+}
+.yr-decan:first-of-type { border-top: 0; }
+.yr-decan-empty { opacity: 0.72; }
+
+.yr-decan-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.4rem;
+}
+
+.yr-decan-no {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+
+.yr-decan-topic { font-weight: 600; color: var(--text-primary); }
+.yr-decan-sign { font-size: 0.8rem; color: var(--text-secondary); margin-left: auto; font-family: 'JetBrains Mono', monospace; }
+
+.yr-decan-planets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 0.5rem;
+}
+
+.yr-planet {
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-accent);
+  font-size: 0.79rem;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.yr-empty-planets { font-size: 0.78rem; color: var(--text-muted); font-style: italic; }
+.yr-decan-text { color: var(--text-secondary); line-height: 1.6; margin-bottom: 0.4rem; }
+.yr-decan-list { margin: 0 0 0.4rem 1.1rem; color: var(--text-secondary); line-height: 1.55; }
+.yr-decan-list li { margin-bottom: 0.2rem; }
+.yr-planet-note {
+  margin-top: 0.35rem;
+  padding: 0.4rem 0.6rem;
+  border-left: 3px solid var(--accent-secondary);
+  background: var(--bg-panel);
+  border-radius: 0 6px 6px 0;
+  color: var(--text-secondary);
+  font-size: 0.86rem;
+}
+
+.yr-missing {
+  font-size: 0.8rem;
+  color: var(--warning);
+  font-style: italic;
+}
+
+@media (max-width: 640px) {
+  .yr-decan-sign, .yr-house-nat { margin-left: 0; width: 100%; }
+}

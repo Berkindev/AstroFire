@@ -1,0 +1,720 @@
+{
+  "meta": {
+    "surum": "0.1",
+    "kaynak": "Ekol ders notları derlemesi (04-evler-dekanlar.md)",
+    "not": "Metinler hoca revizyonu beklemektedir."
+  },
+  "evler": {
+    "1": {
+      "dogalBurc": "Koç",
+      "dogalYonetici": "Mars",
+      "genel": "",
+      "konular": [
+        "Fiziksel yapımız, yüz yapımız, gözlerimiz ve ne renkte olduğu; kısacası tipolojimiz (boy, kilo, göz rengi, yüz yapısı).",
+        "Dışarıya yansıttığımız ilk bakıştaki intibamız; bizi tanımayan insanların zihinlerinde uyandırdığımız karakterimiz (ilk izlenim, kişilik maskesi, dışa yansıma).",
+        "Genel sağlığımız ve bedensel direncimiz.",
+        "Duruşumuz, tavırlarımız ve davranış tarzımız. Bu eve düşen sert etkili burçlar ve sert etkili gezegenler bizi dışarıya daha sert bir yapıda tanıtır; olumlu (pozitif etkili) gezegen ve burç yerleşimleri bizi daha pozitif, daha olumlu ve daha çekici kılar.",
+        "Anahtar kavramlar: benlik, bireysellik, refleksler, aura, yaşam enerjisi, \"ben\" bilinci."
+      ],
+      "dekanlar": [
+        {
+          "no": 1,
+          "derece": "0-10",
+          "baslik": "Fiziksel yapı, fiziksel güç, dış görünüş",
+          "dekanYoneticisiNot": "Dekan yöneticisi Mars (Koç).",
+          "aciklama": "Harita sahibinin fiziksel görüntüsünü ve fiziksel yapısını gösterir; ayrıca kişinin fiziksel gücü hakkında bilgi verir. Buraya düşen gezegenler kişinin tipi hakkında bilgi verir: boy, pos, kilo, göz rengi ve yüz yapısı. Bu dekanda bulunan giriş aksına (ASC noktası) açı yapan gezegenler de tipimizi etkiler.",
+          "maddeler": [
+            "Harita sahibinin fiziksel görüntüsünü ve fiziksel yapısını gösterir; ayrıca kişinin fiziksel gücü hakkında bilgi verir.",
+            "Buraya düşen gezegenler kişinin tipi hakkında bilgi verir: boy, pos, kilo, göz rengi ve yüz yapısı.",
+            "Bu dekanda bulunan giriş aksına (ASC noktası) açı yapan gezegenler de tipimizi etkiler."
+          ],
+          "gezegenNotlari": {
+            "Plüton": "Plüton 1. evde (yükselen Akrep): Plüton 1. veya 2. dekanda ise, kişi 14 yaşına kadar yaşamaması gereken kriz-kaos durumlar yaşar, çevresel durumlardan çok fazla psikolojik sınavlara tabi olur (akran zorbalığı vb.); ilk 14 yılın kalıntıları 28 yaşına kadar zorluk yaşatır."
+          }
+        },
+        {
+          "no": 2,
+          "derece": "10-20",
+          "baslik": "Kişilik, karakter, ilk intiba",
+          "dekanYoneticisiNot": "Dekan yöneticisi Güneş (Aslan). Güneş = kimlik, benlik.",
+          "aciklama": "Bu dekan daha çok kişilik ve karakter hakkında bilgi verir; Güneş kimlik göstergesidir. Burada bulunan gezegenler — veya gezegen yoksa buraya düşen misafir burç dekanının yönetici gezegeni — kişinin kişiliği ve karakteri hakkında bilgi verir. Ayrıca başkalarının bizi ilk gördüklerinde onlara yansıttığımız benlik duygumuz hakkında bilgi içerir.",
+          "maddeler": [
+            "Bu dekan daha çok kişilik ve karakter hakkında bilgi verir; Güneş kimlik göstergesidir.",
+            "Burada bulunan gezegenler — veya gezegen yoksa buraya düşen misafir burç dekanının yönetici gezegeni — kişinin kişiliği ve karakteri hakkında bilgi verir.",
+            "Ayrıca başkalarının bizi ilk gördüklerinde onlara yansıttığımız benlik duygumuz hakkında bilgi içerir."
+          ],
+          "gezegenNotlari": {}
+        },
+        {
+          "no": 3,
+          "derece": "20-30",
+          "baslik": "Genel sağlık, mesleki yatkınlık",
+          "dekanYoneticisiNot": "Dekan yöneticisi Jüpiter (Yay).",
+          "aciklama": "Bu dekan kişinin genel sağlığı hakkında bilgi verir. Bu dekanda bulunan gezegenler, kişinin hem genel sağlığı hem de mesleki yatkınlığı anlamında bilgi verir.",
+          "maddeler": [
+            "Bu dekan kişinin genel sağlığı hakkında bilgi verir.",
+            "Bu dekanda bulunan gezegenler, kişinin hem genel sağlığı hem de mesleki yatkınlığı anlamında bilgi verir."
+          ],
+          "gezegenNotlari": {}
+        }
+      ]
+    },
+    "2": {
+      "dogalBurc": "Boğa",
+      "dogalYonetici": "Venüs",
+      "genel": "Bu ev gelirlerimizin evidir; maddiyat bu evle ilgilidir.",
+      "konular": [
+        "Hayatımız boyunca maddi durumumuzun nasıl olacağı.",
+        "Gelirlerimizi nereden, nasıl, ne şekilde daha kolay kazanabileceğimiz.",
+        "Paraya bakış açımız.",
+        "Kazanımlarımızı nasıl kullandığımız (sahip olunan varlığın ne amaçla ve nasıl kullanıldığı, harcama alışkanlığı).",
+        "Kişinin ses tonu.",
+        "Anahtar kavramlar: maddi güvenlik, öz değer, kişisel kaynaklar, kazanım, sahiplenme, değer yargıları."
+      ],
+      "dekanlar": [
+        {
+          "no": 1,
+          "derece": "0-10",
+          "baslik": "Gelirler, para durumu (hayat boyu gelir ve kazanç yolları)",
+          "dekanYoneticisiNot": "Dekan yöneticisi Venüs (Boğa).",
+          "aciklama": "Kişinin hayatı boyunca nasıl bir gelire sahip olduğunu, kısacası para durumunu gösterir. Buraya düşen gezegenler, kendi karakteristiğinde kişiye para kazandırır. Buraya düşen misafir burç, dekan yöneticisiyle harmanlanarak kişinin parayı nasıl ve ne şekilde kazandığını gösterir.",
+          "maddeler": [
+            "Kişinin hayatı boyunca nasıl bir gelire sahip olduğunu, kısacası para durumunu gösterir.",
+            "Buraya düşen gezegenler, kendi karakteristiğinde kişiye para kazandırır.",
+            "Buraya düşen misafir burç, dekan yöneticisiyle harmanlanarak kişinin parayı nasıl ve ne şekilde kazandığını gösterir."
+          ],
+          "gezegenNotlari": {}
+        },
+        {
+          "no": 2,
+          "derece": "10-20",
+          "baslik": "Para kazanmak için harcanan efor",
+          "dekanYoneticisiNot": "Dekan yöneticisi Chiron (Başak).",
+          "aciklama": "Kişinin nasıl ve ne şekilde para kazanacağına dair bilgi verir; para kazanmak için harcadığı efor ne ise onu gösterir.",
+          "maddeler": [
+            "Kişinin nasıl ve ne şekilde para kazanacağına dair bilgi verir; para kazanmak için harcadığı efor ne ise onu gösterir."
+          ],
+          "gezegenNotlari": {
+            "Şiron": "Şiron 2. evde, orta dekanda: Kişi para kazanmak için aşırı mücadele eder, efor sarfeder. Açıları kötü ise mücadele sonucu kötü etkilenir; efor gösterdikçe kişi kötü etkilenir, zorlar. Kişi ne kadar çalışırsa çalışsın para ondan kaçar gibidir; statüsü artmaz, geliri artmaz."
+          }
+        },
+        {
+          "no": 3,
+          "derece": "20-30",
+          "baslik": "Giderler, yatırımlar (daha oturaklı yatırımlar)",
+          "dekanYoneticisiNot": "Dekan yöneticisi Satürn (Oğlak).",
+          "aciklama": "Bu dekan kişinin daha çok gelecek vadeden yatırımlarıyla ilgilidir; parayı biriktirme ve nasıl kullandığıyla da ilişkilidir. Bu dekanda bulunan gezegenler kişinin yatırım yapıp yapamayacağını veya parayı nasıl kullandığını gösterir. Burada bulunan kötücül gezegenler, kişinin yatırım yapmada zorlandığını gösterir.",
+          "maddeler": [
+            "Bu dekan kişinin daha çok gelecek vadeden yatırımlarıyla ilgilidir; parayı biriktirme ve nasıl kullandığıyla da ilişkilidir.",
+            "Bu dekanda bulunan gezegenler kişinin yatırım yapıp yapamayacağını veya parayı nasıl kullandığını gösterir.",
+            "Burada bulunan kötücül gezegenler, kişinin yatırım yapmada zorlandığını gösterir."
+          ],
+          "gezegenNotlari": {
+            "Şiron": "Şiron 2. evde, çıkış dekanında: Olumsuz açılarda kıtlık bilinci, aşırı cimrilik; iyi açılıysa tarla, arsa vb. yatırımlar yapabilir."
+          }
+        }
+      ]
+    },
+    "3": {
+      "dogalBurc": "İkizler",
+      "dogalYonetici": "Merkür",
+      "genel": "",
+      "konular": [
+        "Kişinin zeka kapasitesi.",
+        "Yetenekleri ve kabiliyetleri.",
+        "Konuşma tarzı.",
+        "Kardeş sayısı ve kardeşlerle münasebet.",
+        "Akraba ve komşularla münasebet.",
+        "Ülke içi seyahatler (taşınma, ikametgâh değişikliği).",
+        "El, kol yapısı ve parmaklar.",
+        "Burun yapısı.",
+        "Anneden başlayarak üniversite hayatına kadarki eğitim ve öğretim hayatı.",
+        "Yakın çevreyle olan ilişki.",
+        "Anahtar kavramlar: iletişim, öğrenme, erken eğitim, yazma, medya."
+      ],
+      "dekanlar": [
+        {
+          "no": 1,
+          "derece": "0-10",
+          "baslik": "Zeka kapasitesi, eğitim durumu, zihinsel algı; yetenekler, kabiliyetler; ergenlik dönemi",
+          "dekanYoneticisiNot": "Dekan yöneticisi Merkür (İkizler). Merkür iletişim, haberleşme, bilgi alıp verme ve öğrenme ile ilgilidir.",
+          "aciklama": "Merkür iletişim, haberleşme, bilgi alıp verme, öğrenme ile ilgilidir; dolayısıyla kişinin zeka kapasitesini, eğitim durumunu ve zihinsel algısını gösterir. Bu dekan yeteneklerimizle de ilgilidir; kişinin kabiliyetlerini gösterir. Kişinin ergenlik dönemi de bu dekandan görülür.",
+          "maddeler": [
+            "Merkür = iletişim, haberleşme, bilgi alıp verme, öğrenme ile ilgilidir; dolayısıyla kişinin zeka kapasitesini, eğitim durumunu ve zihinsel algısını gösterir.",
+            "Bu dekan yeteneklerimizle de ilgilidir; kişinin kabiliyetlerini gösterir.",
+            "Kişinin ergenlik dönemi de bu dekandan görülür."
+          ],
+          "gezegenNotlari": {}
+        },
+        {
+          "no": 2,
+          "derece": "10-20",
+          "baslik": "Kardeşlerle ilişkiler; kardeş sayısı ve cinsiyeti; akrabalarla ve yakın çevreyle ilişkiler",
+          "dekanYoneticisiNot": "Dekan yöneticisi Venüs (Terazi).",
+          "aciklama": "Kardeşler, yakın çevre ve akrabalarla olan ilişkilerimizi gösterir. Kişinin kardeş sayısı ve cinsiyeti ile kan bağıyla kendisine yakın olan akrabalarla olan durumu hakkında da bilgi verir.",
+          "maddeler": [
+            "Kardeşler, yakın çevre ve akrabalarla olan ilişkilerimizi gösterir.",
+            "Kişinin kardeş sayısı ve cinsiyeti ile kan bağıyla kendisine yakın olan akrabalarla olan durumu hakkında da bilgi verir."
+          ],
+          "gezegenNotlari": {
+            "Uranüs": "Uranüs 3. evde: Kova teklik verir; orta dekanda tek kardeş verebilir. Uranüs eril burca düştüyse kardeşler eril, dişile düştüyse dişil özellikte olabilir.",
+            "Neptün": "Neptün 3. evde, orta dekanda: Kişisel bazda kişi yakın çevre, akrabalar, kardeşler konularında iyi açılarında kendinden verir; kötü açılarında bu konularda kandırılır, aldanır."
+          }
+        },
+        {
+          "no": 3,
+          "derece": "20-30",
+          "baslik": "Kısa yolculuklar; taşınma, tayin, ikametgâh değişiklikleri; teknolojik aletleri kullanma becerisi; araba kullanma becerisi",
+          "dekanYoneticisiNot": "Dekan yöneticisi Uranüs (Kova).",
+          "aciklama": "Burada bulunan gezegenler, kişinin hayatı boyunca yapacağı ülke içi seyahatler hakkında bilgi verir. Teknolojik aletleri ve araba kullanma becerileri de bu dekana aittir.",
+          "maddeler": [
+            "Burada bulunan gezegenler, kişinin hayatı boyunca yapacağı ülke içi seyahatler hakkında bilgi verir.",
+            "Teknolojik aletleri ve araba kullanma becerileri de bu dekana aittir."
+          ],
+          "gezegenNotlari": {
+            "Mars": "Mars 3. evde, 3. evin çıkış dekanı: trafik kazası vs.",
+            "Uranüs": "Uranüs 3. evde, 3. dekan: beklenmedik yolculuklar.",
+            "Şiron": "Şiron 3. evde, 3. dekanda: çok fazla seyahat ve çok yer görme; o yerle ilgili bilgi sahibi olma."
+          }
+        }
+      ]
+    },
+    "4": {
+      "dogalBurc": "Yengeç",
+      "dogalYonetici": "Ay",
+      "genel": "",
+      "konular": [
+        "Annemiz.",
+        "Aileye bakış açımız (aile algımız).",
+        "Oturduğumuz evimiz.",
+        "Yuvamız.",
+        "Köklerimiz, kökenimiz, ırkımız ve onlardan getirdiklerimiz (kalıtım, biyolojik-genetik miras).",
+        "İlk çocukluk dönemimize ait yaşadıklarımızın tümü.",
+        "Hafızamız.",
+        "Korkularımızın kökeni.",
+        "Yuvamızı nasıl kurduğumuz veya kuracağımız; duygusal açıdan başkalarından gizlediğimiz/sakladığımız, kendimizi dışarıdan gelecek tehlikelere karşı korumamız için kalın kabuğumuz.",
+        "Gelenek, görenek ve adetlerimiz.",
+        "Kadın haritasında kadının doğurganlık potansiyeli."
+      ],
+      "dekanlar": [
+        {
+          "no": 1,
+          "derece": "0-10",
+          "baslik": "Oturulan ev, mahalle, muhit, şehir; kökler; anne ve aileyi algılayış biçimi; kişinin ilk çocukluk dönemi",
+          "dekanYoneticisiNot": "Dekan yöneticisi Ay (Yengeç).",
+          "aciklama": "Bu dekanda bulunan gezegenler bu konular hakkında ipuçları verir; bu dekana düşen misafir burç dekan yöneticisi de önem kazanır. Kötücül gezegenlerin bu dekanda yerleşimi; ya sorunlu bir anneye veya aile hayatına ya da oturduğu evle ilgili sorunlar yaşamasına işaret eder. Harita sahibi kadınsa kişinin kendi anneliği ve ilk hamileliği hakkında bilgi verir.",
+          "maddeler": [
+            "Bu dekanda bulunan gezegenler bu konular hakkında ipuçları verir; bu dekana düşen misafir burç dekan yöneticisi de önem kazanır.",
+            "Kötücül gezegenlerin bu dekanda yerleşimi; ya sorunlu bir anneye veya aile hayatına ya da oturduğu evle ilgili sorunlar yaşamasına işaret eder.",
+            "Harita sahibi kadınsa: kişinin kendi anneliği ve ilk hamileliği hakkında bilgi verir.",
+            "Kaynakta bu dekanın altında yer alan not: Geleneksel burçlar: Yengeç, Oğlak, Boğa, Akrep. Yenilikçi burçlar: Kova, Aslan, İkizler, Yay."
+          ],
+          "gezegenNotlari": {
+            "Mars": "Mars 4. evde, kadın haritasında, özellikle 1. dekanda: dış gebelik, düşük, kürtaj veyahut yumurtalık problemi ya da memelerde kiste neden olabilir."
+          }
+        },
+        {
+          "no": 2,
+          "derece": "10-20",
+          "baslik": "Genetik miras; aileden geçen her türlü mal varlığı; kişinin hafızası; kişinin annesinin mesleği",
+          "dekanYoneticisiNot": "Dekan yöneticisi Plüton (Akrep).",
+          "aciklama": "Bu dekan daha çok genetik miras ve mirasımız hakkında bilgi verir; aileden geçen her türlü mal varlığı bu dekanın konusudur. Kişinin hafızası ve annesinin mesleği hakkında bilgi verir.",
+          "maddeler": [
+            "Bu dekan daha çok genetik miras ve mirasımız hakkında bilgi verir; aileden geçen her türlü mal varlığı bu dekanın konusudur.",
+            "Kişinin hafızası ve annesinin mesleği hakkında bilgi verir."
+          ],
+          "gezegenNotlari": {
+            "Uranüs": "Uranüs 4. evde, orta dekanda: Genetik miras, anneden gelen şeyler; kötü bir hafıza verebilir (geçmiş, soy, aile vb. anıları oluşturmakta zorlanabilir); aileden gelebilecek Kova hastalıkları; kişinin soyunun deniz aşırı ülkelerden, uzak yerlerden gelmiş olması.",
+            "Neptün": "Neptün 4. evde, orta dekanda: Geçmişine, soyuna bağlı, meraklı; bu işlerden meslek sahibi olabilir. Açıları kötüyse miras konusunda problem, hayal kırıklığı olabilir.",
+            "Plüton": "Plüton 4. evde, orta dekanda: Güzel açı, güzel hafıza."
+          }
+        },
+        {
+          "no": 3,
+          "derece": "20-30",
+          "baslik": "Kişinin kendi kuracağı yuvası; kadın için annelik ile ilgili ailevi sorumluluk; erkek için kendi ailesine karşı sorumluluk ve nasıl babalık yapacağı; kişinin yaşlılık dönemi",
+          "dekanYoneticisiNot": "Dekan yöneticisi Neptün (Balık).",
+          "aciklama": "Kişinin kendi kuracağı yuva ile ilgili bilgiler verir. Kişi kadınsa kendi anneliği ile ilgili (ailevi sorumluluk), erkekse kendi ailesine karşı sorumluluğu ile ilgili bilgiler verir. Yaşlılık dönemini temsil eder.",
+          "maddeler": [
+            "Kişinin kendi kuracağı yuva ile ilgili bilgiler verir.",
+            "Kişi kadınsa kendi anneliği ile ilgili (ailevi sorumluluk), erkekse kendi ailesine karşı sorumluluğu ile ilgili bilgiler verir.",
+            "Yaşlılık dönemini temsil eder."
+          ],
+          "gezegenNotlari": {
+            "Uranüs": "Uranüs 4. evde, çıkış dekanında: Kişinin kendi kurduğu ev modern, teknolojiye uygun; kişi aniden evlenebilir, kendi yuvasını erkenden bir anda kurabilir (bir anda tanışıp evlenme gibi); kişinin evi lüks, teknolojik, çağın getirdiği gibi.",
+            "Neptün": "Neptün 4. evde, son dekanda: Olumsuz açılar: kişi eşinden dolayı aldanabilir, ummadığı gibi birisi çıkabilir."
+          }
+        }
+      ]
+    },
+    "5": {
+      "dogalBurc": "Aslan",
+      "dogalYonetici": "Güneş",
+      "genel": "",
+      "konular": [
+        "Kişinin aşk hayatı ve duygusal yaşamı.",
+        "Kişinin babası (babayla ilişki).",
+        "Kişinin çocukları: çocuğunun olup olmayacağı, kaç çocuğu olacağı ve ilk çocuğunun cinsiyeti.",
+        "Kişinin zevk aldığı, eğlendiği hobileri.",
+        "Riskli işler (kumar, borsa vb.).",
+        "Şans eseri, tesadüfen kazanılan paralar.",
+        "Anahtar kavramlar: romantizm, sahne, yaratıcılık, gösteri, risk alma, keyif, bireysel ifade, şan-şöhret."
+      ],
+      "dekanlar": [
+        {
+          "no": 1,
+          "derece": "0-10",
+          "baslik": "Çocuk konuları; kişinin kaç çocuğu olacağı; ilk çocuğun cinsiyeti; kişinin babası ile ilişkisi (her iki cins için); erkek için kişinin kendi babalığı",
+          "dekanYoneticisiNot": "Dekan yöneticisi Güneş (Aslan).",
+          "aciklama": "Bu dekan çocuk sahibi olmakla alakalıdır; kişinin kaç çocuğu olacağı ve ilk çocuğun cinsiyeti bu dekandan görülür. Buraya yerleşen kötücül gezegenler düşük, kürtaj ve az çocuk olmasına sebep olabilir. Buraya düşen doğurgan burçların dekanı da kişinin çok çocuk sahibi olmasına neden olur. KAD, kişinin çocuk sahibi olabileceğine dair bir uyarıdır; Talih (şans) noktası ise kişinin çocuklar konusunda şanslı olacağını gösterir. 5. evin ilk dekanındaki kötücül gezegenlerin Ay ile yaptığı olumsuz açılar, kadın haritalarında çocuk sahibi olmayı zorlaştırır; ya da kişide kısırlık durumu söz konusu olabilir.",
+          "maddeler": [
+            "Bu dekan çocuk sahibi olmakla alakalıdır; kişinin kaç çocuğu olacağı ve ilk çocuğun cinsiyeti bu dekandan görülür.",
+            "Buraya yerleşen kötücül gezegenler düşük, kürtaj ve az çocuk olmasına sebep olabilir.",
+            "Buraya düşen doğurgan burçların dekanı da kişinin çok çocuk sahibi olmasına neden olur.",
+            "KAD: kişinin çocuk sahibi olabileceğine dair bir uyarıdır.",
+            "Talih (şans) noktası: kişinin çocuklar konusunda şanslı olacağını gösterir.",
+            "5. evin ilk dekanındaki kötücül gezegenlerin Ay ile yaptığı olumsuz açılar, kadın haritalarında çocuk sahibi olmayı zorlaştırır; ya da kişide kısırlık durumu söz konusu olabilir."
+          ],
+          "gezegenNotlari": {
+            "Plüton": "Çocuğun ölü doğması.",
+            "Mars": "Hamilelikte zorlanma veya kürtaj gibi sıkıntılar.",
+            "Satürn": "Çocuğun olmasını geciktirir veya hiç çocuk vermez.",
+            "Chiron": "Tedavi ile çocuk verir.",
+            "Neptün": "Düşüğe neden olabilir (kötü açıları varsa). Ek gözlem (Neptün 5. evde, giriş dekanında): Neptün bu evde su grubu burçlarında ise çok fazla çocuğa sahip olma anlamında yorumlanabilir; tabii ki açıları da önemlidir.",
+            "Ay": "Kötü açılarında düşük verir.",
+            "Güneş": "Az sayıda çocuk sahibi olmak.",
+            "Merkür": "Çift karakterli bir burca düştüyse ikiz çocuk verebilir.",
+            "Venüs": "Güzel açılarında kız çocuk işaretidir ve çocuk verir.",
+            "Jüpiter": "Çok çocuk verir.",
+            "Uranüs": "Tek çocuk verir."
+          }
+        },
+        {
+          "no": 2,
+          "derece": "10-20",
+          "baslik": "Duygusal ve aşk hayatı; kişinin ilişkilerindeki sevgi anlayışı; şan, şöhret, ünlenme durumu",
+          "dekanYoneticisiNot": "Dekan yöneticisi Jüpiter (Yay).",
+          "aciklama": "Duygusal ve aşk hayatımızı gösterir; özellikle kişisel gezegenlerin bu dekana yerleşmesi kişinin aşka bakış açısını belirler. Kişinin ilişkilerdeki sevgi anlayışı bu dekanda yorumlanır; şan, şöhret, ünlenme kısmı bu dekandan görülür. Plüton, Satürn ve Mars'ın düşmesi — dolayısıyla Akrep burcunun ilk dekanı, Oğlak burcunun ilk dekanı, Koç burcunun ilk dekanının buraya düşmesi — iyi sayılmaz; çünkü aşk hayatında başarısız olmasına neden olur. Buna karşılık Jüpiter, Venüs, Güneş, Şans noktası, Ay ve Merkür'ün yönettiği dekanların bu dekana düşmesi iyi sayılır; çünkü bu dekanda bulunan gezegenler veya dekan yöneticilerinin 1. evin orta dekanı ile üçgen açıları vardır; bu nedenle kişinin kişiliğinde albenisini yükselten etkilere neden olur.",
+          "maddeler": [
+            "Duygusal ve aşk hayatımızı gösterir; özellikle kişisel gezegenlerin bu dekana yerleşmesi kişinin aşka bakış açısını belirler.",
+            "Kişinin ilişkilerdeki sevgi anlayışı bu dekanda yorumlanır; şan, şöhret, ünlenme kısmı bu dekandan görülür.",
+            "Plüton, Satürn ve Mars'ın düşmesi — dolayısıyla Akrep burcunun ilk dekanı, Oğlak burcunun ilk dekanı, Koç burcunun ilk dekanının buraya düşmesi — iyi sayılmaz; çünkü aşk hayatında başarısız olmasına neden olur.",
+            "Jüpiter, Venüs, Güneş, Şans noktası, Ay ve Merkür'ün yönettiği dekanların bu dekana düşmesi iyi sayılır; çünkü bu dekanda bulunan gezegenler veya dekan yöneticilerinin 1. evin orta dekanı ile üçgen açıları vardır. Bu nedenle kişinin kişiliğinde albenisini yükselten etkilere neden olur."
+          ],
+          "gezegenNotlari": {
+            "Neptün": "Neptün 5. evde, orta dekanda: Olumsuz açılarda kötü ün."
+          }
+        },
+        {
+          "no": 3,
+          "derece": "20-30",
+          "baslik": "Kişinin riskli işlemleri; iddiacılık; kumara merak; havadan kazanılacak paralara ve şans oyunlarına karşı ilgi; kişinin hobileri",
+          "dekanYoneticisiNot": "Dekan yöneticisi Mars (Koç).",
+          "aciklama": "Kişinin riskli işlerini temsil eder; iddiacılığa neden olur. Kişinin kumara meraklı olmasına, havadan kazanılacak paralara ya da şans oyunlarına karşı ilgisini artırır. Kişinin ilgilendiği hobilerinin ne olduğu hakkında fikir verir.",
+          "maddeler": [
+            "Kişinin riskli işlerini temsil eder; iddiacılığa neden olur.",
+            "Kişinin kumara meraklı olmasına, havadan kazanılacak paralara ya da şans oyunlarına karşı ilgisini artırır.",
+            "Kişinin ilgilendiği hobilerinin ne olduğu hakkında fikir verir."
+          ],
+          "gezegenNotlari": {}
+        }
+      ]
+    },
+    "6": {
+      "dogalBurc": "Başak",
+      "dogalYonetici": "Chiron",
+      "genel": "",
+      "konular": [
+        "Hastalıklarımız, hastalık noktalarımız.",
+        "Çalışma ortamımız, iş hayatımız.",
+        "Kişinin hizmeti (görev bilinci, günlük rutin, çalışma disiplini, hijyen, titizlik).",
+        "Kişinin hayvanlara karşı bakış açısı; ilaveten hayatı boyunca besleyeceği hayvanlar."
+      ],
+      "dekanlar": [
+        {
+          "no": 1,
+          "derece": "0-10",
+          "baslik": "Kişinin hastalıkları",
+          "dekanYoneticisiNot": "Dekan yöneticisi Chiron (Başak).",
+          "aciklama": "Harita sahibinin hastalıkları hakkında bilgi verir. Burada bulunan gezegenler ve buraya düşen misafir burç dekanının karakteristiğinde bir hastalığa işaret eder; örneğin bu dekana Boğa burcunun ilk dekanı düşerse, kişinin hastalıkları bu burca ait temalardan oluşacaktır: boyun, boğaz ve belle ilgili (fıtık gibi) rahatsızlıklar. Ancak bu hastalıkların hepsini yaşayacak demek doğru olmaz; kişi ya sadece bir tanesini yaşar ya da birkaçını yaşayabilir.",
+          "maddeler": [
+            "Harita sahibinin hastalıkları hakkında bilgi verir.",
+            "Burada bulunan gezegenler ve buraya düşen misafir burç dekanının karakteristiğinde bir hastalığa işaret eder. Örneğin bu dekana Boğa burcunun ilk dekanı düşerse, kişinin hastalıkları bu burca ait temalardan oluşacaktır: boyun, boğaz ve belle ilgili (fıtık gibi) rahatsızlıklar.",
+            "Ancak bu hastalıkların hepsini yaşayacak demek doğru olmaz; kişi ya sadece bir tanesini yaşar ya da birkaçını yaşayabilir."
+          ],
+          "gezegenNotlari": {}
+        },
+        {
+          "no": 2,
+          "derece": "10-20",
+          "baslik": "İş ortamı, çalışma hayatı; maddi kazançları elde etme potansiyeli; kişinin sarfettiği efor; günlük rutin işler; ast-üst ilişkisi",
+          "dekanYoneticisiNot": "Dekan yöneticisi Satürn (Oğlak).",
+          "aciklama": "6. evin bu orta dekanı daha çok iş ve çalışma hayatını ilgilendiren konularla alakalıdır. Kişinin iş ortamını, çalışma hayatını, maddi kazançlarını elde etme potansiyelini gösterir; rahat ya da zor çalışma koşullarına sahip olup olmadığını buradan görebiliriz. Buraya düşen gezegenler, kişinin hem çalışma hayatının nasıl olduğunu hem de gündelik yaşantısında nasıl bir efor sarfettiğini gösterir; günlük rutin işlerini nasıl yaptığı hakkında da bilgi verir. Ayrıca burası ast-üst ilişkileri hakkında da bilgi verir.",
+          "maddeler": [
+            "6. evin bu orta dekanı daha çok iş ve çalışma hayatını ilgilendiren konularla alakalıdır.",
+            "Kişinin iş ortamını, çalışma hayatını, maddi kazançlarını elde etme potansiyelini gösterir; rahat ya da zor çalışma koşullarına sahip olup olmadığını buradan görebiliriz.",
+            "Buraya düşen gezegenler, kişinin hem çalışma hayatının nasıl olduğunu hem de gündelik yaşantısında nasıl bir efor sarfettiğini gösterir; günlük rutin işlerini nasıl yaptığı hakkında da bilgi verir.",
+            "Ayrıca burası ast-üst ilişkileri hakkında da bilgi verir."
+          ],
+          "gezegenNotlari": {}
+        },
+        {
+          "no": 3,
+          "derece": "20-30",
+          "baslik": "Hayvanlara bakış açısı; hayvanlarla aramızdaki ilişki; kişinin ne tür hayvan sevdiği",
+          "dekanYoneticisiNot": "Dekan yöneticisi Venüs (Boğa).",
+          "aciklama": "Bu son dekan hayvanlara bakış açımızı, bir nevi hayvanlarla olan ilişkilerimizi temsil eder; kişinin ne tip hayvanları sevdiğini gösterir.",
+          "maddeler": [
+            "Bu son dekan hayvanlara bakış açımızı, bir nevi hayvanlarla olan ilişkilerimizi temsil eder; kişinin ne tip hayvanları sevdiğini gösterir."
+          ],
+          "gezegenNotlari": {}
+        }
+      ]
+    },
+    "7": {
+      "dogalBurc": "Terazi",
+      "dogalYonetici": "Venüs",
+      "genel": "",
+      "konular": [
+        "İlişkilerimiz; nasıl ilişki kurduğumuz, ilişkilerde nasıl bir rol üstlendiğimiz.",
+        "Kişinin evlilikleri: nasıl bir evlilik yapacağı, evleneceği eşinin nasıl bir karaktere sahip olduğu.",
+        "İş astrolojisine göre ortaklık konuları: kişinin nasıl bir partner olduğu, ortaklıklardan kazanç sağlayıp sağlayamayacağı.",
+        "Kişinin hayatı boyunca resmi makamlarla olan ilişkisi, mahkemelik durumları.",
+        "Kişinin açık düşmanları.",
+        "Anahtar kavramlar: aynalanma, diplomasi, denge arayışı, dışarıdan görülen \"biz\"."
+      ],
+      "dekanlar": [
+        {
+          "no": 1,
+          "derece": "0-10",
+          "baslik": "İlk evlilik; kişinin karşı cinsi nasıl algıladığı; evlenilecek kişinin tipi; ikinci çocuk ve cinsiyeti",
+          "dekanYoneticisiNot": "Dekan yöneticisi Venüs (Terazi). Bu dekanı incelerken kombinasyon yapılacak tek gezegen Venüs olmalıdır.",
+          "aciklama": "Bu dekan kişinin direkt karşı cinsi nasıl algıladığını gösterir ve evleneceği kişinin tipini tarif eder. Sert etkili gezegenler bile kişinin evleneceği kişi hakkında bilgi verir. Burada bulunan gezegenler evlilik hakkında da bilgi vereceği için bu dekanın dispozitörüne bakılarak evlilik hakkında fazlasıyla detay elde edilebilir; bu dekanı incelerken kombinasyon yapılacak tek gezegen Venüs olmalıdır. Yorumlama formülü: 7. evin ilk dekanına düşen misafir burç dekanı + bu dekanın yönetici gezegeni + Venüs'ün düştüğü dekan ve açıları beraber yorumlanmalıdır. Bu yorumdan ulaşılacak sonuç: kişinin evlilik hayatının nasıl olacağı, evleneceği insanla anlaşmasının nasıl olduğu ve en önemlisi evleneceği kişinin nasıl birisi olduğu. Ayrıca ikinci çocuk ve cinsiyeti hakkında bilgi verir.",
+          "maddeler": [
+            "Bu dekan kişinin direkt karşı cinsi nasıl algıladığını gösterir ve evleneceği kişinin tipini tarif eder.",
+            "Sert etkili gezegenler bile kişinin evleneceği kişi hakkında bilgi verir.",
+            "Burada bulunan gezegenler evlilik hakkında da bilgi vereceği için bu dekanın dispozitörüne bakılarak evlilik hakkında fazlasıyla detay elde edilebilir. Bu dekanı incelerken kombinasyon yapılacak tek gezegen Venüs olmalıdır.",
+            "Yorumlama formülü: 7. evin ilk dekanına düşen misafir burç dekanı + bu dekanın yönetici gezegeni + Venüs'ün düştüğü dekan ve açıları beraber yorumlanmalıdır. Bu yorumdan ulaşılacak sonuç: kişinin evlilik hayatının nasıl olacağı, evleneceği insanla anlaşmasının nasıl olduğu ve en önemlisi evleneceği kişinin nasıl birisi olduğu.",
+            "İkinci çocuk ve cinsiyeti hakkında bilgi verir."
+          ],
+          "gezegenNotlari": {}
+        },
+        {
+          "no": 2,
+          "derece": "10-20",
+          "baslik": "Kişinin hemcinsleriyle ilişkilerinin nasıl olduğu; kişinin ortaklıklar konusunda nasıl olduğu ve ortaklık anlayışı; açık düşmanlıklar",
+          "dekanYoneticisiNot": "Dekan yöneticisi Uranüs (Kova).",
+          "aciklama": "",
+          "maddeler": [],
+          "gezegenNotlari": {
+            "Mars": "Mars 7. evde, orta dekan: çok açık düşmanlıklar.",
+            "Şiron": "Şiron 7. evde, olumsuz açılarında orta dekanda: ortaklarla ilgili yara alma, ortağı tarafından bırakılma-kullanılma."
+          }
+        },
+        {
+          "no": 3,
+          "derece": "20-30",
+          "baslik": "Yasal-resmi prosedürler; mahkemelik durumlar, davalar; vergi durumları",
+          "dekanYoneticisiNot": "Dekan yöneticisi Merkür (İkizler).",
+          "aciklama": "Bu dekan yasal-resmi prosedürlerle ilgilidir; mahkemelik durumlar, davalar ve vergi ile alakalıdır.",
+          "maddeler": [
+            "Bu dekan yasal-resmi prosedürlerle ilgilidir; mahkemelik durumlar, davalar ve vergi ile alakalıdır."
+          ],
+          "gezegenNotlari": {}
+        }
+      ]
+    },
+    "8": {
+      "dogalBurc": "Akrep",
+      "dogalYonetici": "Plüton",
+      "genel": "Bu evde güçlü gezegen Mars ve Uranüs'tür; diğer bütün gezegenler bu evde zararlıdır. Ek not (Satürn 8. evde): İyi açılarında ve yerleşimlerinde Satürn kişiyi bir takım borçlardan, icralık durumlardan koruyabildiği gibi, düştüğü dekana göre de sınava tabi tutabilir.",
+      "konular": [
+        "Gizli kapaklı işler, araştırmamız gereken tüm konular.",
+        "Borçlar, ödemeler, bankalar, krediler; icralık, acizlik, borçlarla ilgili çeşitli davalar ve duruşmalar.",
+        "Cinsellik anlayışımız.",
+        "Ölüm ve ötesi konular; ölüm kadar ağır gelen acılar; büyü ve nazar gibi cinlerin tesirleri; ölümcül ameliyatlık durumlar.",
+        "Eşimizin parası, kullandığımız başkalarının maddi kaynakları (miras dahil).",
+        "Sezgisellik, yoğun duygusallık, tutku ve ihtiras gibi bizi ruhsal açıdan bağlayıcı kılan soyut konular."
+      ],
+      "dekanlar": [
+        {
+          "no": 1,
+          "derece": "0-10",
+          "baslik": "Kişinin dışarıya yansıttığı psikolojisi; cinsellik-libido; kişinin kendi cinselliğiyle alakalı konular; cinsel yaklaşımlar, sapmalar; cinsel yolla bulaşan hastalıklar",
+          "dekanYoneticisiNot": "Dekan yöneticisi Plüton (Akrep).",
+          "aciklama": "Bu dekan cinsellikten (libidodan) sorumludur; daha çok kişinin kendi cinselliğiyle alakalı konuları temsil eder. Karşı cinsi erkek ya da kadın olarak (cinsellik olarak) nasıl algıladığını; kadınsa şehvet derecesini, erkekse cinsel gücünü gösterir. Cinsel yaklaşımlar, sapmalar ve cinsel yolla bulaşan hastalıklar da buradan görülebilir.",
+          "maddeler": [
+            "Bu dekan cinsellikten (libidodan) sorumludur; daha çok kişinin kendi cinselliğiyle alakalı konuları temsil eder.",
+            "Karşı cinsi erkek ya da kadın olarak (cinsellik olarak) nasıl algıladığını; kadınsa şehvet derecesini, erkekse cinsel gücünü gösterir.",
+            "Cinsel yaklaşımlar, sapmalar ve cinsel yolla bulaşan hastalıklar da buradan görülebilir."
+          ],
+          "gezegenNotlari": {
+            "Jüpiter": "Jüpiter 8. evde, giriş dekanı: aslisi Plüton olduğu için sapkınlık vb. olabilir; düşen gezegene göre."
+          }
+        },
+        {
+          "no": 2,
+          "derece": "10-20",
+          "baslik": "Eşin parası, başkalarının parası; giderler, nafaka; kişinin mirası",
+          "dekanYoneticisiNot": "Dekan yöneticisi Neptün (Balık).",
+          "aciklama": "Bu dekanda bulunan gezegenler; kişinin eşinin hangi yolla para kazandığı, varlıklı olup olmadığı, borçlarına sadık olup olmadığı ve kişinin miras yoluyla paraya sahip olup olmayacağı hakkında bilgi verir. Burada bulunan iyi açılı iyicil gezegenler, kişinin kendi emeği olmadan parasal kazanç sağlayacağını gösterir. Burada bulunan kötü açılı kötücül gezegenler ise, kişinin hayatı boyunca parasal konularda icralık veya resmiyetle ilgili başına gelecek problemleri gösterir.",
+          "maddeler": [
+            "Bu dekanda bulunan gezegenler; kişinin eşinin hangi yolla para kazandığı, varlıklı olup olmadığı, borçlarına sadık olup olmadığı ve kişinin miras yoluyla paraya sahip olup olmayacağı hakkında bilgi verir.",
+            "Burada bulunan iyi açılı iyicil gezegenler, kişinin kendi emeği olmadan parasal kazanç sağlayacağını gösterir.",
+            "Burada bulunan kötü açılı kötücül gezegenler, kişinin hayatı boyunca parasal konularda icralık veya resmiyetle ilgili başına gelecek problemleri gösterir."
+          ],
+          "gezegenNotlari": {}
+        },
+        {
+          "no": 3,
+          "derece": "20-30",
+          "baslik": "Ağır ameliyatlar ve operasyonlar; ölüm konuları, ölümden acı durumlar; kişinin (dışa görünen) psikolojisi, \"elalem ne der\" durumları; büyü, cin gibi durumlar; gizli düşmanlıklar",
+          "dekanYoneticisiNot": "Dekan yöneticisi Ay (Yengeç). Horoskopta etkiye en açık nokta Ay dekanıdır.",
+          "aciklama": "Bu dekan ağır ameliyatlar ve operasyonlarla ilintilidir; ayrıca ölümle de alakalıdır. Burada bulunan sert etkili gezegenler ya da sert etkili gezegenlerin yönettiği misafir dekanlar kişiye ölümcül rahatsızlıklar verebilir; tabii ki açıları da önemsenmelidir. Horoskopta etkiye en açık nokta Ay dekanıdır; bu dekan kişinin psikolojisinden de sorumludur. Büyüye, cinlere maruz kalmak bu dekanın konusudur; ayrıca bu nokta gizli düşmanları da gösterir.",
+          "maddeler": [
+            "Bu dekan ağır ameliyatlar ve operasyonlarla ilintilidir; ayrıca ölümle de alakalıdır.",
+            "Burada bulunan sert etkili gezegenler ya da sert etkili gezegenlerin yönettiği misafir dekanlar kişiye ölümcül rahatsızlıklar verebilir; tabii ki açıları da önemsenmelidir.",
+            "Horoskopta etkiye en açık nokta Ay dekanıdır; bu dekan kişinin psikolojisinden de sorumludur.",
+            "Büyüye, cinlere maruz kalmak bu dekanın konusudur; ayrıca bu nokta gizli düşmanları da gösterir."
+          ],
+          "gezegenNotlari": {}
+        }
+      ]
+    },
+    "9": {
+      "dogalBurc": "Yay",
+      "dogalYonetici": "Jüpiter",
+      "genel": "",
+      "konular": [
+        "Yüksek tahsil, üniversite hayatımız; herhangi bir konuda uzmanlık ve ustalık gerektiren durumlar.",
+        "Kişinin yabancı bir ülkede yaşayıp yaşayamayacağı, yurt dışına çıkıp çıkamayacağı.",
+        "Yabancı dil öğrenip öğrenemeyeceği.",
+        "İthalat-ihracat gibi konular.",
+        "Kişinin itikadi düzeyde din anlayışı, felsefeye yatkınlık (olayları mantık bazlı değerlendirmeyi esas kılan mantık ilmi de bu evin konusudur).",
+        "Uzun seyahatler, yolculuklar ve uzak yol vasıtası araçlar (gemi, uçak, tren vb.).",
+        "Doğum haritası birden fazla evlilik vaat ediyorsa, 9. ev kişinin 2. evliliği anlamına gelir; 2. evlilikle ilgili tüm konular bu evin konusudur.",
+        "Doğum haritası ikiden fazla çocuk vaat ediyorsa, 9. ev kişinin 3. çocuğu hakkında bilgi verir."
+      ],
+      "dekanlar": [
+        {
+          "no": 1,
+          "derece": "0-10",
+          "baslik": "Yurtdışı bağlantılı tüm konular; seyahatler-yolculuklar, özellikle uçakla yapılacak seyahatler; ikinci evlilik ve ikinci evlenilecek kişi bilgisi; üçüncü çocuk ve cinsiyeti",
+          "dekanYoneticisiNot": "Dekan yöneticisi Jüpiter (Yay). Dekan yöneticisinin açıları çok iyi incelenmelidir.",
+          "aciklama": "Bu dekan yurt dışı bağlantılı tüm konulardan sorumludur; özellikle hava yoluyla (uçakla) yapılacak seyahatlerle ilgili bilgi verir. Burada bulunan gezegenler, doğum haritası vadediyorsa, kişinin ikinci defa evleneceği kişi hakkında bilgi verir; dekan yöneticisinin açıları çok iyi incelenmelidir. Harita sahibine üçüncü çocuk vaat ediliyorsa, çocuğun durumu ve cinsiyeti bu dekandan görülür.",
+          "maddeler": [
+            "Bu dekan yurt dışı bağlantılı tüm konulardan sorumludur; özellikle hava yoluyla (uçakla) yapılacak seyahatlerle ilgili bilgi verir.",
+            "Burada bulunan gezegenler, doğum haritası vadediyorsa, kişinin ikinci defa evleneceği kişi hakkında bilgi verir; dekan yöneticisinin açıları çok iyi incelenmelidir.",
+            "Harita sahibine üçüncü çocuk vaat ediliyorsa, çocuğun durumu ve cinsiyeti bu dekandan görülür."
+          ],
+          "gezegenNotlari": {}
+        },
+        {
+          "no": 2,
+          "derece": "10-20",
+          "baslik": "Yabancı dil konuları; kişinin kişisel gelişim durumu",
+          "dekanYoneticisiNot": "Dekan yöneticisi Mars (Koç).",
+          "aciklama": "Kişinin yabancı dil öğrenip öğrenemeyeceği, kaç dil bilip bilemeyeceği bu dekandan görülür. Kişinin yüksek tahsil hayatında veya kendini kişisel olarak geliştirip geliştiremeyeceği hakkında da bilgi verir.",
+          "maddeler": [
+            "Kişinin yabancı dil öğrenip öğrenemeyeceği, kaç dil bilip bilemeyeceği bu dekandan görülür.",
+            "Kişinin yüksek tahsil hayatında veya kendini kişisel olarak geliştirip geliştiremeyeceği hakkında da bilgi verir."
+          ],
+          "gezegenNotlari": {}
+        },
+        {
+          "no": 3,
+          "derece": "20-30",
+          "baslik": "Yüksek tahsil hayatı; inançlar ve felsefe ile ilgili konulara yatkınlık; ithalat-ihracat konuları; kişinin mesleği (dekanın son 5 derecesi)",
+          "dekanYoneticisiNot": "Dekan yöneticisi Güneş (Aslan).",
+          "aciklama": "Kişinin yüksek tahsil hayatı hakkında bilgi verir; inançlar ve felsefeyle alakalı konulara yatkınlığını, keza ithalat ve ihracat konularını gösterir. Özellikle bu dekanın son 5 derecesi kişinin mesleği hakkında da bilgi verir. Buraya düşen jenerasyon gezegenleri, kişinin kadersel olarak hayatında gelebileceği en son noktayı gösterir.",
+          "maddeler": [
+            "Kişinin yüksek tahsil hayatı hakkında bilgi verir; inançlar ve felsefeyle alakalı konulara yatkınlığını, keza ithalat ve ihracat konularını gösterir.",
+            "Özellikle bu dekanın son 5 derecesi kişinin mesleği hakkında da bilgi verir.",
+            "Buraya düşen jenerasyon gezegenleri, kişinin kadersel olarak hayatında gelebileceği en son noktayı gösterir."
+          ],
+          "gezegenNotlari": {}
+        }
+      ]
+    },
+    "10": {
+      "dogalBurc": "Oğlak",
+      "dogalYonetici": "Satürn",
+      "genel": "Ek not (Satürn 10. evde, su grubu burçlarında): Eğer Balık'ta ve Balığın Neptün dekanında güzel açısı varsa kişi ticarette çok başarılı olur (ticaret kafası).",
+      "konular": [
+        "Bir kişinin mesleği, yani işi.",
+        "Toplumsal konulardaki işinden kaynaklı mevkisi ve kariyeri; toplum önündeki itibarı ve sıfatı.",
+        "Toplum önündeki saygınlığımız.",
+        "Anahtar kavramlar: başarı, statü, baba figürü, otorite, disiplin, hedefler."
+      ],
+      "dekanlar": [
+        {
+          "no": 1,
+          "derece": "0-10",
+          "baslik": "Kişinin toplum önündeki vasfı, sıfatı, itibarı; kişinin yaptığı iş ve mesleği",
+          "dekanYoneticisiNot": "Dekan yöneticisi Satürn (Oğlak).",
+          "aciklama": "Kişinin toplum önünde kendini nasıl tanıttığını, nasıl bir itibara sahip olduğunu — kısacası çevresi tarafından tanımlanma biçimini gösterir. En önemli konu kişinin yaptığı iş ve mesleğidir: hangi meslekte olduğu ve mesleki başarısının nasıl olduğu; bu dekanda bulunan gezegenler kişinin mesleği hakkında bilgi verir. 10. ev başlangıcı MC (tepe noktası) bu evin başlangıcıdır; burada bulunan herhangi bir gezegen, haritayı tepeden aydınlatan bir projektör gibidir.",
+          "maddeler": [
+            "Kişinin toplum önünde kendini nasıl tanıttığını, nasıl bir itibara sahip olduğunu — kısacası çevresi tarafından tanımlanma biçimini gösterir.",
+            "En önemli konu kişinin yaptığı iş ve mesleğidir: hangi meslekte olduğu ve mesleki başarısının nasıl olduğu. Bu dekanda bulunan gezegenler kişinin mesleği hakkında bilgi verir.",
+            "10. ev başlangıcı MC (tepe noktası) bu evin başlangıcıdır; burada bulunan herhangi bir gezegen, haritayı tepeden aydınlatan bir projektör gibidir. (Bir gezegenin köşe evde veya ev giriş aksında olması, o evin enerjisini artırır.)"
+          ],
+          "gezegenNotlari": {
+            "Neptün": "Neptün 10. evde, ilk dekanda: Olumsuzda; kişinin iş görüşmesinde vb. anlaştığı şartlar bozulur."
+          }
+        },
+        {
+          "no": 2,
+          "derece": "10-20",
+          "baslik": "Kişinin işinden kazandığı parası; işe yatkınlık",
+          "dekanYoneticisiNot": "Dekan yöneticisi Venüs (Boğa).",
+          "aciklama": "Bu dekan kişinin işinden kazandığı parasıyla ilgilidir; işe yatkınlık bu dekandan belli olur. Kişinin işkolik mi, tembel mi olduğunu, ya da işi için disiplinli olup olmadığını gösterir.",
+          "maddeler": [
+            "Bu dekan kişinin işinden kazandığı parasıyla ilgilidir; işe yatkınlık bu dekandan belli olur.",
+            "Kişinin işkolik mi, tembel mi olduğunu, ya da işi için disiplinli olup olmadığını gösterir."
+          ],
+          "gezegenNotlari": {}
+        },
+        {
+          "no": 3,
+          "derece": "20-30",
+          "baslik": "Kişinin yapmak istediği iş; kişinin başkalarına faydalı olup olmadığı; işinde nasıl efor sarfettiği",
+          "dekanYoneticisiNot": "Dekan yöneticisi Chiron (Başak).",
+          "aciklama": "Kişinin mesleği ne olursa olsun, yapmak istediği iş neyse onu gösterir. \"Kişi başkalarına faydalı mıdır? İşinde nasıl bir efor sarfeder?\" gibi soruların cevapları bu dekandan bulunur.",
+          "maddeler": [
+            "Kişinin mesleği ne olursa olsun, yapmak istediği iş neyse onu gösterir.",
+            "\"Kişi başkalarına faydalı mıdır? İşinde nasıl bir efor sarfeder?\" gibi soruların cevapları bu dekandan bulunur."
+          ],
+          "gezegenNotlari": {
+            "Neptün": "Neptün 10. evde, son dekanda: Olumsuzda; hayalini kurduğu, hedeflediği işler konusunda kişi sürekli kandırılır, destek alamaz."
+          }
+        }
+      ]
+    },
+    "11": {
+      "dogalBurc": "Kova",
+      "dogalYonetici": "Uranüs",
+      "genel": "",
+      "konular": [
+        "Toplumsal statümüz (sosyal, asosyal, neşeli, yetenekli vb.).",
+        "Amaçlarımız ve hedeflerimiz.",
+        "Arkadaşlık ilişkilerimiz; arkadaşlarımıza karşı davranış biçimlerimiz ve ne tip arkadaşlıklarımız olduğu.",
+        "İnsanlara karşı bakış açımız.",
+        "Devlet ricaliyle olan ilişkilerimiz.",
+        "İşimizden kazandığımız paralar (maaşımız).",
+        "Grup, dernek, vakıf işleri (insani amaçlar ve faydalar için kurulan dernekler); grup içindeki faaliyetlerimiz, nasıl bir \"ekipman\" (ekip elemanı) olduğumuz.",
+        "Burası astrolojinin de evidir: bu evde yerleşen Uranüs, Merkür ve Plüton gibi gezegenler ya da Güneş ve Ay olumlu açılar oluşturduklarında, kişinin astrolojide başarı sahibi olmasını, astrolojik merakının ve ilgisinin derecesini gösterir."
+      ],
+      "dekanlar": [
+        {
+          "no": 1,
+          "derece": "0-10",
+          "baslik": "Kişinin amacı ve hedefi; kişinin idealist olup olmadığı; kişinin idealize ettiği konular",
+          "dekanYoneticisiNot": "Dekan yöneticisi Uranüs (Kova).",
+          "aciklama": "Kişinin amacını ve hedefini temsil eder; bir kişinin idealist (kafasına koyduğunu yapan kişi) olup olmadığı buradan anlaşılır. İdealize ettiğimiz konuları burası anlatır. 7. evden Uranüs'ün bu noktaya açısı var ise kişiyi başına buyruk birisi yapar.",
+          "maddeler": [
+            "Kişinin amacını ve hedefini temsil eder; bir kişinin idealist (kafasına koyduğunu yapan kişi) olup olmadığı buradan anlaşılır.",
+            "İdealize ettiğimiz konuları burası anlatır.",
+            "7. evden Uranüs'ün bu noktaya açısı var ise kişiyi başına buyruk birisi yapar."
+          ],
+          "gezegenNotlari": {
+            "Neptün": "Neptün 11. evde, ilk dekanda: Kişi idealize ettiği konuya günün birinde ulaşır; olumsuz açısında ise ne kadar uğraşırsa uğraşsın olamaz.",
+            "Şiron": "Şiron 11. evde, 1. dekanda: Topluma, arkadaşlarına hedefler koyar (kendinden önce arkadaşlarını ve toplumu önceler)."
+          }
+        },
+        {
+          "no": 2,
+          "derece": "10-20",
+          "baslik": "Kişinin arkadaşları ve dostları; kişinin arkadaşlık ve dostluk anlayışı",
+          "dekanYoneticisiNot": "Dekan yöneticisi Merkür (İkizler).",
+          "aciklama": "Bu dekan kişinin kafaca anlaştığı arkadaşları ve dostlarıyla ilgilidir. Bu dekanda bulunan olumsuz yerleşimler, kişinin asosyal olmasına neden olur ya da arkadaşlarından hayatının belli bir döneminde kazık yiyeceğini gösterir.",
+          "maddeler": [
+            "Bu dekan kişinin kafaca anlaştığı arkadaşları ve dostlarıyla ilgilidir.",
+            "Bu dekanda bulunan olumsuz yerleşimler, kişinin asosyal olmasına neden olur ya da arkadaşlarından hayatının belli bir döneminde kazık yiyeceğini gösterir."
+          ],
+          "gezegenNotlari": {
+            "Plüton": "Plüton 11. evde, orta dekanda: Açılar kötü ise; arkadaşları sebebiyle krizler, kaoslar; sonucunda dönüşümler (olumlu dönüşüm).",
+            "Şiron": "Şiron 11. evde, 2. dekanda: Arkadaşlıklardan kaynaklı problemler, dostsuzluk; \"çok arkadaş - hiç arkadaş\" durumu; arkadaşlarından destek alamama durumu.",
+            "Neptün": "Neptün 11. evde, orta dekanda: Devletsel konularda kişide algı problemi, kandırma isteği; iyi açılarda kişi başkalarının toplumsal işlerinde, derneklerde iyi görevlerde olur; kötü açılarda evrakta sahtecilik vb., devlet yetkilisine karşı ters hareketler; arkadaşlarına karşı kandırma gibi."
+          }
+        },
+        {
+          "no": 3,
+          "derece": "20-30",
+          "baslik": "Devlet ricaliyle ilişkiler; yasal-resmi kurumlarla ilişkiler; kişinin devletle ilişkileri",
+          "dekanYoneticisiNot": "Dekan yöneticisi Venüs (Terazi). Venüs'ün bulunduğu her dekan ilişkileri temsil eder.",
+          "aciklama": "Venüs'ün bulunduğu her dekan ilişkileri temsil ettiğinden, burası devlet ricaliyle olan ilişkileri gösterir; yani yasal-resmi kimselerle aranın nasıl olacağı bu dekandan öğrenilir. Bu dekanda bulunan gezegenler kişinin devletle olan ilişkilerini bir bir açık eder.",
+          "maddeler": [
+            "Venüs'ün bulunduğu her dekan ilişkileri temsil ettiğinden, burası devlet ricaliyle olan ilişkileri gösterir; yani yasal-resmi kimselerle aranın nasıl olacağı bu dekandan öğrenilir.",
+            "Bu dekanda bulunan gezegenler kişinin devletle olan ilişkilerini bir bir açık eder."
+          ],
+          "gezegenNotlari": {
+            "Satürn": "Satürn yerleşimi: kişinin devletle yaşayacağı problemlere işaret eder. Satürn 11. evde, olumsuz açılarda (3. dekan): devlet ile arasındaki ilişkide sıkıntı olabilir; devlet memurudur ama atanamaz mesela.",
+            "Mars": "Kötü açılı bir Mars: terör eylemlerine katılan birisini gösterebilir.",
+            "Plüton": "Plüton 11. evde, çıkış dekanında: MİT ajanı, devlete çalışan vb.; devlet için gizli işler yapan.",
+            "Şiron": "Şiron 11. evde, 3. dekanda: Devlet, devlet büyükleri, resmi kurumlar: iyi açılarda kişi toplum yararına işler yapar, devlet kurumları ile arası iyidir, işbirliği; kötü açılarda sivri dilli yönüyle devlet tarafından sevilmez, otoriteyle problemler."
+          }
+        }
+      ]
+    },
+    "12": {
+      "dogalBurc": "Balık",
+      "dogalYonetici": "Neptün",
+      "genel": "",
+      "konular": [
+        "İç dünyamız, maneviyatımız, ruhsal yapımız, bilinçaltımız, rüyalarımız ve hayal gücümüz.",
+        "Bu evde olumlu açıda bulunan gezegenler bize renkli bir iç dünya ve medyumistik yetenekler verir.",
+        "Sezgilerimiz ve sezgisel bütünlüğümüz.",
+        "Maddeden çok mana; somuttan öte soyut konular.",
+        "İnançlarımız (manevi dünyamız).",
+        "Bir nevi niyetlerimizi gösteren evdir.",
+        "Somut olarak birkaç konusu vardır: hastaneler, rehabilitasyon merkezleri, hapishaneler, camiler, ibadet yerleri vb.",
+        "6. evin karşıt evi olması hasebiyle ruhsal kökenli, psikolojik rahatsızlıklarımızı gösterir.",
+        "Fobilerimizle ilgili takıntı yaptığımız rahatsızlıklarımızı da gösterir."
+      ],
+      "dekanlar": [
+        {
+          "no": 1,
+          "derece": "0-10",
+          "baslik": "Kişinin iç dünyası, ruh yapısı, iç psikolojik durumu; kendi iç muhasebesi (kimse bilemez-göremez, yalnızca kişinin kendisi bilir)",
+          "dekanYoneticisiNot": "Dekan yöneticisi Neptün (Balık).",
+          "aciklama": "Kişinin iç dünyası ve ruh yapısıyla ilgilidir. Burada bulunan burç ve gezegenlere bakılarak kişinin psikolojik kökenli rahatsızlıkları tespit edilebilir. Olayları soyut olarak değerlendirdiğimiz noktadır.",
+          "maddeler": [
+            "Kişinin iç dünyası ve ruh yapısıyla ilgilidir.",
+            "Burada bulunan burç ve gezegenlere bakılarak kişinin psikolojik kökenli rahatsızlıkları tespit edilebilir.",
+            "Olayları soyut olarak değerlendirdiğimiz noktadır."
+          ],
+          "gezegenNotlari": {
+            "Neptün": "Neptün 12. evde, giriş dekanında: 6. evin girişine karşıt attığı için psikolojik hastalıklar."
+          }
+        },
+        {
+          "no": 2,
+          "derece": "10-20",
+          "baslik": "Kişinin sanatsal faaliyetleri; kişinin yetenekleri; sanatla ilgili soyut yetenekler (ilham, hissedişler)",
+          "dekanYoneticisiNot": "Dekan yöneticisi Ay (Yengeç).",
+          "aciklama": "Kişinin sanatsal faaliyetleri ve yetenekleri hakkında bilgi verir; sanatla ilgili soyut yeteneklerimizi (ilham, hissedişler) gösterir.",
+          "maddeler": [
+            "Kişinin sanatsal faaliyetleri ve yetenekleri hakkında bilgi verir; sanatla ilgili soyut yeteneklerimizi (ilham, hissedişler) gösterir."
+          ],
+          "gezegenNotlari": {}
+        },
+        {
+          "no": 3,
+          "derece": "20-30",
+          "baslik": "Kişinin maneviyatı; ölüm ve ölüm ötesi konuları; rüyalar, hayaller; kişinin hayatının son yıllarının nasıl ve nerede geçeceği; gizli düşmanlıklar",
+          "dekanYoneticisiNot": "Dekan yöneticisi Plüton (Akrep).",
+          "aciklama": "Burası kişinin maneviyatı ile ilişkilidir; ölüm ve ötesi konuları, bu konudaki düşünceleri hakkında bilgi verir. Rüyalar, hayaller ve kişinin daha çok olgunlaşma, büyüme, gelişme ve inançlarıyla ilgili konuları hakkında bilgi verir. Bu dekan, hayatın son yıllarının ne şekilde ve nerede geçeceğine dair bilgi verir: hapishaneler, hastaneler ve çeşitli rehabilitasyon merkezleri gibi yerlerde kalıp kalmayacağı buradan görülür. Gizli düşmanlıklara buradan da bakılır.",
+          "maddeler": [
+            "Burası kişinin maneviyatı ile ilişkilidir; ölüm ve ötesi konuları, bu konudaki düşünceleri hakkında bilgi verir.",
+            "Rüyalar, hayaller ve kişinin daha çok olgunlaşma, büyüme, gelişme ve inançlarıyla ilgili konuları hakkında bilgi verir.",
+            "Bu dekan, hayatın son yıllarının ne şekilde ve nerede geçeceğine dair bilgi verir: hapishaneler, hastaneler ve çeşitli rehabilitasyon merkezleri gibi yerlerde kalıp kalmayacağı buradan görülür.",
+            "Gizli düşmanlıklara buradan da bakılır."
+          ],
+          "gezegenNotlari": {
+            "Neptün": "Neptün 12. evde, çıkış dekanında: Çok fazla düşmanlık görebilir; kişinin arkasından çok fazla iş çevrilir; ama her şeye rağmen de ayakta kalır (Plüton-Neptün uyumlu açısı dolayısıyla)."
+          }
+        }
+      ]
+    }
+  }
+}

@@ -13,6 +13,7 @@ import { formatLongitude, formatNatalChartText, formatSolarReturnText, formatLun
 import { SIGNS, NATAL_PLANETS } from './modules/constants.js';
 import { calculateTransitReport } from './modules/transitReport.js';
 import { calculatePlanetReturn, RETURN_PLANETS, RETURN_TYPES } from './modules/planetReturns.js';
+import { loadEkolYorum, buildEkolYorum } from './modules/ekolYorum.js';
 import { drawChartWheel, drawSevenYearOverlay, drawDecanOverlay, drawBiWheel, drawTriWheel } from './modules/chartWheelSF.js';
 import { calcCrossAspects, anglePoints } from './modules/aspects.js';
 import { calculateTransits } from './modules/transit.js';
@@ -131,6 +132,7 @@ const elements = {
   srAspectsTable: $('srAspectsTable'),
   srDebugOutput: $('srDebugOutput'),
   decansDisplay: $('decansDisplay'),
+  yorumDisplay: $('yorumDisplay'),
   decanOverlayCheck: $('decanOverlayCheck'),
   srDecansDisplay: $('srDecansDisplay'),
   // Lunar Return elements
@@ -383,6 +385,8 @@ function setupEventListeners() {
           toggleChartInfoPanel();
         } else {
           switchSectionTab(attr, contentClass, target);
+          // Ekol yorumu ağır (bilgi tabanı fetch'i) — yalnız sekmesi açılınca üretilir
+          if (attr === 'tab' && target === 'yorum') renderEkolYorum();
         }
       });
     });
@@ -2054,6 +2058,135 @@ function timingDateStr(enterDate, durationDays, fraction) {
   const d = new Date(enterDate.year, enterDate.month - 1, enterDate.day, enterDate.hour || 0, enterDate.minute || 0);
   d.setTime(d.getTime() + fraction * durationDays * 86400000);
   return `${d.getDate()} ${MONTH_SHORT[d.getMonth() + 1]} ${d.getFullYear()}`;
+}
+
+// ============================================
+// EKOL YORUMU (natal alt sekmesi)
+// ============================================
+
+let _ekolKb = null;
+let _yorumChartJD = null;
+
+/**
+ * Ekol yorum raporunu üretir. Sekmeye ilk girişte bilgi tabanını yükler;
+ * aynı harita için tekrar üretmez (JD ile önbellek).
+ */
+async function renderEkolYorum() {
+  const target = elements.yorumDisplay;
+  if (!target) return;
+
+  if (!currentChart) {
+    target.innerHTML = '<p class="no-data">Önce natal harita hesaplayın.</p>';
+    return;
+  }
+  if (_yorumChartJD === currentChart.julianDay && target.innerHTML.trim()) return;
+
+  target.innerHTML = '<p class="no-data">Yorum hazırlanıyor…</p>';
+
+  try {
+    if (!_ekolKb) _ekolKb = await loadEkolYorum();
+  } catch (err) {
+    console.error('Ekol bilgi tabanı yüklenemedi:', err);
+    target.innerHTML = `<p class="no-data">Ekol bilgi tabanı yüklenemedi.<br><small>${err.message}</small></p>`;
+    return;
+  }
+
+  const rapor = buildEkolYorum(currentChart, _ekolKb);
+  target.innerHTML = renderEkolYorumHTML(rapor);
+  _yorumChartJD = currentChart.julianDay;
+}
+
+function renderEkolYorumHTML(r) {
+  const y = r.yukselen;
+  const d = r.dagilim;
+  const konum = (p) => p ? `${p.symbol} ${p.name} · ${formatLongitude(p.longitude).formatted} · ${p.house}. ev` : '<em>haritada yok</em>';
+
+  // --- Yükselen kartı ---
+  const yukselenHTML = y ? `
+    <div class="yr-card">
+      <div class="yr-card-title">Yükselen ve Yöneticileri</div>
+      <div class="yr-grid">
+        <div><span class="yr-label">Yükselen</span><span class="yr-value">${signImgFromSign(y.burc)} ${y.burc.name} ${Math.floor(y.derece)}°</span></div>
+        <div><span class="yr-label">Yükselen yöneticisi</span><span class="yr-value">${konum(y.yoneticiGezegen)}</span></div>
+        <div><span class="yr-label">Yükselen dekanı</span><span class="yr-value">${signImgFromSign(y.dekanBurc)} ${y.dekanBurc.name}</span></div>
+        <div><span class="yr-label">Dekan yöneticisi</span><span class="yr-value">${konum(y.dekanYoneticiGezegen)}</span></div>
+      </div>
+      <p class="yr-hint">Ekolde yorum buradan başlar: yükselen burcu genel çerçeveyi, dekan burcu ayrıntıyı verir; her iki yöneticinin düştüğü ev ve burç okumayı yönlendirir.</p>
+    </div>` : '';
+
+  // --- Element / nitelik matrisi (ekol puanlaması, 15 puan) ---
+  const els = ['fire', 'earth', 'air', 'water'];
+  const mods = ['cardinal', 'fixed', 'mutable'];
+  const hucre = (v) => v === 0 ? '<td class="yr-zero">·</td>' : `<td>${v}</td>`;
+  const dagilimHTML = `
+    <div class="yr-card">
+      <div class="yr-card-title">Element ve Nitelik Dağılımı <span class="yr-sub">ekol puanlaması · toplam ${d.toplam}</span></div>
+      <table class="data-table yr-matrix">
+        <thead><tr><th></th>${els.map(e => `<th>${d.ELEMENT_TR[e]}</th>`).join('')}<th>Toplam</th></tr></thead>
+        <tbody>
+          ${mods.map(m => `<tr>
+            <th>${d.MODALITE_TR[m]}</th>
+            ${els.map(e => hucre(d.matris[m][e])).join('')}
+            <td class="yr-total">${d.nitelikToplam[m]}</td>
+          </tr>`).join('')}
+          <tr class="yr-total-row">
+            <th>Toplam</th>
+            ${els.map(e => `<td class="yr-total">${d.elementToplam[e]}</td>`).join('')}
+            <td class="yr-total">${d.toplam}</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="yr-hint">
+        Baskın element: <strong>${d.ELEMENT_TR[d.baskinElement]}</strong> ·
+        Baskın nitelik: <strong>${d.MODALITE_TR[d.baskinNitelik]}</strong>
+        ${d.eksikElementler.length ? ` · Eksik element: <strong>${d.eksikElementler.map(e => d.ELEMENT_TR[e]).join(', ')}</strong>` : ''}
+        ${d.zayifElementler.length ? ` · Zayıf: ${d.zayifElementler.map(e => d.ELEMENT_TR[e]).join(', ')}` : ''}
+      </p>
+      <p class="yr-hint yr-small">Puanlar: Güneş ve Ay 2'şer; ASC, MC ve diğer gezegenler 1'er.</p>
+    </div>`;
+
+  // --- 12 ev × 3 dekan ---
+  const evlerHTML = r.evler.map(ev => `
+    <div class="yr-house">
+      <div class="yr-house-head">
+        <span class="yr-house-no">${ev.house}</span>
+        <span class="yr-house-sign">${signImgFromSign(ev.houseSign)} ${ev.houseSign.name}</span>
+        ${ev.dogalYonetici ? `<span class="yr-house-nat">doğal: ${ev.dogalBurc} · ${ev.dogalYonetici}</span>` : ''}
+      </div>
+      ${ev.genel ? `<p class="yr-house-genel">${ev.genel}</p>` : ''}
+      ${ev.dekanlar.map(dk => `
+        <div class="yr-decan${dk.metinVar ? '' : ' yr-decan-empty'}">
+          <div class="yr-decan-head">
+            <span class="yr-decan-no">${dk.no}. dekan</span>
+            <span class="yr-decan-topic">${dk.baslik}</span>
+            <span class="yr-decan-sign">${signImgFromSign(dk.dekanBurc)} ${dk.dekanBurc.name} · ${dk.dekanYonetici.symbol} ${dk.dekanYonetici.name}</span>
+          </div>
+          ${dk.gezegenler.length ? `<div class="yr-decan-planets">${dk.gezegenler.map(p =>
+            `<span class="yr-planet">${p.symbol} ${p.name} ${formatLongitude(p.longitude).formatted}${p.isRetrograde ? ' <span class="retro-badge">R</span>' : ''}</span>`
+          ).join('')}</div>` : '<div class="yr-decan-planets yr-empty-planets">bu dekanda gezegen yok</div>'}
+          ${dk.aciklamaGoster ? `<p class="yr-decan-text">${dk.aciklama}</p>` : ''}
+          ${dk.maddeler.length ? `<ul class="yr-decan-list">${dk.maddeler.map(m => `<li>${m}</li>`).join('')}</ul>` : ''}
+          ${dk.gezegenNotlari.map(g => `<p class="yr-planet-note"><strong>${g.gezegen}:</strong> ${g.not}</p>`).join('')}
+          ${dk.metinVar ? '' : '<p class="yr-missing">Bu dekan için ders notu henüz eklenmemiş.</p>'}
+        </div>
+      `).join('')}
+    </div>
+  `).join('');
+
+  return `
+    <div class="yorum-report">
+      <div class="yr-intro">
+        <strong>🔮 Ekol Yorumu</strong> — ders notlarından derlenen kural tabanlı rapor.
+        Her ev 3 dekana bölünür; aşağıda her dekanın konusu, burcu, yöneticisi ve içindeki gezegenler
+        ekol metinleriyle birlikte verilir.
+        ${r.eksikSayisi ? `<span class="yr-missing-count">${r.eksikSayisi} dekanda not eksik</span>` : ''}
+      </div>
+      ${yukselenHTML}
+      ${dagilimHTML}
+      <div class="yr-card-title yr-section">Evler ve Dekanlar</div>
+      ${evlerHTML}
+      ${r.meta?.not ? `<p class="yr-hint yr-small">${r.meta.not}</p>` : ''}
+    </div>`;
 }
 
 function renderDecanHTML(decanData, aspects, houseTiming) {
