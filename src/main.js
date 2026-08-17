@@ -301,6 +301,7 @@ async function init() {
     trAngleAspects: () => { if (currentTransit) renderTRChart(currentTransit); },
     prAngleAspects: () => { if (currentProgression) renderPRChart(currentProgression); },
     lyAngleAspects: () => { if (currentLayers) renderLYChart(); },
+    lyRingHouses: () => { if (currentLayers) renderLYChart(); },
     arAngleAspects: () => { if (currentAdvReturn) renderARChart(); },
     syAngleAspects: () => {
       if (currentSynastry) renderSYChart();
@@ -313,8 +314,8 @@ async function init() {
   }
 }
 
-/** "ASC/MC açıları" tiki — yoksa/işaretliyse true (default açık). */
-function angleAspectsOn(id) {
+/** Bir aç/kapa tikinin durumu — tik DOM'da yoksa açık kabul edilir (default). */
+function tikAcikMi(id) {
   const el = $(id);
   return el ? el.checked : true;
 }
@@ -1411,7 +1412,7 @@ function renderNatalChart(chart) {
     showAspects: true,
     chartType: 'natal',
     activePlanets: natalPlanetFilter?.getActiveSet(),
-    showAngleAspects: angleAspectsOn('natalAngleAspects'),
+    showAngleAspects: tikAcikMi('natalAngleAspects'),
     // Dekanlar drawChartWheel'in İÇİNDE, gezegenlerden önce çizilir (çakışma önlenir)
     decans: (elements.decanOverlayCheck && elements.decanOverlayCheck.checked)
       ? calculateHouseDecans(chart.houses, getAllPlanets(chart))
@@ -1896,7 +1897,7 @@ function renderARChart() {
     showAspects: true,
     chartType: 'planet_return',
     activePlanets: arPlanetFilter?.getActiveSet(),
-    showAngleAspects: angleAspectsOn('arAngleAspects'),
+    showAngleAspects: tikAcikMi('arAngleAspects'),
   });
 }
 
@@ -2437,7 +2438,7 @@ function renderSRChart(sr) {
     showAspects: true,
     chartType: 'solar',
     activePlanets: srPlanetFilter?.getActiveSet(),
-    showAngleAspects: angleAspectsOn('srAngleAspects'),
+    showAngleAspects: tikAcikMi('srAngleAspects'),
   });
 }
 
@@ -2749,7 +2750,7 @@ function renderLRChart(lr) {
     showAspects: true,
     chartType: 'lunar',
     activePlanets: lrPlanetFilter?.getActiveSet(),
-    showAngleAspects: angleAspectsOn('lrAngleAspects'),
+    showAngleAspects: tikAcikMi('lrAngleAspects'),
   });
 }
 
@@ -3119,7 +3120,7 @@ function renderTRChart(tr) {
     title: 'Transit Bi-Wheel',
     subtitle: `Natal: ${natalDate}\nTransit: ${dateStr} ${timeStr}\n${tr.location.name || tr.location.timezone}`,
     activePlanets: transitPlanetFilter?.getActiveSet(),
-    showAngleAspects: angleAspectsOn('trAngleAspects'),
+    showAngleAspects: tikAcikMi('trAngleAspects'),
   });
 }
 
@@ -3553,7 +3554,7 @@ function renderPRChart(pr) {
     title: 'Progres Bi-Wheel',
     subtitle: `Natal: ${natalDate}\nProgres: ${targetStr} (${Math.floor(pr.elapsedYears)} yaş)\n${methodName}`,
     activePlanets: progressionPlanetFilter?.getActiveSet(),
-    showAngleAspects: angleAspectsOn('prAngleAspects'),
+    showAngleAspects: tikAcikMi('prAngleAspects'),
   });
 }
 
@@ -4040,7 +4041,10 @@ function renderLYChart() {
       : `İç: ${label(L.innerKind)}\nDış: ${label(L.outerKind)}`)
       + `\n${lyDateStr()}`,
     activePlanets: layersPlanetFilter?.getActiveSet(),
-    showAngleAspects: angleAspectsOn('lyAngleAspects'),
+    showAngleAspects: tikAcikMi('lyAngleAspects'),
+    // Orta/dış halkaların kendi ev cuspları (tri-wheel); bi-wheel'de dış evler
+    // her zaman çizilir, o yüzden yalnız tri-wheel'i etkiler.
+    showRingHouses: tikAcikMi('lyRingHouses'),
   };
 
   if (L.middleKind) {
@@ -4248,7 +4252,7 @@ function renderSYChart() {
       + `Dış — ${outerName}: ${syShortDate(outer.birthData)}\n`
       + `${wheel.crossAspects.length} çapraz aspekt`,
     activePlanets: synastryPlanetFilter?.getActiveSet(),
-    showAngleAspects: angleAspectsOn('syAngleAspects'),
+    showAngleAspects: tikAcikMi('syAngleAspects'),
   });
 
   elements.syLegendInner.textContent = `İç halka: ${innerName}`;
@@ -4482,7 +4486,7 @@ function renderSYComposite() {
     subtitle: `Composite (Midpoint)\nKişi A × Kişi B\nÇapa: ${anchorName}`,
     showAspects: true,
     chartType: 'composite',
-    showAngleAspects: angleAspectsOn('syAngleAspects'),
+    showAngleAspects: tikAcikMi('syAngleAspects'),
   });
 
   renderSYPlanetTable(comp, elements.syCompositePlanetsTable);
@@ -4513,7 +4517,7 @@ function renderSYDavison() {
     subtitle: `Davison (Time/Space Midpoint)\n${dateStr}\n${loc}`,
     showAspects: true,
     chartType: 'davison',
-    showAngleAspects: angleAspectsOn('syAngleAspects'),
+    showAngleAspects: tikAcikMi('syAngleAspects'),
   });
 
   renderSYPlanetTable(dav, elements.syDavisonPlanetsTable);

@@ -1328,7 +1328,9 @@ export function drawBiWheel(canvas, natalData, transitData, options = {}) {
   circle(ctx, cx, cy, R.outerR, 1.4);   // en dış çerçeve (transit halkası)
 
   // Dış (transit/progres) haritanın kendi ev cuspları — dış bantta.
-  if (transitData.houses) {
+  // showRingHouses false ise gizlenir (MultiWheel'deki "Dış halka evleri" tiki);
+  // transit/progres/sinastri panellerinde tik yok, orada varsayılan açıktır.
+  if (transitData.houses && options.showRingHouses !== false) {
     drawOuterHouseCusps(ctx, cx, cy, transitData.houses, R, ascLon);
   }
 
@@ -1482,6 +1484,33 @@ function drawRingPlanets(ctx, cx, cy, planets, R, ascLon, partOfFortune, ringInR
  *     Orta halkanın açıları çizilmez (okunabilirlik) — tabloda gösterilir.
  *   - activePlanets / showAngleAspects: tekil/bi-wheel ile aynı anlam.
  */
+/**
+ * Bir halkanın KENDİ ev cusp çizgileri — tri-wheel'de orta ve dış halka için.
+ * Her harita (progres anı, transit anı) kendi ev sistemine sahiptir; bunlar
+ * natal evlerden bağımsızdır. Üç halka üst üste geldiği için derece yazılmaz,
+ * yalnız sınır çizgileri verilir — dereceler iç haritada okunur.
+ *
+ * @param {number} inR - halkanın iç sınırı
+ * @param {number} outR - halkanın dış sınırı
+ */
+function drawRingHouseCusps(ctx, cx, cy, houses, R, ascLon, inR, outR) {
+  if (!houses?.cusps) return;
+
+  ctx.save();
+  ctx.strokeStyle = LINE_COLOR;
+  ctx.lineWidth = 1;
+  for (const cusp of houses.cusps) {
+    const a = lonToAngle(cusp.longitude, ascLon);
+    const p1 = polarToXY(cx, cy, inR, a);
+    const p2 = polarToXY(cx, cy, outR, a);
+    ctx.beginPath();
+    ctx.moveTo(p1.x, p1.y);
+    ctx.lineTo(p2.x, p2.y);
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+
 export function drawTriWheel(canvas, innerData, middleData, outerData, options = {}) {
   if (!canvas || !innerData || !middleData || !outerData) return;
 
@@ -1503,6 +1532,12 @@ export function drawTriWheel(canvas, innerData, middleData, outerData, options =
   circle(ctx, cx, cy, R.innerR, 1.4);
   circle(ctx, cx, cy, R.midOutR, 1.4);  // orta/dış ayracı
   circle(ctx, cx, cy, R.outerR, 1.4);   // en dış çerçeve
+
+  // Orta ve dış halkaların kendi ev sistemleri (gezegenlerden ÖNCE, altta kalsın)
+  if (options.showRingHouses !== false) {
+    drawRingHouseCusps(ctx, cx, cy, middleData.houses, R, ascLon, R.signOutR, R.midOutR);
+    drawRingHouseCusps(ctx, cx, cy, outerData.houses, R, ascLon, R.midOutR, R.outerR);
+  }
 
   drawInnerAngles(ctx, cx, cy, innerData.houses, R, ascLon);
 
