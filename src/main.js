@@ -3377,13 +3377,18 @@ function renderTRRReport(events, start, days, timezone) {
   `;
 }
 
-/** Tema butonu etiketi: hangi görünüme GEÇİLECEĞİNİ söyler. */
+/**
+ * Tema butonu: yalnız simge — hangi görünüme GEÇİLECEĞİNİ gösterir.
+ * Açık (SF) görünümdeyken ay = geceye dön, koyu görünümdeyken güneş = aydınlığa geç.
+ * Açıklama title'da durur.
+ */
 function updateThemeToggleLabel() {
   const btn = $('themeToggle');
   if (!btn) return;
   const sf = document.body.classList.contains('sf-theme');
-  btn.textContent = sf ? '🌙 Gece Görünümü' : '🖥️ SF Görünümü';
-  btn.title = sf ? 'Koyu görünüme dön' : 'SolarFire görünümüne geç';
+  btn.textContent = sf ? '🌙' : '☀️';
+  btn.title = sf ? 'Gece görünümüne dön' : 'SolarFire (aydınlık) görünümüne geç';
+  btn.setAttribute('aria-label', btn.title);
 }
 
 // ============================================

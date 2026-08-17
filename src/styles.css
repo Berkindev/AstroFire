@@ -3082,15 +3082,21 @@ input::placeholder {
    çevresindeki UI'ı klasik açık görünüme çevirir. Bileşenlerin tamamı
    CSS değişkeni kullandığı için override bu blokla sınırlı kalır.
    ============================================ */
+/* Yalnız simge: kare, dokunma hedefi yeterli (44px'e yakın) */
 .theme-toggle {
-  padding: 0.45rem 0.8rem;
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
   background: var(--bg-input);
   color: var(--text-secondary);
   border: 1px solid var(--border-color);
-  border-radius: 8px;
-  font-size: 0.8rem;
+  border-radius: 10px;
+  font-size: 1.05rem;
+  line-height: 1;
   cursor: pointer;
-  white-space: nowrap;
 }
 
 .theme-toggle:hover {
