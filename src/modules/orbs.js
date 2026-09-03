@@ -5,7 +5,7 @@
  * tabloydu (constants.js MAJOR_ASPECTS.orb): her gezegen, her harita tipi
  * aynı orb'u kullanıyordu. Artık orb iki şeye bağlı:
  *
- *   1. GEZEGEN GRUBU  — kişisel / jenerasyon / noktalar
+ *   1. GEZEGEN GRUBU  — kişisel / jenerasyon / açılar (ASC-MC) / noktalar
  *   2. HARİTA PROFİLİ — natal, sinastri, transit… her biri kendi seti
  *
  * KARIŞIK ÇİFT KURALI: iki ucun grubu farklıysa JENERASYON grubu baz alınır
@@ -13,10 +13,10 @@
  *   Güneş (kişisel) □ Plüton (jenerasyon) → jenerasyon orb'u
  *   Solar'da jenerasyon 7° / kişisel 5° → ☉□♇ = 7°
  * Öncelik sırası GRUP_ONCELIGI'nde; değiştirmek için o diziyi yeniden sırala.
- * NOKTALAR (ASC/MC/düğümler/Şans Noktası) her profilde 1°, ama öncelik
- * sırası jenerasyon → kişisel → noktalar olduğu için bu 1° yalnız
- * nokta × nokta çiftlerinde devreye girer. Nokta × gezegen çiftinde
- * gezegenin grubu belirler (natal ASC ☌ ☉ → 7°, ASC ☌ ♇ → 7°).
+ * AÇILAR (ASC/MC) ve NOKTALAR (☊ KAD, ☋ GAD, ⊗ Şans Noktası) ayrı iki
+ * gruptur; ikisi de her profilde 1°. Öncelik sırası jenerasyon → kişisel
+ * → acilar → noktalar olduğu için bu 1° yalnız iki ucu da gezegen-dışı
+ * olan çiftlerde devreye girer; ASC ☌ ☉ → 7°, ASC ☌ ♇ → 7°.
  * Ekol tercihi (Kerem, 2026-09-03).
  *
  * ⚠️ DEĞERLERİ DEĞİŞTİRMEK İÇİN: yalnız aşağıdaki ORB_TABLOSU'nu düzenle.
@@ -50,17 +50,23 @@ const JENERASYON_IDS = new Set([
 ]);
 
 /**
- * ASC · MC · ☊ KAD · ☋ GAD · ⊗ Şans Noktası
- * (id'ler: aspects.js ASC_POINT_ID=-101 / MC_POINT_ID=-102,
- *  chartUtils.js GAD=-1, natal/solar/lunar Şans Noktası=-99)
- * Buraya düşmeyen her şey de "noktalar" sayılır (fallback).
+ * ASC · MC — harita açıları. Gezegen değil, ev sisteminin çatısı;
+ * kendi grubu (id'ler: aspects.js ASC_POINT_ID=-101 / MC_POINT_ID=-102).
  */
-export const GRUPLAR = ['kisisel', 'jenerasyon', 'noktalar'];
+const ACI_IDS = new Set([-101, -102]);
+
+/**
+ * ☊ KAD · ☋ GAD · ⊗ Şans Noktası — duyarlı noktalar.
+ * (id'ler: KAD=10, chartUtils.js GAD=-1, Şans Noktası=-99)
+ * Yukarıdaki hiçbir gruba düşmeyen her şey de buraya sayılır (fallback).
+ */
+export const GRUPLAR = ['kisisel', 'jenerasyon', 'acilar', 'noktalar'];
 
 /** Gezegen/nokta id'sinden grup adı. */
 export function grupBul(id) {
   if (KISISEL_IDS.has(id)) return 'kisisel';
   if (JENERASYON_IDS.has(id)) return 'jenerasyon';
+  if (ACI_IDS.has(id)) return 'acilar';
   return 'noktalar';
 }
 
@@ -96,6 +102,7 @@ const VARSAYILAN = {
   //             kavuşum ☌   karşıt ☍   üçgen △   kare □   altıgen ⚹
   kisisel:    { kavusum: 7, karsit: 7, ucgen: 7, kare: 7, altigen: 7 },
   jenerasyon: { kavusum: 7, karsit: 7, ucgen: 7, kare: 7, altigen: 7 },
+  acilar:     { kavusum: 1, karsit: 1, ucgen: 1, kare: 1, altigen: 1 },
   noktalar:   { kavusum: 1, karsit: 1, ucgen: 1, kare: 1, altigen: 1 },
 };
 
@@ -109,6 +116,7 @@ export const ORB_TABLOSU = {
   natal: {
     kisisel: hepsi(7),
     jenerasyon: hepsi(7),
+    acilar: hepsi(1),
     noktalar: hepsi(1),
   },
 
@@ -116,6 +124,7 @@ export const ORB_TABLOSU = {
   solar: {
     kisisel: hepsi(5),
     jenerasyon: hepsi(7),
+    acilar: hepsi(1),
     noktalar: hepsi(1),
   },
 
@@ -123,6 +132,7 @@ export const ORB_TABLOSU = {
   lunar: {
     kisisel: hepsi(5),
     jenerasyon: hepsi(7),
+    acilar: hepsi(1),
     noktalar: hepsi(1),
   },
 
@@ -131,6 +141,7 @@ export const ORB_TABLOSU = {
   donus: {
     kisisel: hepsi(5),
     jenerasyon: hepsi(7),
+    acilar: hepsi(1),
     noktalar: hepsi(1),
   },
 
@@ -139,6 +150,7 @@ export const ORB_TABLOSU = {
   transit: {
     kisisel: hepsi(1),
     jenerasyon: hepsi(3),
+    acilar: hepsi(1),
     noktalar: hepsi(1),
   },
 
@@ -147,6 +159,7 @@ export const ORB_TABLOSU = {
   progres: {
     kisisel: hepsi(1),
     jenerasyon: hepsi(3),
+    acilar: hepsi(1),
     noktalar: hepsi(1),
   },
 
@@ -154,6 +167,7 @@ export const ORB_TABLOSU = {
   sinastri: {
     kisisel: hepsi(3),
     jenerasyon: hepsi(3),
+    acilar: hepsi(1),
     noktalar: hepsi(1),
   },
 
@@ -162,6 +176,7 @@ export const ORB_TABLOSU = {
   kompozit: {
     kisisel: hepsi(3),
     jenerasyon: hepsi(3),
+    acilar: hepsi(1),
     noktalar: hepsi(1),
   },
 
@@ -170,6 +185,7 @@ export const ORB_TABLOSU = {
   multiwheel: {
     kisisel: hepsi(1),
     jenerasyon: hepsi(3),
+    acilar: hepsi(1),
     noktalar: hepsi(1),
   },
 };
@@ -203,11 +219,16 @@ export function grupOrbu(profil, grup, angle) {
 
 /**
  * Karışık çiftte hangi grubun orb'u geçerli — soldaki önce gelir.
- * Jenerasyon her şeyi ezer, sonra kişisel gelir; noktaların orb'u ancak
- * ÇİFTİN İKİ UCU DA nokta olduğunda kullanılır (ASC × düğüm, ASC × Şans
- * Noktası gibi). Kerem'in kararı (2026-09-03).
+ * Jenerasyon her şeyi ezer, sonra kişisel gelir. ASC/MC (acilar) ve
+ * duyarlı noktalar en sonda olduğu için bir ucunda gezegen olan çiftte
+ * KARŞIDAKİ GEZEGENİN orb'u kullanılır (Kerem: "karşısındakine göre
+ * hareket etsin"). Kendi 1° değerleri yalnız gezegen içermeyen çiftlerde
+ * devreye girer (ASC × KAD, ASC × Şans Noktası…).
+ *
+ * ⚙️ ASC/MC'ye dokunan HER açının 1° olmasını istersen 'acilar'ı bu
+ *    dizinin başına al — tek satır.
  */
-const GRUP_ONCELIGI = ['jenerasyon', 'kisisel', 'noktalar'];
+const GRUP_ONCELIGI = ['jenerasyon', 'kisisel', 'acilar', 'noktalar'];
 
 /**
  * İki ucun ortak orb'u — KARIŞIK ÇİFTTE GRUP ÖNCELİĞİ BELİRLER.
