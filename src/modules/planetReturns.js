@@ -175,6 +175,6 @@ export async function calculatePlanetReturn(natalChart, planetId, typeKey, refJD
 
     interceptedSigns: findInterceptedSigns(houses.cusps),
 
-    aspects: calcAspects([...planetsWithHouses, ...pofForAspects, ...anglePoints(houses)]),
+    aspects: calcAspects([...planetsWithHouses, ...pofForAspects, ...anglePoints(houses)], { profil: 'donus' }),
   };
 }

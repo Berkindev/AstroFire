@@ -166,9 +166,9 @@ export async function calculateSecondaryProgression(natalChart, targetDate, opti
 
   // Çapraz aspektler: progres gezegen × natal gezegen + natal ASC/MC (natal taraf sabit)
   const progNatalAspects = calcCrossAspects(planetsWithHouses,
-    [...natalChart.planets, ...anglePoints(natalChart.houses)]);
+    [...natalChart.planets, ...anglePoints(natalChart.houses)], { profil: 'progres' });
   // Progres gezegenlerin kendi arası aspektleri + progres ASC/MC
-  const progAspects = calcAspects([...planetsWithHouses, ...anglePoints(houses)]);
+  const progAspects = calcAspects([...planetsWithHouses, ...anglePoints(houses)], { profil: 'progres' });
 
   // Progres anının takvim karşılığı — geriye dönük uyumluluk için saniyesiz
   const progUTC = jdToUTC(progJD);

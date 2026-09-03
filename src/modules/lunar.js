@@ -139,6 +139,6 @@ export async function calculateLunarReturn(natalChart, year, month, day, locatio
 
     interceptedSigns: findInterceptedSigns(houses.cusps),
 
-    aspects: calcAspects([...planetsWithHouses, ...pofForAspects, ...anglePoints(houses)]),
+    aspects: calcAspects([...planetsWithHouses, ...pofForAspects, ...anglePoints(houses)], { profil: 'lunar' }),
   };
 }

@@ -172,7 +172,7 @@ export async function calculateSolarReturn(natalChart, year, location) {
 
     interceptedSigns: findInterceptedSigns(houses.cusps),
 
-    aspects: calcAspects([...planetsWithHouses, ...pofForAspects, ...anglePoints(houses)]),
+    aspects: calcAspects([...planetsWithHouses, ...pofForAspects, ...anglePoints(houses)], { profil: 'solar' }),
   };
 }
 

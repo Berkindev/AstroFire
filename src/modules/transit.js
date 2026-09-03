@@ -112,7 +112,7 @@ export async function calculateTransits(natalChart, date, location) {
     // Çapraz aspektler: natal taraf sabit (yalnızca transit gezegen hareket eder).
     // Natal ASC/MC de hedef — transit gezegenlerin açılara teması ders için kritik.
     transitNatalAspects: calcCrossAspects(planetsWithHouses,
-      [...natalChart.planets, ...anglePoints(natalChart.houses)]),
-    transitAspects: calcAspects([...planetsWithHouses, ...anglePoints(transitHouses)]),
+      [...natalChart.planets, ...anglePoints(natalChart.houses)], { profil: 'transit' }),
+    transitAspects: calcAspects([...planetsWithHouses, ...anglePoints(transitHouses)], { profil: 'transit' }),
   };
 }

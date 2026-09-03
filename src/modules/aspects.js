@@ -9,6 +9,7 @@
 import { MAJOR_ASPECTS } from './constants.js';
 import { normalizeDegree } from './ephemeris.js';
 import { angularSeparation } from './chartUtils.js';
+import { orbBul } from './orbs.js';
 
 // ============================================
 // AÇI NOKTALARI (ASC/MC)
@@ -75,18 +76,30 @@ export function isApplying(p1, p2, aspectAngle, staticP2 = false) {
 
 /**
  * İki gezegenin arasındaki aspekti bulur (varsa).
- * MAJOR_ASPECTS sırasına göre ilk eşleşen orb penceresini alır.
  *
+ * Orb sınırı artık sabit değil: gezegen grubuna (kişisel/jenerasyon/noktalar)
+ * ve harita profiline (natal/sinastri/transit…) göre orbs.js'ten okunur.
+ * Karışık çiftte dar olan geçerlidir — bkz. orbs.js.
+ *
+ * Birden fazla aspekt penceresi çakışırsa (çok geniş orb verilirse olabilir)
+ * TAM AÇIYA EN YAKIN olan seçilir; orb'lar dar olduğunda pencereler zaten
+ * kesişmez ve bu eski "listede ilk eşleşen" davranışıyla aynı sonucu verir.
+ *
+ * @param {Object} p1 - {longitude, id}
+ * @param {Object} p2 - {longitude, id}
+ * @param {string} profil - orbs.js harita profili
  * @returns {{aspectDef, orb}|null}
  */
-function matchAspect(lon1, lon2) {
-  const angle = angularSeparation(lon1, lon2);
+function matchAspect(p1, p2, profil) {
+  const angle = angularSeparation(p1.longitude, p2.longitude);
 
+  let best = null;
   for (const aspectDef of MAJOR_ASPECTS) {
     const orb = Math.abs(angle - aspectDef.angle);
-    if (orb <= aspectDef.orb) return { aspectDef, orb };
+    if (orb > orbBul(profil, p1.id, p2.id, aspectDef.angle)) continue;
+    if (!best || orb < best.orb) best = { aspectDef, orb };
   }
-  return null;
+  return best;
 }
 
 /** Aspekt kaydının ortak alanları. */
@@ -111,9 +124,12 @@ function planetRef(p) {
  * Natal, Solar Return, Lunar Return, transit×transit, progres×progres.
  *
  * @param {Array} planets - Şans Noktası ve GAD dahil edilebilir
+ * @param {Object} [options]
+ * @param {string} [options.profil='varsayilan'] - orbs.js harita profili
  * @returns {Array<{planet1, planet2, aspect, aspectEn, aspectSymbol, angle, orb, isApplying}>}
  */
-export function calcAspects(planets) {
+export function calcAspects(planets, options = {}) {
+  const profil = options.profil || 'varsayilan';
   const aspects = [];
 
   for (let i = 0; i < planets.length; i++) {
@@ -125,7 +141,7 @@ export function calcAspects(planets) {
       // geometrisi, gökyüzü değil) — atla.
       if (isAnglePoint(p1) && isAnglePoint(p2)) continue;
 
-      const match = matchAspect(p1.longitude, p2.longitude);
+      const match = matchAspect(p1, p2, profil);
       if (!match) continue;
 
       aspects.push({
@@ -155,17 +171,19 @@ export function calcAspects(planets) {
  *   Transit/progres için true (natal donuk). Sinastride her iki kişi de
  *   "donuk" olduğundan applying kavramı zayıftır; yine de her iki hızı
  *   kullanmak için false verilebilir.
+ * @param {string} [options.profil='varsayilan'] - orbs.js harita profili
  * @returns {Array}
  */
 export function calcCrossAspects(setA, setB, options = {}) {
   const staticB = options.staticB !== false;
+  const profil = options.profil || 'varsayilan';
   const aspects = [];
 
   for (const a of setA) {
     for (const b of setB) {
       if (isAnglePoint(a) && isAnglePoint(b)) continue;
 
-      const match = matchAspect(a.longitude, b.longitude);
+      const match = matchAspect(a, b, profil);
       if (!match) continue;
 
       aspects.push({

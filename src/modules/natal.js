@@ -92,6 +92,6 @@ export async function calculateNatalChart(birthData) {
       house: findHouseOfPlanet(partOfFortune.longitude, houses.cusps),
     } : null,
 
-    aspects: calcAspects([...planetsWithHouses, ...pofForAspects, ...anglePoints(houses)]),
+    aspects: calcAspects([...planetsWithHouses, ...pofForAspects, ...anglePoints(houses)], { profil: 'natal' }),
   };
 }

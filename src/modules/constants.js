@@ -77,14 +77,17 @@ export const DEFAULT_HOUSE_SYSTEM = HOUSE_SYSTEMS.PLACIDUS;
 
 // ============================================
 // ASPEKTLER (Aspects)
-// SolarFire default orbları
+//
+// ⚠️ ORB DEĞERLERİ BURADA DEĞİL: gezegen grubuna (kişisel/jenerasyon/noktalar)
+// ve harita tipine (natal/sinastri/transit…) göre değiştiği için orb tablosu
+// `orbs.js` içindedir. Burada yalnız açının kimliği durur.
 // ============================================
 export const MAJOR_ASPECTS = [
-  { name: 'Kavuşum', nameEn: 'Conjunction', angle: 0, symbol: '☌', orb: 8 },
-  { name: 'Karşıt', nameEn: 'Opposition', angle: 180, symbol: '☍', orb: 8 },
-  { name: 'Üçgen', nameEn: 'Trine', angle: 120, symbol: '△', orb: 8 },
-  { name: 'Kare', nameEn: 'Square', angle: 90, symbol: '□', orb: 7 },
-  { name: 'Altıgen', nameEn: 'Sextile', angle: 60, symbol: '⚹', orb: 6 },
+  { name: 'Kavuşum', nameEn: 'Conjunction', angle: 0, symbol: '☌' },
+  { name: 'Karşıt', nameEn: 'Opposition', angle: 180, symbol: '☍' },
+  { name: 'Üçgen', nameEn: 'Trine', angle: 120, symbol: '△' },
+  { name: 'Kare', nameEn: 'Square', angle: 90, symbol: '□' },
+  { name: 'Altıgen', nameEn: 'Sextile', angle: 60, symbol: '⚹' },
 ];
 
 // ============================================

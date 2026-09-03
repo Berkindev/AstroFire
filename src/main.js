@@ -4000,9 +4000,9 @@ async function handleLYCalculate() {
     // Çapraz aspektler İÇ halkaya göre; iç natal ise natal taraf sabit sayılır.
     const staticInner = innerKind === 'natal';
     const innerTargets = [...innerChart.planets, ...anglePoints(innerChart.houses)];
-    const crossOuter = calcCrossAspects(outerChart.planets, innerTargets, { staticB: staticInner });
+    const crossOuter = calcCrossAspects(outerChart.planets, innerTargets, { staticB: staticInner, profil: 'multiwheel' });
     const crossMiddle = middleChart
-      ? calcCrossAspects(middleChart.planets, innerTargets, { staticB: staticInner })
+      ? calcCrossAspects(middleChart.planets, innerTargets, { staticB: staticInner, profil: 'multiwheel' })
       : null;
 
     currentLayers = {

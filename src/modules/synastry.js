@@ -61,7 +61,7 @@ export function calculateSynastry(chartA, chartB) {
   const crossAspects = calcCrossAspects(
     chartB.planets,
     [...chartA.planets, ...anglePoints(chartA.houses)],
-    { staticB: false },
+    { staticB: false, profil: 'sinastri' },
   );
 
   // Karşılıklı ev yerleşimleri — sinastrinin asıl anlatısı burada
@@ -258,7 +258,7 @@ export function calculateComposite(chartA, chartB, options = {}) {
 
     interceptedSigns: findInterceptedSigns(rawCusps),
 
-    aspects: calcAspects([...planetsWithHouses, ...pofForAspects, ...anglePoints({ ascendant, mc })]),
+    aspects: calcAspects([...planetsWithHouses, ...pofForAspects, ...anglePoints({ ascendant, mc })], { profil: 'kompozit' }),
   };
 }
 
@@ -374,6 +374,6 @@ export async function calculateDavison(chartA, chartB) {
 
     interceptedSigns: findInterceptedSigns(houses.cusps),
 
-    aspects: calcAspects([...planetsWithHouses, ...pofForAspects, ...anglePoints(houses)]),
+    aspects: calcAspects([...planetsWithHouses, ...pofForAspects, ...anglePoints(houses)], { profil: 'kompozit' }),
   };
 }
