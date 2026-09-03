@@ -13,6 +13,10 @@
  *   Güneş (kişisel) □ Plüton (jenerasyon) → jenerasyon orb'u
  *   Solar'da jenerasyon 7° / kişisel 5° → ☉□♇ = 7°
  * Öncelik sırası GRUP_ONCELIGI'nde; değiştirmek için o diziyi yeniden sırala.
+ * NOKTALAR (ASC/MC/düğümler/Şans Noktası) her profilde 1° — Kerem'in
+ * 2026-09-03 kararı. Öncelik jenerasyonda olduğu için nokta × jenerasyon
+ * çiftinde jenerasyonun orb'u geçerlidir (ör. natal ASC ☌ ♇ → 7°),
+ * nokta × kişisel çiftinde 1°.
  * Ekol tercihi (Kerem, 2026-09-03).
  *
  * ⚠️ DEĞERLERİ DEĞİŞTİRMEK İÇİN: yalnız aşağıdaki ORB_TABLOSU'nu düzenle.
@@ -92,7 +96,7 @@ const VARSAYILAN = {
   //             kavuşum ☌   karşıt ☍   üçgen △   kare □   altıgen ⚹
   kisisel:    { kavusum: 7, karsit: 7, ucgen: 7, kare: 7, altigen: 7 },
   jenerasyon: { kavusum: 7, karsit: 7, ucgen: 7, kare: 7, altigen: 7 },
-  noktalar:   { kavusum: 7, karsit: 7, ucgen: 7, kare: 7, altigen: 7 },
+  noktalar:   { kavusum: 1, karsit: 1, ucgen: 1, kare: 1, altigen: 1 },
 };
 
 /** Tek satırda "hepsi şu kadar" yazmanın kısayolu. */
@@ -101,25 +105,25 @@ const hepsi = (d) => ({ kavusum: d, karsit: d, ucgen: d, kare: d, altigen: d });
 export const ORB_TABLOSU = {
   varsayilan: VARSAYILAN,
 
-  /** Natal harita (kendi içi) — Kerem: hepsi 7° */
+  /** Natal harita (kendi içi) — Kerem: gezegenler 7°, noktalar 1° */
   natal: {
     kisisel: hepsi(7),
     jenerasyon: hepsi(7),
-    noktalar: hepsi(7),
+    noktalar: hepsi(1),
   },
 
   /** Solar Return (kendi içi) — Kerem: jenerasyon 7°, kişisel 5° */
   solar: {
     kisisel: hepsi(5),
     jenerasyon: hepsi(7),
-    noktalar: hepsi(5),   // Kerem ayrıca belirtmedi → kişisel ile aynı
+    noktalar: hepsi(1),
   },
 
   /** Lunar Return (kendi içi) — Kerem: solar gibi (jenerasyon 7°, kişisel 5°) */
   lunar: {
     kisisel: hepsi(5),
     jenerasyon: hepsi(7),
-    noktalar: hepsi(5),
+    noktalar: hepsi(1),
   },
 
   /** Gelişmiş Dönüşler — gezegen dönüşleri, demi/quarti (kendi içi)
@@ -127,7 +131,7 @@ export const ORB_TABLOSU = {
   donus: {
     kisisel: hepsi(5),
     jenerasyon: hepsi(7),
-    noktalar: hepsi(5),
+    noktalar: hepsi(1),
   },
 
   /** Transit — hem transit×natal çapraz hem transit×transit
@@ -135,7 +139,7 @@ export const ORB_TABLOSU = {
   transit: {
     kisisel: hepsi(1),
     jenerasyon: hepsi(3),
-    noktalar: hepsi(1),   // Kerem ayrıca belirtmedi → kişisel ile aynı
+    noktalar: hepsi(1),
   },
 
   /** Progres — hem progres×natal çapraz hem progres×progres
@@ -146,11 +150,11 @@ export const ORB_TABLOSU = {
     noktalar: hepsi(1),
   },
 
-  /** Sinastri — kişi A × kişi B çapraz açılar — Kerem: hepsi 3° */
+  /** Sinastri — kişi A × kişi B çapraz açılar — Kerem: gezegenler 3°, noktalar 1° */
   sinastri: {
     kisisel: hepsi(3),
     jenerasyon: hepsi(3),
-    noktalar: hepsi(3),
+    noktalar: hepsi(1),
   },
 
   /** Kompozit ve Davison (ikisi de ilişki haritası, kendi içi)
@@ -158,7 +162,7 @@ export const ORB_TABLOSU = {
   kompozit: {
     kisisel: hepsi(3),
     jenerasyon: hepsi(3),
-    noktalar: hepsi(3),
+    noktalar: hepsi(1),
   },
 
   /** MultiWheel — bi/tri-wheel halkaları arası çapraz açılar
