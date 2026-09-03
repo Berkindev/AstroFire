@@ -13,10 +13,10 @@
  *   Güneş (kişisel) □ Plüton (jenerasyon) → jenerasyon orb'u
  *   Solar'da jenerasyon 7° / kişisel 5° → ☉□♇ = 7°
  * Öncelik sırası GRUP_ONCELIGI'nde; değiştirmek için o diziyi yeniden sırala.
- * NOKTALAR (ASC/MC/düğümler/Şans Noktası) her profilde 1° — Kerem'in
- * 2026-09-03 kararı. Öncelik jenerasyonda olduğu için nokta × jenerasyon
- * çiftinde jenerasyonun orb'u geçerlidir (ör. natal ASC ☌ ♇ → 7°),
- * nokta × kişisel çiftinde 1°.
+ * NOKTALAR (ASC/MC/düğümler/Şans Noktası) her profilde 1°, ama öncelik
+ * sırası jenerasyon → kişisel → noktalar olduğu için bu 1° yalnız
+ * nokta × nokta çiftlerinde devreye girer. Nokta × gezegen çiftinde
+ * gezegenin grubu belirler (natal ASC ☌ ☉ → 7°, ASC ☌ ♇ → 7°).
  * Ekol tercihi (Kerem, 2026-09-03).
  *
  * ⚠️ DEĞERLERİ DEĞİŞTİRMEK İÇİN: yalnız aşağıdaki ORB_TABLOSU'nu düzenle.
@@ -203,9 +203,11 @@ export function grupOrbu(profil, grup, angle) {
 
 /**
  * Karışık çiftte hangi grubun orb'u geçerli — soldaki önce gelir.
- * Jenerasyon her şeyi ezer; noktalar kişiseli ezer.
+ * Jenerasyon her şeyi ezer, sonra kişisel gelir; noktaların orb'u ancak
+ * ÇİFTİN İKİ UCU DA nokta olduğunda kullanılır (ASC × düğüm, ASC × Şans
+ * Noktası gibi). Kerem'in kararı (2026-09-03).
  */
-const GRUP_ONCELIGI = ['jenerasyon', 'noktalar', 'kisisel'];
+const GRUP_ONCELIGI = ['jenerasyon', 'kisisel', 'noktalar'];
 
 /**
  * İki ucun ortak orb'u — KARIŞIK ÇİFTTE GRUP ÖNCELİĞİ BELİRLER.
