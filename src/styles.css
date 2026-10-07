@@ -673,6 +673,17 @@ input::placeholder {
 
 /* Chart Info Side Panel */
 .chart-info-panel {
+  /* Panel her temada koyu: gezegen renkleri ve burç simgeleri koyu zemine göre.
+     Açık (SF) temanın koyu yazı değişkenlerini burada geri alıyoruz. */
+  --text-primary: #e2e8f0;
+  --text-secondary: #94a3b8;
+  --text-muted: #7c8799;
+  --text-accent: #a5b4fc;
+  --accent-primary: #a5b4fc;
+  --border-color: #2a3350;
+  --bg-input: #121a2c;
+  --bg-hover: #1e293b;
+  color: var(--text-primary);
   position: fixed;
   top: 0;
   right: 0;
@@ -786,13 +797,26 @@ input::placeholder {
 .chart-info-content .badge-cardinal { background: rgba(255,165,0,0.2); color: #ffa500; }
 .chart-info-content .badge-fixed { background: rgba(128,128,128,0.2); color: #aaa; }
 .chart-info-content .badge-mutable { background: rgba(200,100,255,0.2); color: #c864ff; }
-.chart-info-content .ekol-badges { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 6px; }
-.chart-info-content .ekol-badges .badge { margin: 0; }
-.chart-info-content .ekol-tur-label { font-size: 0.7rem; opacity: 0.6; margin: 4px 0 3px; text-transform: uppercase; letter-spacing: 0.04em; }
-.chart-info-content .ekol-ek { font-weight: 400; opacity: 0.7; margin-left: 3px; }
-.chart-info-content .ekol-detay { font-size: 0.75rem; opacity: 0.85; margin: 2px 0 10px; }
-.chart-info-content .ekol-detay summary { cursor: pointer; opacity: 0.7; margin-bottom: 4px; }
-.chart-info-content .ekol-detay div { padding: 1px 0; }
+.chart-info-content .ekol-tablo { margin-bottom: 0.6rem; font-size: 0.8rem; table-layout: fixed; }
+.chart-info-content .ekol-tablo th,
+.chart-info-content .ekol-tablo td { padding: 4px 2px; }
+.chart-info-content .ekol-tablo thead th { font-size: 0.72rem; }
+.chart-info-content .ekol-tablo tbody th { background: transparent; color: var(--text-secondary); font-weight: 500; text-align: left; padding-left: 8px; width: 64px; }
+.chart-info-content .ekol-ek-satir td { color: var(--text-secondary); }
+.chart-info-content .ekol-son td { font-weight: 700; font-size: 0.9rem; }
+.chart-info-content .ekol-son th { color: var(--text-primary); font-weight: 700; }
+.chart-info-content .ekol-fire { color: #ff5555; }
+.chart-info-content .ekol-earth { color: #44cc44; }
+.chart-info-content .ekol-air { color: #00ccc8; }
+.chart-info-content .ekol-water { color: #5c95ff; }
+.chart-info-content .ekol-cardinal { color: #ffa500; }
+.chart-info-content .ekol-fixed { color: #bbb; }
+.chart-info-content .ekol-mutable { color: #c864ff; }
+.chart-info-content .ekol-not { font-size: 0.72rem; color: var(--text-muted); margin: 0 0 0.5rem; line-height: 1.4; }
+.chart-info-content .ekol-detay { font-size: 0.78rem; margin: 0 0 0.4rem; color: var(--text-secondary); }
+.chart-info-content .ekol-detay summary { cursor: pointer; color: var(--text-accent); margin-bottom: 4px; }
+.chart-info-content .ekol-detay div { display: flex; justify-content: space-between; gap: 8px; padding: 3px 4px; border-bottom: 1px solid var(--border-color); }
+.chart-info-content .ekol-detay div span:last-child { color: var(--text-primary); white-space: nowrap; }
 
 /* ============================================
    DATA TABLES

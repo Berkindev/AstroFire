@@ -1671,21 +1671,25 @@ function renderChartInfoPanel(chart) {
   const { tur2 } = dg;
   const EL_KEYS = ['fire', 'earth', 'air', 'water'];
   const MOD_KEYS = ['cardinal', 'fixed', 'mutable'];
-  const badgeRow = (keys, vals, tr, ek) =>
-    `<div class="ekol-badges">${keys.map(k =>
-      `<span class="badge badge-${k}">${tr[k]}: ${vals[k]}${ek ? `<small class="ekol-ek">${ek[k] ? `+${ek[k]}` : ''}</small>` : ''}</span>`
-    ).join('')}</div>`;
+  // Satırlar: 1. tur (burç) · 2. tur eki (ev) · son değer = ikisinin toplamı
+  const turTablosu = (baslik, keys, tr, ilk, ek, son) => `
+    <table class="ekol-tablo">
+      <thead><tr><th>${baslik}</th>${keys.map(k => `<th class="ekol-${k}">${tr[k]}</th>`).join('')}</tr></thead>
+      <tbody>
+        <tr><th>1. tur</th>${keys.map(k => `<td>${ilk[k]}</td>`).join('')}</tr>
+        <tr class="ekol-ek-satir"><th>2. tur</th>${keys.map(k => `<td>${ek[k] ? `+${ek[k]}` : '–'}</td>`).join('')}</tr>
+        <tr class="ekol-son"><th>Son</th>${keys.map(k => `<td class="ekol-${k}">${son[k]}</td>`).join('')}</tr>
+      </tbody>
+    </table>`;
 
-  html += '<div class="ekol-tur-label">1. tur · burç</div>';
-  html += badgeRow(EL_KEYS, dg.elementToplam, dg.ELEMENT_TR);
-  html += badgeRow(MOD_KEYS, dg.nitelikToplam, dg.MODALITE_TR);
-  html += '<div class="ekol-tur-label">2. tur · ev (son değer)</div>';
-  html += badgeRow(EL_KEYS, tur2.elementSon, dg.ELEMENT_TR, tur2.elementEk);
-  html += badgeRow(MOD_KEYS, tur2.nitelikSon, dg.MODALITE_TR, tur2.nitelikEk);
+  html += '<h4>⚖️ ELEMENT · NİTELİK</h4>';
+  html += turTablosu('Element', EL_KEYS, dg.ELEMENT_TR, dg.elementToplam, tur2.elementEk, tur2.elementSon);
+  html += turTablosu('Nitelik', MOD_KEYS, dg.MODALITE_TR, dg.nitelikToplam, tur2.nitelikEk, tur2.nitelikSon);
+  html += '<p class="ekol-not">1. tur burçtan (Güneş, Ay 2; diğerleri 1 puan). 2. tur evden: cisim, evinin elementi/niteliğinden farklı bir burçtaysa puanı o eve de eklenir.</p>';
   if (tur2.katkilar.length) {
-    html += `<details class="ekol-detay"><summary>2. turda puan verenler</summary>${tur2.katkilar.map(k => {
+    html += `<details class="ekol-detay"><summary>2. turda puan ekleyenler (${tur2.katkilar.length})</summary>${tur2.katkilar.map(k => {
       const hedef = [k.evElement && dg.ELEMENT_TR[k.evElement], k.evNitelik && dg.MODALITE_TR[k.evNitelik]].filter(Boolean).join(', ');
-      return `<div>${k.symbol ? k.symbol + ' ' : ''}${k.ad} · ${k.burc} · ${k.ev}. ev → ${hedef} +${k.puan}</div>`;
+      return `<div><span>${k.symbol ? k.symbol + ' ' : ''}${k.ad} · ${k.burc} · ${k.ev}. ev</span><span>${hedef} +${k.puan}</span></div>`;
     }).join('')}</details>`;
   }
 
