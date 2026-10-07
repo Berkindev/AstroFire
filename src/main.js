@@ -6,14 +6,18 @@
 import { initEphemeris, calculateJulianDay } from './modules/ephemeris.js';
 import { searchCity, formatCityName, formatCoordinates } from './modules/geocoding.js';
 import { getUTCOffsetMinutes, formatUTCOffset } from './modules/datetime.js';
+import { jdToLocal } from './modules/chartUtils.js';
 import { calculateNatalChart } from './modules/natal.js';
-import { calculateSolarReturn, calculateSRHouseTiming, solarPeriod } from './modules/solar.js';
+import {
+  calculateSolarReturn, calculateSRHouseTiming, solarPeriod,
+  srGunesAraliklari, srGunesGecisTarihi,
+} from './modules/solar.js';
 import { calculateLunarReturn } from './modules/lunar.js';
 import { formatLongitude, formatNatalChartText, formatSolarReturnText, formatLunarReturnText, formatTransitText, formatProgressionText } from './modules/formatting.js';
 import { SIGNS, NATAL_PLANETS } from './modules/constants.js';
 import { calculateTransitReport } from './modules/transitReport.js';
 import { calculatePlanetReturn, RETURN_PLANETS, RETURN_TYPES } from './modules/planetReturns.js';
-import { loadEkolYorum, buildEkolYorum } from './modules/ekolYorum.js';
+import { loadEkolYorum, buildEkolYorum, hesaplaEkolDagilimi } from './modules/ekolYorum.js';
 import { drawChartWheel, drawSevenYearOverlay, drawDecanOverlay, drawBiWheel, drawTriWheel } from './modules/chartWheelSF.js';
 import { calcCrossAspects, anglePoints } from './modules/aspects.js';
 import { calculateTransits } from './modules/transit.js';
@@ -1662,56 +1666,28 @@ function renderChartInfoPanel(chart) {
   let html = '';
 
   // ============ 1. ELEMENT & NİTELİK (TOP) ============
-  const planetScores = {
-    'Güneş': 2, 'Ay': 2,
-    'Merkür': 1, 'Venüs': 1, 'Mars': 1,
-    'Jüpiter': 1, 'Satürn': 1,
-    'Uranüs': 1, 'Neptün': 1, 'Plüton': 1,
-    'Chiron': 1,
-  };
+  // Ekol puanlaması (ekolYorum.js tek kaynak): 1. tur burçtan, 2. tur evden.
+  const dg = hesaplaEkolDagilimi(chart);
+  const { tur2 } = dg;
+  const EL_KEYS = ['fire', 'earth', 'air', 'water'];
+  const MOD_KEYS = ['cardinal', 'fixed', 'mutable'];
+  const badgeRow = (keys, vals, tr, ek) =>
+    `<div class="ekol-badges">${keys.map(k =>
+      `<span class="badge badge-${k}">${tr[k]}: ${vals[k]}${ek ? `<small class="ekol-ek">${ek[k] ? `+${ek[k]}` : ''}</small>` : ''}</span>`
+    ).join('')}</div>`;
 
-  const allItems = [];
-  if (chart.planets) {
-    chart.planets.forEach(p => {
-      if (planetScores[p.name] !== undefined) {
-        const signIdx = Math.floor((p.longitude % 360) / 30) % 12;
-        allItems.push({ name: p.name, symbol: p.symbol, signIdx, score: planetScores[p.name] });
-      }
-    });
+  html += '<div class="ekol-tur-label">1. tur · burç</div>';
+  html += badgeRow(EL_KEYS, dg.elementToplam, dg.ELEMENT_TR);
+  html += badgeRow(MOD_KEYS, dg.nitelikToplam, dg.MODALITE_TR);
+  html += '<div class="ekol-tur-label">2. tur · ev (son değer)</div>';
+  html += badgeRow(EL_KEYS, tur2.elementSon, dg.ELEMENT_TR, tur2.elementEk);
+  html += badgeRow(MOD_KEYS, tur2.nitelikSon, dg.MODALITE_TR, tur2.nitelikEk);
+  if (tur2.katkilar.length) {
+    html += `<details class="ekol-detay"><summary>2. turda puan verenler</summary>${tur2.katkilar.map(k => {
+      const hedef = [k.evElement && dg.ELEMENT_TR[k.evElement], k.evNitelik && dg.MODALITE_TR[k.evNitelik]].filter(Boolean).join(', ');
+      return `<div>${k.symbol ? k.symbol + ' ' : ''}${k.ad} · ${k.burc} · ${k.ev}. ev → ${hedef} +${k.puan}</div>`;
+    }).join('')}</details>`;
   }
-  if (chart.houses) {
-    const ascIdx = Math.floor((chart.houses.ascendant % 360) / 30) % 12;
-    allItems.push({ name: 'Yükselen', symbol: 'ASC', signIdx: ascIdx, score: 1 });
-    const mcIdx = Math.floor((chart.houses.mc % 360) / 30) % 12;
-    allItems.push({ name: 'Tepe Noktası', symbol: 'MC', signIdx: mcIdx, score: 1 });
-  }
-
-  const elCounts = { fire: 0, earth: 0, air: 0, water: 0 };
-  const modCounts = { cardinal: 0, fixed: 0, mutable: 0 };
-  const cross = {};
-  ['cardinal', 'fixed', 'mutable'].forEach(m => {
-    cross[m] = { fire: 0, earth: 0, air: 0, water: 0 };
-  });
-  for (const item of allItems) {
-    const sign = SIGNS[item.signIdx];
-    if (!sign) continue;
-    elCounts[sign.element] += item.score;
-    modCounts[sign.modality] += item.score;
-    cross[sign.modality][sign.element] += item.score;
-  }
-
-  // Badges: all elements on one line, modalities on second line, no emojis
-  html += '<div style="display:flex;gap:6px;margin-bottom:6px;">';
-  html += `<span class="badge badge-fire">Ateş: ${elCounts.fire}</span>`;
-  html += `<span class="badge badge-earth">Toprak: ${elCounts.earth}</span>`;
-  html += `<span class="badge badge-air">Hava: ${elCounts.air}</span>`;
-  html += `<span class="badge badge-water">Su: ${elCounts.water}</span>`;
-  html += '</div>';
-  html += '<div style="display:flex;gap:6px;margin-bottom:10px;">';
-  html += `<span class="badge badge-cardinal">Öncü: ${modCounts.cardinal}</span>`;
-  html += `<span class="badge badge-fixed">Sabit: ${modCounts.fixed}</span>`;
-  html += `<span class="badge badge-mutable">Değişken: ${modCounts.mutable}</span>`;
-  html += '</div>';
 
   // Planet colors (same as chart wheel)
   // Brighter colors for dark background readability
@@ -2055,12 +2031,6 @@ function formatSpanDMS(spanDeg) {
   return `${d}° ${String(m).padStart(2, '0')}'`;
 }
 
-function timingDateStr(enterDate, durationDays, fraction) {
-  const d = new Date(enterDate.year, enterDate.month - 1, enterDate.day, enterDate.hour || 0, enterDate.minute || 0);
-  d.setTime(d.getTime() + fraction * durationDays * 86400000);
-  return `${d.getDate()} ${MONTH_SHORT[d.getMonth() + 1]} ${d.getFullYear()}`;
-}
-
 // ============================================
 // EKOL YORUMU (natal alt sekmesi)
 // ============================================
@@ -2190,7 +2160,17 @@ function renderEkolYorumHTML(r) {
     </div>`;
 }
 
-function renderDecanHTML(decanData, aspects, houseTiming) {
+/**
+ * @param {Object} [sr] - Solar Return verilirse ev/dekan/gezegen tarihleri
+ *   Güneş'in solar yıl içinde o dereceye geldiği KESİN an olarak yazılır.
+ */
+function renderDecanHTML(decanData, aspects, houseTiming, sr = null) {
+  const tarihStr = (d) => `${d.day} ${MONTH_SHORT[d.month]} ${d.year}`;
+  const tz = sr?.location.timezone;
+  // Yay iki parçaya bölünebilir (SR Güneşi yayın içindeyse) — kronolojik yaz
+  const araliklarStr = (startLon, endLon) => srGunesAraliklari(sr, startLon, endLon)
+    .map(p => `${tarihStr(jdToLocal(p.startJD, tz))} → ${tarihStr(jdToLocal(p.endJD, tz))}`)
+    .join(' · ');
 
   return `<div class="decans-list">${decanData.map(h => {
     const element = h.houseSign.element;
@@ -2198,11 +2178,8 @@ function renderDecanHTML(decanData, aspects, houseTiming) {
 
     const timing = houseTiming ? houseTiming.find(t => t.house === h.house) : null;
     const timingHeader = timing ? (() => {
-      const ed = timing.enterDate;
-      const ld = timing.leaveDate;
-      const enterStr = `${ed.day} ${MONTH_SHORT[ed.month]} ${ed.year}`;
-      const leaveStr = `${ld.day} ${MONTH_SHORT[ld.month]} ${ld.year}`;
-      return `<span class="decan-house-timing">${enterStr} → ${leaveStr} • ${timing.durationDays.toFixed(1)} gün</span>`;
+      const parcalar = timing.parcalar.map(p => `${tarihStr(p.startDate)} → ${tarihStr(p.endDate)}`).join(' · ');
+      return `<span class="decan-house-timing">${parcalar} • ${timing.durationDays.toFixed(1)} gün</span>`;
     })() : '';
 
     return `
@@ -2217,34 +2194,16 @@ function renderDecanHTML(decanData, aspects, houseTiming) {
             const startSign = SIGNS[Math.floor(d.startLongitude / 30)];
             const decanSign = d.decanSign;
             const startPos = formatDecanDegree(d.startLongitude);
+            const decanEndLon = (d.startLongitude + decanSizeDeg) % 360;
             const planetRows = d.planets.map(p => {
-              let planetDateStr = null;
-              if (timing) {
-                // Gezegenin dekan içindeki fraksiyonel pozisyonunu hesapla
-                const decanStartLon = d.startLongitude;
-                const decanEndLon = decanStartLon + (h.span / 3);
-                let pOffset = p.longitude - decanStartLon;
-                if (pOffset < 0) pOffset += 360;
-                const decanSpan = h.span / 3;
-                if (pOffset <= decanSpan) {
-                  const pFraction = pOffset / decanSpan;
-                  const f0 = d.index / 3;
-                  const f1 = (d.index + 1) / 3;
-                  const planetFraction = f0 + pFraction * (f1 - f0);
-                  planetDateStr = timingDateStr(timing.enterDate, timing.durationDays, planetFraction);
-                }
-              }
+              const planetDateStr = timing ? tarihStr(srGunesGecisTarihi(sr, p.longitude)) : null;
               return renderPlanetRow(p, aspects, planetDateStr);
             }).join('');
 
             // Dekan tarih aralığı (varsa)
-            const decanTiming = timing ? (() => {
-              const f0 = d.index / 3;
-              const f1 = (d.index + 1) / 3;
-              const dStart = timingDateStr(timing.enterDate, timing.durationDays, f0);
-              const dEnd = timingDateStr(timing.enterDate, timing.durationDays, f1);
-              return `<span class="decan-dates">${dStart} → ${dEnd}</span>`;
-            })() : '';
+            const decanTiming = timing
+              ? `<span class="decan-dates">${araliklarStr(d.startLongitude, decanEndLon)}</span>`
+              : '';
 
             return `
               <div class="decan-bar element-decan-${decanSign.element}">
@@ -2305,7 +2264,7 @@ function renderSRDecans(sr) {
   const allPlanets = getAllPlanets(sr);
   const decanData = calculateHouseDecans(sr.houses, allPlanets);
   const houseTiming = calculateSRHouseTiming(sr);
-  elements.srDecansDisplay.innerHTML = renderDecanHTML(decanData, sr.aspects, houseTiming);
+  elements.srDecansDisplay.innerHTML = renderDecanHTML(decanData, sr.aspects, houseTiming, sr);
 }
 
 

@@ -47,6 +47,10 @@ export const EKOL_PUANLARI = {
 
 const ELEMENT_TR = { fire: 'Ateş', earth: 'Toprak', air: 'Hava', water: 'Su' };
 const MODALITE_TR = { cardinal: 'Öncü', fixed: 'Sabit', mutable: 'Değişken' };
+// Doğal zodyak: 1-5-9 ateş, 2-6-10 toprak, 3-7-11 hava, 4-8-12 su;
+// 1-4-7-10 öncü, 2-5-8-11 sabit, 3-6-9-12 değişken.
+const EV_ELEMENTI = ['fire', 'earth', 'air', 'water'];
+const EV_NITELIGI = ['cardinal', 'fixed', 'mutable'];
 
 function signOf(longitude) {
   return SIGNS[Math.floor((((longitude % 360) + 360) % 360) / 30)];
@@ -64,17 +68,18 @@ export function hesaplaEkolDagilimi(chart) {
   };
   const katilanlar = [];
 
-  const ekle = (ad, lon) => {
+  const ekle = (ad, lon, ev, symbol) => {
     const puan = EKOL_PUANLARI[ad];
     if (!puan || lon == null) return;
     const s = signOf(lon);
     matris[s.modality][s.element] += puan;
-    katilanlar.push({ ad, puan, burc: s.name, element: s.element, modalite: s.modality });
+    katilanlar.push({ ad, symbol, puan, burc: s.name, element: s.element, modalite: s.modality, ev });
   };
 
-  for (const p of chart.planets || []) ekle(p.name, p.longitude);
-  ekle('ASC', chart.houses?.ascendant);
-  ekle('MC', chart.houses?.mc);
+  for (const p of chart.planets || []) ekle(p.name, p.longitude, p.house, p.symbol);
+  // ASC 1. evin, MC 10. evin başıdır — 2. turda bu evlerden okunurlar
+  ekle('ASC', chart.houses?.ascendant, 1, '');
+  ekle('MC', chart.houses?.mc, 10, '');
 
   const elementToplam = { fire: 0, earth: 0, air: 0, water: 0 };
   const nitelikToplam = { cardinal: 0, fixed: 0, mutable: 0 };
@@ -94,8 +99,32 @@ export function hesaplaEkolDagilimi(chart) {
   // Ekolde "zayıf" eşiği: toplamın ~%10'unun altı (15 puanda 1 puan ve altı)
   const zayiflar = (obj) => Object.entries(obj).filter(([, v]) => v > 0 && v <= 1).map(([k]) => k);
 
+  // --- 2. tur: ev üzerinden ---
+  // Cisim, bulunduğu evin elementinden/niteliğinden FARKLI bir burçtaysa
+  // puanı o evin elementine/niteliğine bir kez daha yazılır; aynıysa yazılmaz.
+  // (Kişinin değişip değişememe potansiyeli — hoca, Eki 2026.)
+  const elementEk = { fire: 0, earth: 0, air: 0, water: 0 };
+  const nitelikEk = { cardinal: 0, fixed: 0, mutable: 0 };
+  const katkilar = [];
+  for (const k of katilanlar) {
+    if (!k.ev) continue;
+    const evEl = EV_ELEMENTI[(k.ev - 1) % 4];
+    const evNit = EV_NITELIGI[(k.ev - 1) % 3];
+    const el = k.element !== evEl ? evEl : null;
+    const nit = k.modalite !== evNit ? evNit : null;
+    if (el) elementEk[el] += k.puan;
+    if (nit) nitelikEk[nit] += k.puan;
+    if (el || nit) katkilar.push({ ...k, evElement: el, evNitelik: nit });
+  }
+  const topla = (a, b) => Object.fromEntries(Object.keys(a).map(k => [k, a[k] + b[k]]));
+  const tur2 = {
+    elementEk, nitelikEk, katkilar,
+    elementSon: topla(elementToplam, elementEk),
+    nitelikSon: topla(nitelikToplam, nitelikEk),
+  };
+
   return {
-    matris, elementToplam, nitelikToplam, toplam, katilanlar,
+    matris, elementToplam, nitelikToplam, toplam, katilanlar, tur2,
     baskinElement: enBuyuk(elementToplam),
     eksikElementler: sifirlar(elementToplam),
     zayifElementler: zayiflar(elementToplam),

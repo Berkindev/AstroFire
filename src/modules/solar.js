@@ -176,17 +176,66 @@ export async function calculateSolarReturn(natalChart, year, location) {
   };
 }
 
+const TROPIK_YIL = 365.2422;
+
+/**
+ * Güneş'in SR anından itibaren `lon` boylamına ileri yönde kaç derece
+ * gideceği (0..360). SR anındaki kendi derecesi 0'dır — yıl orada BAŞLAR;
+ * `yilSonu` ise aynı derece yılın sonundaki (bir sonraki SR) geçiş sayılır.
+ */
+function gunesYayi(sr, lon, yilSonu = false) {
+  let off = (((lon - sr.natalSun.longitude) % 360) + 360) % 360;
+  if (off > 360 - 1e-4) off = 0; // float gürültüsü: Güneş'in kendi derecesi
+  if (yilSonu && off === 0) off = 360;
+  return off;
+}
+
+/**
+ * Solar yıl içinde Güneş'in `lon` boylamına geldiği an (JD).
+ * Her derece yılda tam bir kez geçilir; SR Güneşi'nin derecesi yılın ilk
+ * günüdür (yilSonu=true ile bir sonraki SR).
+ */
+export function srGunesGecisJD(sr, lon, yilSonu = false) {
+  const off = gunesYayi(sr, lon, yilSonu);
+  if (off === 0) return sr.julianDay;
+  return findBodyAtLongitude(PLANETS.SUN.id, lon, sr.julianDay + off * TROPIK_YIL / 360, 'Güneş geçişi');
+}
+
+/** srGunesGecisJD'nin yerel tarihi ({year, month, day, hour, minute…}). */
+export function srGunesGecisTarihi(sr, lon, yilSonu = false) {
+  return jdToLocal(srGunesGecisJD(sr, lon, yilSonu), sr.location.timezone);
+}
+
+/**
+ * `startLon`→`endLon` yayını Güneş solar yıl içinde hangi tarihlerde
+ * katediyor. Normalde tek parça; SR Güneşi yayın İÇİNDEyse yıl o yayın
+ * ortasında başlar ve yay iki parçaya bölünür: [SR → çıkış] + [giriş → sonraki SR].
+ *
+ * @returns {Array<{startJD, endJD}>} kronolojik sırada 1 veya 2 parça
+ */
+export function srGunesAraliklari(sr, startLon, endLon) {
+  const a = gunesYayi(sr, startLon);
+  const b = gunesYayi(sr, endLon, true);
+  if (a < b) return [{ startJD: srGunesGecisJD(sr, startLon), endJD: srGunesGecisJD(sr, endLon, true) }];
+  return [
+    { startJD: sr.julianDay, endJD: srGunesGecisJD(sr, endLon) },
+    { startJD: srGunesGecisJD(sr, startLon), endJD: srGunesGecisJD(sr, sr.natalSun.longitude, true) },
+  ];
+}
+
 /**
  * Solar Return haritasında Güneş'in her ev cuspunu geçtiği tarihleri hesaplar.
  * Güneş SR anında natal derecesindedir ve yıl boyunca 12 evi gezer.
+ *
+ * SR Güneşi'nin bulunduğu ev iki parçalıdır: yıl o evin ortasında başlar
+ * (SR → evden çıkış) ve yılın sonunda o eve geri girilir (giriş → sonraki SR).
+ * Bu ev için `parcalar` iki elemanlı, `durationDays` iki parçanın toplamıdır.
  *
  * @param {Object} sr - calculateSolarReturn() sonucu
  * @returns {Array<Object>} 12 ev için tarih aralıkları
  */
 export function calculateSRHouseTiming(sr) {
   const cusps = sr.houses.cusps;
-  const srJD = sr.julianDay;
-  const sunLonAtSR = sr.natalSun.longitude;
   const timezone = sr.location.timezone;
   const result = [];
 
@@ -195,18 +244,14 @@ export function calculateSRHouseTiming(sr) {
     const nextCuspLon = cusps[(i + 1) % 12].longitude;
     const houseNum = cusps[i].house;
 
-    // Güneş'in SR pozisyonundan bu cuspa ileri yöndeki açısal mesafesi (~1°/gün)
-    let enterOffset = cuspLon - sunLonAtSR;
-    if (enterOffset < 0) enterOffset += 360;
-
-    let leaveOffset = nextCuspLon - sunLonAtSR;
-    if (leaveOffset < 0) leaveOffset += 360;
-
-    // Güneş önce girer, sonra çıkar
-    if (leaveOffset <= enterOffset) leaveOffset += 360;
-
-    const enterJD = findBodyAtLongitude(PLANETS.SUN.id, cuspLon, srJD + enterOffset, 'Ev girişi');
-    const leaveJD = findBodyAtLongitude(PLANETS.SUN.id, nextCuspLon, srJD + leaveOffset, 'Ev çıkışı');
+    const parcalar = srGunesAraliklari(sr, cuspLon, nextCuspLon).map(p => ({
+      ...p,
+      startDate: jdToLocal(p.startJD, timezone),
+      endDate: jdToLocal(p.endJD, timezone),
+    }));
+    // Ev girişi = cuspun geçildiği an (Güneş'in evinde yılın sonundaki giriş)
+    const enterJD = parcalar[parcalar.length - 1].startJD;
+    const leaveJD = parcalar[0].endJD;
 
     const decanInfo = getDecanSign(cuspLon);
 
@@ -217,7 +262,9 @@ export function calculateSRHouseTiming(sr) {
       leaveJD,
       enterDate: jdToLocal(enterJD, timezone),
       leaveDate: jdToLocal(leaveJD, timezone),
-      durationDays: leaveJD - enterJD,
+      durationDays: parcalar.reduce((t, p) => t + p.endJD - p.startJD, 0),
+      parcalar,
+      gunesEvi: parcalar.length > 1,
       sign: SIGNS[cusps[i].signIndex],
       decanSign: decanInfo.sign,
       ruler: decanInfo.ruler,

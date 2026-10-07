@@ -786,6 +786,13 @@ input::placeholder {
 .chart-info-content .badge-cardinal { background: rgba(255,165,0,0.2); color: #ffa500; }
 .chart-info-content .badge-fixed { background: rgba(128,128,128,0.2); color: #aaa; }
 .chart-info-content .badge-mutable { background: rgba(200,100,255,0.2); color: #c864ff; }
+.chart-info-content .ekol-badges { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 6px; }
+.chart-info-content .ekol-badges .badge { margin: 0; }
+.chart-info-content .ekol-tur-label { font-size: 0.7rem; opacity: 0.6; margin: 4px 0 3px; text-transform: uppercase; letter-spacing: 0.04em; }
+.chart-info-content .ekol-ek { font-weight: 400; opacity: 0.7; margin-left: 3px; }
+.chart-info-content .ekol-detay { font-size: 0.75rem; opacity: 0.85; margin: 2px 0 10px; }
+.chart-info-content .ekol-detay summary { cursor: pointer; opacity: 0.7; margin-bottom: 4px; }
+.chart-info-content .ekol-detay div { padding: 1px 0; }
 
 /* ============================================
    DATA TABLES
