@@ -36,7 +36,7 @@ const SIGN_SVG_NAMES = [
 ];
 function signImg(signIndex, size = 14) {
   const idx = ((signIndex % 12) + 12) % 12;
-  return `<img src="/Symbols/${SIGN_SVG_NAMES[idx]}-symbol-icon.svg" style="width:${size}px;height:${size}px;vertical-align:middle;filter:brightness(0) invert(1);" alt="">`;
+  return `<img src="/Symbols/${SIGN_SVG_NAMES[idx]}-symbol-icon.svg" style="width:${size}px;height:${size}px;vertical-align:middle;filter:brightness(0) invert(1);" alt="" onerror="this.style.display='none'">`;
 }
 // Get sign index from SIGNS array by sign object
 function signImgFromSign(sign, size = 14) {
@@ -1655,14 +1655,6 @@ function renderChartInfoPanel(chart) {
   const content = $('chartInfoContent');
   if (!content || !chart) return;
 
-  // SVG sign file names for inline <img> tags
-  const SIGN_SVG_FILES = [
-    'aries', 'taurus', 'gemini', 'cancer', 'leo', 'virgo',
-    'libra', 'scorpio', 'sagittarius', 'capricorn', 'aquarius', 'pisces',
-  ];
-  const signSvg = (idx, size = 14) =>
-    `<img src="/Symbols/${SIGN_SVG_FILES[idx]}-symbol-icon.svg" style="width:${size}px;height:${size}px;vertical-align:middle;filter:brightness(0) invert(1);" alt="${SIGNS[idx]?.name || ''}">`;
-
   let html = '';
 
   // ============ 1. ELEMENT & NİTELİK (TOP) ============
@@ -1717,7 +1709,7 @@ function renderChartInfoPanel(chart) {
     const borderColor = elBorder(sign.element);
     return `<div class="info-row planet-row" style="border:1.5px solid ${borderColor};border-left:4px solid ${borderColor};border-radius:6px;margin-bottom:6px;">
       <span class="planet-col" style="color:${pColor}">${sym} ${name}</span>
-      <span class="sign-col element-${sign.element}">${sign.name} ${signSvg(signIdx)} • ${deg}°${String(min).padStart(2,'0')}'${retro}</span>
+      <span class="sign-col element-${sign.element}">${sign.name} ${signImg(signIdx)} • ${deg}°${String(min).padStart(2,'0')}'${retro}</span>
     </div>`;
   };
   if (chart.planets) {
@@ -1742,7 +1734,7 @@ function renderChartInfoPanel(chart) {
     const hBorderColor = elBorder(sign.element);
     html += `<div class="info-row planet-row" style="border:1.5px solid ${hBorderColor};border-left:4px solid ${hBorderColor};border-radius:6px;margin-bottom:6px;">
       <span class="planet-col">${i + 1}. Ev</span>
-      <span class="sign-col element-${sign.element}">${sign.name} ${signSvg(signIdx)} • ${deg}°${String(min).padStart(2,'0')}'</span>
+      <span class="sign-col element-${sign.element}">${sign.name} ${signImg(signIdx)} • ${deg}°${String(min).padStart(2,'0')}'</span>
     </div>`;
   });
 
